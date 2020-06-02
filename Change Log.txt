@@ -1,6 +1,8 @@
 // CMDR Clicker Thrustmaster TARGET Script Change Log //
 
-v4.2.0	- Point Release (Elite Dangerous 3.7 - Fleet Carriers)
+v4.2.1	- New Point Release
+
+v4.2.0	- Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
 		- Update Enter Hanger Macro to cater for new menus
 		- Added index section to function .tmh files
