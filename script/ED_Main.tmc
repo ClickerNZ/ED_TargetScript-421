@@ -85,8 +85,8 @@ include "ED_Macros.tmh"
 		SetKBRate(PulseTime, DelayTime);										// Base Settings 	(See EDSettings.tmh)
 		SetKBLayout(KBLayout);
 
-		ActKey(PULSE+KEYON+LED(&Throttle, LED_INTENSITY, SetLED)); 				// Set overall LED back-light intensity...
-		fnSetLEDs();
+//		ActKey(PULSE+KEYON+LED(&Throttle, LED_INTENSITY, SetLED)); 				// Set overall LED back-light intensity...
+//		fnSetLEDs();
 		
 		fnCustomCommands();														// Initialise Custom Macros (See EDMacros.tmh)
 		fnPIPMode(0);															// Reset PIPMode
@@ -115,7 +115,7 @@ include "ED_Macros.tmh"
 			printf("Rudder Axis	... disabled		");
 		}
 
-		fnSetJoystickCurves(MILD, NOPRINT);										// Initialise for default position of Autopilot switch
+//		fnSetJoystickCurves(MILD, NOPRINT);										// Initialise for default position of Autopilot switch
 		
 		StartupLock = 0;														// Set in EDSettings.tmh. Reset now initialisation is complete
 		

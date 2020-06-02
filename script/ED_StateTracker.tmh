@@ -39,7 +39,6 @@
 	int		newJson			= 0;								// set when myJson != lastJson...we then call fnsProcessFlags();
 
 	int 	fnReturn		= 0;								// Return -1 if error
-	int 	FileIOError		= 0;								// Set if get errors reading files
 
 	// End of Global Variables
 	//============================================================================================================================
@@ -81,7 +80,6 @@
 //			printf("strlen(StatusFile) = %d\x0a", strlen(&StatusFile));
 //		}
 
-		FileIOError = 0;											// if we get this far...all is well
 	}
 
 
@@ -310,7 +308,7 @@
 	// Input: 'UpdateLEDs', 1 = update, 0 = no update					// <<<<<<<<<<<<< Remove the "update LEDs feature once we get this all working again.
 	// Output: Flags value
 
-	int fnsProcessFlags(int UpdateLEDs) {
+	int fnsProcessFlags(int UpdateLEDs=0) {
 
 		int VoiceTxt;
 		
@@ -360,7 +358,7 @@
 //				ActKey(PULSE+KEYON+LED(&Throttle, LED_INTENSITY, 0));	// Set LED back-light OFF
 			}
 		}
-		else {															// Flags != 0
+		else {		// Flags != 0
 		
 			if (Flags < 0) {
 				fSRVHiBeam			= 1;
@@ -460,32 +458,36 @@
 					if (AutoGearUP) {
 						ActKey(PULSE+KEYON+LandingGear);
 					}
+					ShipDismissed = 0;
 				}
-//				fnTextToSpeech(VoiceTxt);
-				ShipDismissed = 0;
 			}
 			
 			if (fDocked != dk) {		// Framework - currently testing - may not be viable in current form without additional information from journal
 				if (fDocked) {							
-					VoiceTxt = "Docked"; 
 					if (AutoHanger) {
 						DeferCall(2500, &fnHangerServices, 1);			// Cannot use Auto feature until determine if in a Starport v Carrier
 					}
-				DeferCall(1000, &ActKey, PULSE+KEYON+BalancePower);
+					DeferCall(1000, &ActKey, PULSE+KEYON+BalancePower);
 				}
 				else	{	
-					VoiceTxt = "Undocked";
 					InHanger = 0;
 					if (AutoGearUP) {
 						DeferCall(1500, &ActKey, PULSE+KEYON+LandingGear);
 					}					
 				}
-				printf("Docked status: %s\x0a", VoiceTxt);					
-//				fnTextToSpeech(VoiceTxt);
 			}
 									
 			if (fa != fFAOff | lt != fLights | sr != fSilentRunning | cs != fCargoScoop | lg != fLandingGear | sh != fMainShip) UpdateLEDs = 1;
-
+			
+			if(GameLoaded == 0) {			// Game started...as opposed to re-started.
+				fnGameStarted();
+			}
+			else if(UpdateLEDs) {
+				fnSetLEDs();
+			}
+			
+			OldFlags = Flags;				// Keep track of last Flags Value to track when Flags Changes
+			
 			if (ShowFlags) {
 				printf("\x0a===============\x0a");
 				if (fSRVHiBeam) 			printf("SRVHiBeam\x0a");
@@ -523,12 +525,12 @@
 				printf("===============\x0a");
 			}
 			
-			if (UpdateLEDs) fnSetLEDs();
+//			if (UpdateLEDs) fnSetLEDs();
 
-			if(GameLoaded == 0) {			// Game started...as opposed to re-started.
-				fnGameStarted();
-			}
-			OldFlags = Flags;				// Keep track of last Flags Value to track when Flags Changes
+//			if(GameLoaded == 0) {			// Game started...as opposed to re-started.
+//				fnGameStarted();
+//			}
+//			OldFlags = Flags;				// Keep track of last Flags Value to track when Flags Changes
 		}
 	}
 	// END of fnsProcessFlags()

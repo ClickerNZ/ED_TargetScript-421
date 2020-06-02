@@ -322,9 +322,9 @@
 //		(AutoPilot Select)	// JoystickCurves Selector
 //		------------------
 
-		MapKey(&Throttle, APPAT, EXEC("fnSetJoystickCurves(NONE, PRINT);"));		// Set Joystick curves = NONE
-		MapKey(&Throttle, APAH,  EXEC("fnSetJoystickCurves(MILD, PRINT);"));		// Set Joystick curves = MILD
-		MapKey(&Throttle, APALT, EXEC("fnSetJoystickCurves(MEDIUM, PRINT);"));		// Set Joystick curves = MEDIUM
+		MapKey(&Throttle, APPAT, EXEC("fnSetJoystickCurves(NONE, CurveInfo);"));		// Set Joystick curves = NONE
+		MapKey(&Throttle, APAH,  EXEC("fnSetJoystickCurves(MILD, CurveInfo);"));		// Set Joystick curves = MILD
+		MapKey(&Throttle, APALT, EXEC("fnSetJoystickCurves(MEDIUM, CurveInfo);"));		// Set Joystick curves = MEDIUM
 
 //		(Enhanced Attitude Control (EAC) Arm/Off)
 //		-----------------------------------------

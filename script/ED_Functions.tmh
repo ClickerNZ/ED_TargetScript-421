@@ -74,7 +74,7 @@
 		
 		// Throttle mapping...
 		MapAxis(&Throttle, THR_LEFT, DX_ZROT_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);					// Set Left Throttle. Right throttle not used.
-		printf("Throttle Axis		... done\x0a");
+		printf("Throttle Axis	... done\x0a");
 
 		// Slider Mapping...
 		MapAxis(&Throttle, THR_FC, DX_SLIDER_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);					// Set Friction Control Axis Curve (Sensor Range Zoom Scaling)
@@ -88,7 +88,8 @@
 	// FUNCTION: Initialise Rudder
 	int initTFRPRudder() {																		// Initialise Thrustmaster TFRP Rudder
 		MapAxis(&TFRPRudder, TRUDDER, DX_Z_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
-		printf("Rudder Axis	... done		");
+		printf("Rudder Axis	... done\x0a");
+		printf("-----------------------------------------------------------------------------------------------------------------------------------------------\x0a");
 	}
 
 	// FUNCTION: Initialise Text To Speech Engine	
@@ -142,11 +143,11 @@
 	// Parameter:	Profile = 0, 1 or 2 (see JSProfile in EDGlobalVars)
 	// Parameter:	print = 0 to supress console print of Curve settings, 1 to print
 
-	int fnSetJoystickCurves(int profile, int print=0) {
+	int fnSetJoystickCurves(int profile, int print=0, int announce=1) {
 
 		int VoiceTxt;
 
-//		JSProfile = profile;
+		JSProfile = profile;
 		
 		if (profile == 0) {
 			JSCurveSetting = "NONE";
@@ -182,17 +183,18 @@
 			printf("Joystick & Pedal Curves	... done.\x0a");
 			printf("-----------------------------------------------------------------------------------------------------------------------------------------------\x0a");
 		}
-		else {
+		else if (announce) {
 			fnTextToSpeech(VoiceTxt);
-		}			
+		}
+		
 		if (print) {
 			printf("Joystick Curves[%s]	: LDZ=%d, CDZ=%d,  RDZ=%d, Curve= %d, Zoom= %d\x0a", JSCurveSetting, Joystick_L_DZ, Joystick_C_DZ, Joystick_R_DZ, Joystick_Curve[profile], Joystick_Zoom);
 			printf("Rudder Curves[%s]	: LDZ=%d, CDZ=%d, RDZ=%d, Curve= %d, Zoom= %d\x0a", JSCurveSetting, Rudder_L_DZ, Rudder_C_DZ, Rudder_R_DZ, Rudder_Curve[profile], Rudder_Zoom);
 			printf("Slew Curves[%s]	: LDZ=%d, CDZ=%d, RDZ=%d, Curve= %d, Zoom= %d\x0a", JSCurveSetting, Slew_L_DZ, Slew_C_DZ, Slew_R_DZ, Slew_Curve[profile], Slew_Zoom);
 		}
-//		else {
-//			printf(" [%d]\x0a", profile);
-//		}
+		else if (announce) {
+			printf("Curve Profile: [%s]\x0a", JSCurveSetting);
+		}
 	}
 
 
@@ -222,8 +224,12 @@
 		
 		DefEventHandler(EV_HID_INPUT_DATA, &Throttle, THR_FC);			// Forces re-read of slider axis
 
-		if (!StartupLock)
+		if (!StartupLock) {
 			printf("Slider Curve Profile:	[%d] %s\x0a", x, SliderProfile);
+		}
+		else {
+			printf("Slider Axis	... done		");
+		}
 	}
 
 
@@ -436,12 +442,17 @@
 		DefEventHandler(EV_HID_INPUT_DATA, &Throttle, THR_FC);			// Forces re-read of slider axis								
 		
 		fnFlashStart();
-//		DeferCall(1000, &fnSetLEDs, 0);
+		DeferCall(1000, &fnSetLEDs, 0);
 		
 		// Align toggle switches and internal status flags if required
 		if (Throttle[EACON])	DeferCall(999, &tgSilentRunning, 1);		
 		if (Throttle[RDRNRM])	DeferCall(999, &tgCargoScoop, 1);
 		if (Throttle[SPDF])		DeferCall(999, &tgReverseThrust, 0);
+
+		// Align Joystick curves
+		if (Throttle[APPAT])	fnSetJoystickCurves(NONE, NOPRINT, 0);
+		if (Throttle[APAH])		fnSetJoystickCurves(MILD, NOPRINT, 0);
+		if (Throttle[APALT])	fnSetJoystickCurves(MEDIUM, NOPRINT, 0);		
 		
 		if (fDocked) 			InHanger = 1;
 		
@@ -468,6 +479,14 @@
 		}
 		printf("VoiceStatus	= %d - %s\x0a", EnableVoice, VoiceStatus);
 		printf("VoiceVolume	= %d\x0a", VoiceVolume);
+
+		if(EnableSoundFX) {
+			SoundFXStatus = "Enabled";
+		}
+		else {
+			SoundFXStatus = "Disabled";
+		}
+		printf("\x0a\SoundFXStatus = %s\x0a", SoundFXStatus);
 
 		fnTextToSpeech("Welcome back Commander");
 
@@ -780,8 +799,12 @@
 				VoiceTxt = "Ship dismissed";
 			}
 			ActKey(PULSE+KEYON+SRVRecallDismissShip);
-			fnTextToSpeech(VoiceTxt);
-			printf("Ship status: %s\x0a", VoiceTxt);
+//			fnTextToSpeech(VoiceTxt);
+//			printf("Ship status: %s\x0a", VoiceTxt);
+
+			printf("Ship Status: ");
+			fnVPOutput(VoiceTxt);
+			
 			ShipDismissed = !ShipDismissed;
 			fnsMyStates(SAVE);														// saves my status variables 
 			
