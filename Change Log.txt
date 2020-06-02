@@ -1,0 +1,291 @@
+// CMDR Clicker Thrustmaster TARGET Script Change Log //
+
+v4.2.0	- Point Release (Elite Dangerous 3.7 - Fleet Carriers)
+		- Ported code from 4.1.0b
+		- Update Enter Hanger Macro to cater for new menus
+		- Added index section to function .tmh files
+		- Refactor some toggles to remove unneccessary flag assignments
+		- Add second parameter, 'reason' to fnNotValid ()
+		- Add second parameter, 'VolumeOverride' to fnTextToSpeech()
+		- Remove unused parameter from fnSetLEDs()
+		- Tweak Slew control curves
+		- Create targetdx64enh.tmh from targetdx128.tmh and add my tweaks. 
+				- Move DX33-64 defines to top of script.
+				- Add ThrottleMap mappings for DX34-DX55
+				- NOTE: Elite Dangerous only detects up to DX32
+		- Extend Joystick Curves to include global variables for all 3 deadzones
+		- Decouple Rudder from Joystick Curves and create independant curve variables etc.
+		- Add User Setting for FA-OFF Curves and printinfo
+		- Tweak tgEnhancedFAOFF() code
+		- Tweak fnModeSwitch{} and fnGameStarted()
+		- Remove Communications functions for now - these need to be tested before releasing
+		- Create fnDRShip() function to track when Ship is dismissed or recalled
+		- Remove Zoom factors from curve arrays (static Zoom set to 0)
+		- Add and report on Slider Profile when it changes
+		- Create fnsMyStates() function to save and load non 'status.json' variables we want to be persistent
+		- Replace Sleep() with DeferCall when triggering use of FreeCamera
+		- Create bind file for No EDTracker
+		- Create User setting to disable TFRP Rudder controller if not connected. Add test when Configuring and initialising devices
+		- Include 'DefaultPIPMode' in UserSettings. Reset PIPMode now resets to this default instead of Mode 0
+		- Create mClearAllChatBox macro to clear all three chat session windows instead of the currently selected window 
+		- Create a 'Training Mode'. Seperate Keymap profile which announces what each button or switch does 
+		- Create ED_MapKeyAssignments.tmh file and move main and training keymaps into it
+		- Rename ED_KeyMap.ttm to ED_Defines.ttm to avoid confusion
+		- Create fnVPOutput() function to send a string to both fnTextToSpeech() and printf to console. Refactor code to suit
+		- Create AutoGearUP and AutoGearDOWN flags in ED_UserSettings to enable toggle of gear when lifting off or request dock 
+		- Move several Global variables into Local context. (SysCmd, SliderCurve)
+		- Remove no longer used Globals (SRVBeam, JSProfile)
+		- Rename fnDebugStates() to fnDebug(). This function now only sets Debug and ShowFlags flags
+		- MapKeys for EFLNORM and EFRNORM better aligned and improved for Debug functions
+		- Remove several 'if (Debug) {}' code blocks
+		- Refactor several functions parameters as optional where it makes sense (eg. functions with > 1 argument can now be called via DeferCall)
+		- Add test in fnModeSwitch() function to disallow console logging during battle or interdictions
+		- Create 'ED_TargetScript User Reference Guide' PDF
+
+v4.1.0b	- created forked branch - this version uses REXEC to read status.json in the background every 500ms.
+		- (it no longer uses TCPCallback)
+		- Add more voice feedback
+		- Create fnCommsControl() - TESTING
+		- Update fnHangerServices() - TESTING 
+		- Fix mEnterHanger macro (non-Fleet Carriers)
+		- Create new mEnterHanger Macro for Fleet Carriers (ED v3.7)
+		- (add AutoHanger option when docking at starport or station - in development)
+		- Create tgTriggerMode() function to cycle between 6.1 second auto fire (disco scanner) and press-to-fire/press-to-stop (mining laser)
+		- Expand fnAdvFireControl() function to cater for tgTriggerMode()
+		- Modify MapKey for TG1 (primary fire) and S2 (secondary fire) buttons.
+		- Abort if we can't find status.json
+		- Only report read errors on status.json if >3 times in succession
+		- Add slew control axes for camera lateral and vertical control 
+		- Add usage examples in comments for fnTextToSpeech()
+		- Move Open SystemMap and Open GalaxyMap triggers to Flaps Down and Flaps Up
+		
+		
+v4.1.0 	- major change to processing status.json using GameCallBack TCP sockets
+		- Start with 'Flags' then expand.
+		- requires external script/program to send key values to TARGET dynamically as they change 
+		
+	Create new point release
+	New:
+		Attach TCPCallback procedure to TCP port 1000 in ED_Main - Flags key value from status.json
+		Modify external CPP program (ED_TCPCallback) to increase buffer size
+		Modify external CPP program (ED_TCPCallback) to only send updates when 'Flags' key value changes
+		Refactor fnProcessFlags(); and update all script files where used
+		Remove fnWaitstart() and create fnGameStarted();
+		Fix LED behavior due to above changes
+		Detect Supercruise toggle
+		-	call fnSetSliderCurve()
+		-	if we didn't select drop, sound a warning
+		-	if fDanger, select Combat HUD, deploy hardpoints, sound a warning
+		Add voice response to tgPlanetView()
+		Add keybinds for Pitch and Yaw and include defines for same (for future AutoPilot implementation)
+		Create "uninitiated drop detected" code
+		-	Includes tracking when we enter and exit OrbitalCruise
+		Create fnNotValid(fnName) function to announce when a function is not available at this time (eg Landing Gear when in Supercruise)
+		-	Reqs fnName string to be set and parsed when calling
+		-	Uses fnTextToSpeech()
+		Create initTextToSpeech() to detect existence of voice.exe 
+		Added more voice feedback when engaging supercruise and for landing gear
+		Create fnVoiceVolume() to enable volume control for fnTextToSpeech() via Shift=U on FLAPU or FLAPD on throttle
+		Create fnSoundFX() to enable sound effects via a command line .wav file player
+		
+	Maintenance, Updates & fixes:
+		Modify Voice path to include switch usage (use alt voice as example)
+		Add space {" ") when building SysCmd in fnTextToSpeech() between path and text 
+		Alter timings in mEnterHanger and mLaunch macros
+		Change ED_TCPCallback console output. Print time + Flags value instead of entire status.json
+		ED_TCPCallback amended to send Flags=0 and...
+		Modify fnsProcessFlags() to detect when game stops
+		Rewrite fnModeSwitch() to monitor GUIMode for game reload
+		Remove Voice Attack integration (use voice.exe via fnTextToSpeech(VoiceTxt))
+		Fix Status LEDs becoming misalligned via toggle tracking when we call fnsProcessFlags()
+		Fix typo in argumnet in fnTextToSpeech() call for unitiated drop detection code
+		Include argument for fnSetLEDs(int x) so we can DeferCall it (future functionality??)
+		Minor typo fixes and consistency changes
+		Move user configurable settings into ED_UserSettings.tmh file
+		Complete rewrite of fnsGetStatusFileInfo() and fnsGetKeyValue()
+		Increase buffer for fnTextToSpeech() 'syscmd' to 256
+		Existance checks for 'StatusFile' added (Script aborts if not found)
+		Added alias for 'StatusFile' in ED_UserSettings and instructions for options
+		('fnsGetStatusFileInfo()' function now largely redundant)
+		Use sprintf() to concatenate and buid strings in place of multiple strcat() statements
+	
+v4.0.1 - mostly maintenance build 
+	Fix Reverse Thrust Toggle code
+	Fix Mode switch macros due to ARX menu choice addition
+	Do not toggle ConnectionStatus after a mode switch
+	Fix fnProcessFlags() to cater for srvHighBeam (ie 32 bit integers > 2147483648) 
+	Modify fnHeatsink() to allow firing in Supercruise (except FSSMode)
+	Create fnChaff() for sake of consistency
+	Modify fnAdvancedSCB() to allow FSSZoomIN when in Supercruise+FSSMode
+	Fix "ShowConnectionStatus" at startup
+	Define variables for GUIFocus values
+	Tweak mLaunch macro to only rise for 1.5 and don't set throttle to 25%
+	Refactor fnGetFlightMode()
+	Create check for Voice attack running in launcher script
+	Create HCSTriggers flag. Send trigger only when enabled (if HCS/Voiceattack is not running sends LSHIFT+1 as "1" which then opens NAV panel etc)
+	Add file read operation to check if VA running and set HCSTriggers flag (fnWaitstart() in EDStateTracker.tmh)
+	Refactor all "fp = fopen();" instances to followup with an "if (fp) {}" test wrapper
+	Rename EDStateTracker.tmh functions with "fns" prefix to differentiate from EDFunctions.tmh functions and update all references across script stack
+	Rename files with "ED_" prefix
+	Tidy up. Remove old comments and commented code
+	Change "ShowConnectionStatus" to SC Press (Up)
+	Map "System Map" toggle to SC Press (Down)
+	Comment unused key defines in "ED_KeyMap" file
+	Add voice.exe functionality to send text to voice messages
+	Change Vertical Thrust button for SRV to Slew UP in Control bindings (in game)
+	Create fnTextToSpeech() to dynamically build and send system() commands for voice.exe
+	Modify fnSetJoystickCurves() and fnPIPMode() to use fnTextToSpeech()
+	Create tgTxt2Speech() to toggle EnableVoice on/off and map to Throttle Boat Switch (Down)
+	Remove voice.exe lag delay by using "start" command
+		
+v4.0.0
+	New Major Version
+	Replace legacy variable names with their equivalent "Flags" variable names 
+	Modify tgHardpoints to cater for SRV Turretview On/Off 
+	Add VA trigger for Planet Front/Back View change 
+	Add "-shortcutson" to VoiceAttack start command in ED v4.0.0.cmd
+	Turn on ConnectionStatus @ game load by default 
+	Create fnHeatsink() to fix FSS Zoom IN/OUT and add console messages 
+	Create tgExtCamera() and map to Throttle LTB (Down)
+	Create ShowFlags global flag. Set/Reset in fnDebug and used in fnProcessFlags()
+	Fix mFastModeSwitch1 macro for Private Group 
+	Create fnHangerServices(). Mapped to IDLELON/OFF. 
+		- Enters Hanger and Station Services + buys fuel, repairs, restock
+		- Exit Hanger and Launch ship (rise 3.5 seconds, retract gear, quarter impulse)
+			(issue with rise for 3.5 seconds is different ships have different thrust-up rates)
+			(issue if lifting off from front pads if height isn't achieved)
+	Correct some minor syntactical inaccuracies for KEYON
+	Remove FSSZoom function from fnAdvancedSCB(). Remap FSSZoom IN/OUT to same as CameraZoom IN/OUT (D - H4U/D)
+	(Fix SRV Recover logic and tweak macro) - still needs work 
+	Create tgPlanetView() to prevent VA Trigger when in SRV (for example) 
+	Create fnAdvFireControl() basic construct (for future development)
+	Change TFRP control configuration statement to FILTERED and un-comment
+		- due to external USB hub connection "issue". i.e. Not reqd if connected into native USB...very strange
+	Modify SetShiftButton statement to exclude "IO" part
+	Fix slider curve change not updating in game until move slider by force re-read and resend slider position
+	Adjust timing for slider curve change when entering and exiting FSD
+	Include command line switch in script launcher to set timeout value to 5 minutes (from 1 minute)
+	Add new status flags for fsdJump and srvHighBeam
+	Re-write SRV section in tgLights() now we have a srvHighBeam flag 
+	Teak tgWarpDrive() to include new fsdJump flag
+	
+v3.4.0 
+	New Minor Version
+	Fix macros due to April 2019 Update (v3.4 ?)
+		- NAV Beacon ON/OFF
+		- Report Crimes ON/OFF
+		- Menulog OPEN/PG/SOLO
+	Rename file extensions for EDMacros (.tmh) and EDKeymap (.ttm)
+	Add new Status.json FLAG bit for 'Altitude from Average Radius'
+	Fix some string variable issues processing status.json
+	Rewrite PIP Management
+		Create fnPIPManager();
+		PIPMode changed from binary value to 0-5
+		H4P now increaments/decrements/resets PIPMode
+	Move state tracking code into its own file (EDStateTracker.tmh)
+		- move associated Global variables from EDGlobalVars into EDStateTracker
+	Tweak CMS (H4U/D/L/R) MapKeys and add MapKeyRUMD for H4L to release ECM
+	Create Voice Attack triggers for PIPMode and Curves
+		- issue = if VA not running, ED interprets CTRL or SHIFT+num as num 
+	
+v3.3.3
+	Split EDFunctions into EDFunctions and EDToggles as EDFunctions was getting a bit too long
+	Rename Toggle functions as tgToggleName()
+	Fix FSS Zoom/UnZoom
+	Include "Supercruise Test" in most TOGGLES and some FUNCTIONS to ensure switch/button does the right things only if appropriate
+	Tweak fnStateDump() 
+	Global variable usage check.
+	Replace strdel() with Dim() function to resize string variables 
+	Review/fine tune Speedbrake function
+	
+v3.3.2
+	Create fnSetSliderCurve() for dynamic DX-Slider curves
+	Create fnDeploySRV() ... mapped to APUON/APUOFF switch
+	Tweak fnLights() to cater for SRV Lights (Lo/Hi/Off)
+	Modify fnStateDump() to include Ship/SRV context and more state flags
+	Create fnGetKeyValue() function to extract any key value from status.json using "key" as parsed parameter
+	Rename fnReadStatus() to fnProcessFlags(). Remove file operations and call fnGetKeyValue() to get Flags value
+	Create fnProcessGuiFocus() to extract and process "GuiFocus" key value from status.json
+	Normalise Function and Toggle header comments and include input/output/parameter descriptors.
+	Re-add dynamic JSCurve to FAOff
+	Refactor variables and review comments
+	Create fnAdvancedSCB() to fire 1 or 2 SCBs + Heat Sink
+	Tweak fnReverseThrust() so Speedbrake works in both Combat and Analysis modes
+	
+v3.3.1
+	Use Thrustmaster preferred file naming conventions and other pedantic changes
+		- Split macros into their own file (EDMacros.ttm)
+		- Rename EDSettings to EDGlobalVars
+		- Changed file extension for EDKeyMap to .tmh
+	Add state tracking via status.json using file operations
+	Rename functions from init<Name>() to fn<Name>() (except the initialise functions)
+	Merge fnSupercruise() and fnFrameshiftDrive() and rename to fnWarpDrive()
+	Add Repeat fire (every 7 seconds) to TG1(U) and S2(U) for Pulse Wave Scanner
+	Include parameter parsing to several functions 
+	Rename fnToggleShipLights() to fnToggleLights() and...
+		- Add Night Vision via parsed parameter
+		- Include SRV logic (not finished)
+
+v3.3.0 (* Reqd for Beyond Chapter 4)
+	* Add Night Vision mode
+	* Fix Request and Cancel Docking request due to UI changes
+	* Fix Wing NAV Beacon ON/OFF Macros due to UI changes
+	* Fix Report Crimes ON/OFF Macro due to UI changes
+	* Create fnToggleHUDMode()
+	* Create fnToggleFSSMode()
+	* Create fnModeSwitch() to ensure HUD Mode = Combat prior to menu log
+	* Add DSSModeON/OFF. Fire probe via 2nd Fire, aim via mouse or Joy+Pedals(?)
+	Add external camera functions 
+	Create fnFlashLED() to flash LEDs when they change states	
+	Add fnStateDump() to dump all current states to console
+	Reformat console output
+	Changed a bunch of key binds to consolidate modifier keys
+	Tweaked PIP Power management
+	Simplified enhanced FA-OFF function
+	Simplify fnSetJoystickCurves(). Parse profile# when calling
+	Remove "Mute Teamspeak" mapping (was S4) - use mute button on headset
+	Moved FA-OFF back to S4 (from boat switch)
+	Moved NAVBeacon WING/OFF and ToggleReportCrimes functions to Boat Switch (from S4)
+	Moved Recall/Dismiss Ship function to Throttle EOR Switch (from S1)
+	Updated Joystick & Throttle Map Images
+	Create fnSupercruise() to track states
+	Create fnFrameshiftDrive() to track states
+	
+v3.2.0	(Compatible with Beyond Chapter 3) 
+	Create new major point release
+	Delete no longer used (commented) code
+	Made user settings largely obsolete (for things I'll never change)
+	Hard coded DXSlider (still needs tweaking)
+	Implement MapKeyUMD via S3 (IO) and PSB (UMD)
+	Use MapKeyUMD instead of TEMPO for PIPManagement
+	Use MapKeyUMD in place of fnFireControl() and fnTargetDesignator() functions
+	Move Dismiss/Recall Ship to shifted S1
+	Shift+SBF fixes ReverseThrust if misaligned
+	Fixed bug with ChargeECM
+	Moved default states and joystick defines from Keymap file into Settings file 
+	Create fnReqDock() to set PIPs 4x2x0 & print to console
+	Create tgPIPMode() to change PIP Management on the fly via CMS - MapKEYUMD(&Joystick[H4P])
+	Create fnToggleHardpoints() (sets/resets "GunsDeployed")
+	Create fnToggleReverse() - uses Landing Gear as speedbrake if "GunsDeployed" 
+	
+v3.1.0.7
+	Free up use of [S3] by moving the shift function to [PSB]
+	Formatting tweaks
+	Include Dismiss/Recall Ship via S3
+	
+v3.1.0.6
+	Moved Gear and Lights back onto [H1L/R] as long press via TEMPO
+	Rewrote fnAdvancedFAOff()
+	Added fnTargetDesignator()
+	Mute TeamSpeak via S4
+	Turn Throttle Base LEDs on/off via FLAPD
+	Create mNAVBeaconToggle & mReportCrimesToggle
+	re-add FastModeToggle and HideShipGUI
+	Create fnFireControl()
+
+v3.1.0.5
+	Heavily modify "Aussiedroid's script v3.1.0" to mimic my TARGET GUI Profile, then...
+	Included PIP Control and Fancy FA-OFF
+	Cleaned up code
+	Simplified the toggle functions
+	

@@ -1,0 +1,192 @@
+
+//----------------------------------------------------------------------//
+//	CMDR Clicker's Elite Dangerous Thrustmaster Warthog + TFRP Script	//
+//----------------------------------------------------------------------//
+
+// This file: ED_UserSettings.tmh (v4.2.0) ... supports Elite Dangerous v3.7 (Fleet Carriers)
+
+// Refer Change Log.txt in same folder
+
+// LEGEND: 
+// ========================================================
+// fnName()					refer to ED_Functions file
+// initName()				refer to ED_Functions file
+// fnsName()				refer to ED_StateTracker file
+// tgName()					refer to ED_Toggles file
+// mName					refer to ED_Macros file
+// MapKey statements		refer to ED_MapKeyAssignment file
+// Global Defines			refer to ED_Defines file
+// Global Variables			refer to ED_GlobalVars file
+// User Config Settings		refer to ED_UserSettings file
+// ========================================================
+
+// START
+
+//---------------//
+// LED intensity //
+//---------------//
+	
+	int	SetLED	 				= 43;					// Set LED Backlight Level on Throttle
+														// Level 0: 0	- 42 (off)
+														// Level 1: 43	- 85 (dimmest)
+														// Level 2: 86	- 128
+														// Level 3: 129 - 171
+														// Level 4: 172	- 214
+														// Level 5: 215 - 255 (brightest)
+
+//----------------//
+// Status.json    //
+//----------------//
+
+	// WARNING:		This script relies on and makes extensive use of 'status.json' key values
+	//				If the script cannot find status.json, it will abort.
+
+	// NOTE:		Set the 'alias' below to point to the Elite Dangerous journal folder / status.json file
+	//				The below path is usually where the Elite Dangerous journal file can be found.
+	//				Just replace '<username>' with your windows username.
+	
+//	alias StatusFile			= "C:\\Users\\<username>\\Saved Games\\Frontier Developments\\Elite Dangerous\\status.json";
+
+//	example...
+	alias StatusFile			= "C:\\Users\\clicker\\Saved Games\\Frontier Developments\\Elite Dangerous\\status.json";
+	
+	int StatusReadRate			= 500;	// Set Read Loop rate in milliseconds. (ie 500 = read status.json twice a second)
+										// You may see issues if this is set too small. If you do, raise this value to 750, 1000, or higher
+
+//----------------//
+// MyStatusFile   //
+//----------------//
+
+	// NOTE:		Set the 'alias' below to point to where you want to save and load script variables that are not tracked via status.json
+	//				I've included an example below but so long as you create the folder structure, you can put this anywhere on your PC
+	
+	alias MyStatusFile			= "d:\\Thrustmaster\\ED_TargetScript\\MyStatusFile.json";
+
+
+//----------------//
+// Text To Speech //
+//----------------//
+
+	// Refer fnTextToSpeech(text) function for usage etc
+	// Set voicepath to where you copied voice.exe. Add any command line arguments you want within 'VoiceCMD'!
+	// Run voice.exe in a command prompt (from where you copied it) with no arguments etc to see a list of options
+	// VoiceVolume should be set to the relative volume level (%) for voice.exe 
+	// VoiceCMD is example on how to use command line arguments. -r <rate> (>0 = faster, <0 = slower), voice = "Catherine" (must be installed)
+
+	int		EnableVoice			= 1; 					// 0 = Disable, 1 = Enable. Enable this if you wish to use "voice.exe". 
+														// Toggled via tgTxt2Speech();
+														
+	alias	VoicePath			= "d:\\Thrustmaster\\ED_TargetScript\\voice.exe";
+	
+	int		VoiceVolume			= 75;					// Default Volume set at 75% Settable via fnVoiceVolume()
+														// Note: VoiceVolume gets saved to MyStatus file when game halts and is reloaded at script start
+
+	alias	VoiceCMD			= "-r 0 -n \"Microsoft Catherine\"";
+	
+	int		TrainingEnabled		= 0;					// 0 = Disable, 1 = Enable. When game stopped pressing a button/switch announces basic function
+	int		AnnounceTraining	= 0;					// 0 = Do not annnounce training mode, 1 = Announce training mode
+
+//------------------//
+// WAV Sound Player //
+//------------------//
+
+	// Refer fnSoundFX() function for usage etc
+	// Set SoundPath to where you copied sounder.exe. 
+	// Set WAVPath to where you copied any wav files you wish to use
+	// Set 'SoundCMD' for any command line arguments you wish to use 
+	// Run sounder.exe in a command prompt (from where you copied it) with no arguments etc to see a list of options
+
+	int		EnableSoundFX		= 1; 					// 0 = Disable, 1 = Enable. Enable this if you wish to use "sounder.exe". 
+	alias	SoundPath			= "d:\\Thrustmaster\\ED_TargetScript\\sounder.exe";
+	alias	WAVPath				= "d:\\Thrustmaster\\ED_TargetScript\\sounds\\";
+	alias	SoundCMD			= "";
+
+
+//----------//
+// PIP Mode //
+//----------//
+
+	//	There are 6 PIPModes available.
+	//	You may set the Default mode below to one of the following values
+	//
+	//	0 = Single		1 PIPs per press
+	//	1 = Double		2 PIPs per press
+	//	2 = Attack		4 PIPs to selected system, 2 PIPs to secondary attack focussed system (ie ENG + WEP focussed) 
+	//	3 = Defend		4 PIPs to selected system, 2 PIPs to secondary defend focussed system (ie SYS + ENG focussed)
+	//	4 = Recharge	4 PIPs to selected system, 1 PIP to each of the other 2
+	//	5 = Gen Purpose	3 PIPs to selected system, 3 PIPs to secondary 
+	//
+	//	Refer fnPIPManager() function within ED_Functions for more info.
+	
+	int DefaultPIPMode			= 3;		// Set this to your preferred PIPMode. Value is set on the fly via H4P (see fnPIPMode() in ED_Functions.tmh)
+
+
+//---------//
+// Timings //
+//---------//
+
+	// These delay settings affect how fast the script executes key presses etc.
+	// If you find the macros are dropping characters, then the delay is too short.
+	// "LongPress" is a personal setting. I find a half second is about right for me.
+	
+	define 	PulseTime 			33							// PULSE+ Delay time (ms) - Used as key-hold-down time.
+	define 	DelayTime 			75							// D() Delay time 	 (ms) - Used in macros as the time between releasing one key and pressing the next.
+	define 	LongPress	 		500							// Tempo Delay 		 (ms) - Used in Tempos. ie hold switch/button for 0.5 seconds for alternate function
+	
+	define 	DiscoDelay			6100						// Discovery scanner 'hold-trigger' timer (6.1 seconds)
+	
+
+//--------------------------//
+// General Status Variables //
+//--------------------------//
+
+	int		AutoHanger			= 0;				 		// !! TESTING !!	// 1 = Initiate Hanger+Station Services automatically when docked, 0 = don't
+															// !! TESTING !!	// Hanger services on Carrier is completely different to a station in the Beta
+	int		AutoGearUP			= 0; 						//	Enable to toggle landing gear when lifting off
+	int		AutoGearDOWN		= 0; 						//	Enable to toggle landing gear when request docking	
+	int		CommsModule			= 0; 						//	Required whilst ED_CommsControl not loaded
+
+//-------------//
+// Axis Curves //
+//-------------//
+
+	define	FAOFFCurves				MEDIUM					// Set Curve profile desired for FA-OFF. Valid settings = OFF, MILD or MEDIUM 
+	define	CurveInfo				NOPRINT					// Set if you want curve info printed to console each time we change. Valid settings = PRINT or NOPRINT
+	int		EnableTFRPRudder	=	1;						// Set to 0 if you do not have a Thrustmaster TFRP Rudder.
+
+	// Refer "Axes" chapter (p27) in the Target Script Editor Basics v1.5 manual for more detail
+	// The below constructs support S-Curves
+
+	// Define the deadzones and zoom factor
+	// ------------------------------------
+	define	Joystick_L_DZ 			0						// Set Joystick Left	Deadzone
+	define	Joystick_C_DZ 			1						// Set Joystick Centre	Deadzone
+	define	Joystick_R_DZ 			0						// Set Joystick Right	Deadzone
+	define	Joystick_Zoom			0						// Set Joystick Zoom factor
+	
+	define	Rudder_L_DZ				0						// Set Rudder Left 		Deadzone
+	define	Rudder_C_DZ				10						// Set Rudder Centre	Deadzone
+	define	Rudder_R_DZ				0						// Set Rudder Right		Deadzone
+	define	Rudder_Zoom				0						// Set Rudder Zoom factor
+	
+	define	Slew_L_DZ				0						// Set Slew Left		Deadzone
+	define	Slew_C_DZ				15						// Set Slew Centre		Deadzone
+	define	Slew_R_DZ				0						// Set Slew Right		Deadzone
+	define	Slew_Zoom				0						// Set Slew Zoom factor 
+
+	// The below curve arrays are set for "off", "mild" and "medium" and controlled via the Autopilot switch
+	// Eg 	AP Switch set at APPAT	= (Curve = 0)
+	//		AP Switch set to APAH	= (Curve = 1)
+	//		AP Switch set to APALT	= (Curve = 4)
+	// 
+
+	// Define curve & zoom arrays
+	// --------------------------   APPAT   APAH	APALT	// Used within fnSetJoystickCurves() and applied to JS and Pedals (x, y & z axis)
+	short	Joystick_Curve[] 	= {	0,		1,		4	};	// Set via the Autopilot Switch	(Up is most aggresive joystick response, down is least aggressive)
+	
+	short	Rudder_Curve[]		= { 0,		1,		4	};	// Set via the Autopilot Switch	(Up is most aggresive joystick response, down is least aggressive)
+	
+	short	Slew_Curve[]		= {	0,		0,		0	};	// Set Slew Curve
+
+	
+// END

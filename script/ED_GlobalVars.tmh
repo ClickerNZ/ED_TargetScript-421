@@ -1,0 +1,208 @@
+
+//----------------------------------------------------------------------//
+//	CMDR Clicker's Elite Dangerous Thrustmaster Warthog + TFRP Script	//
+//----------------------------------------------------------------------//
+
+// This file: ED_GlobalVars.tmh (v4.2.0) ... supports Elite Dangerous v3.7 (Fleet Carriers)
+
+// Refer Change Log.txt in same folder
+
+// NOTE:	All user related settings can be found in the ED_UserSettings.tmh file
+//			Changing any of the below global variables will have s ignificant effect on the script
+//			and may cause errors. Change these at your own risk
+
+// LEGEND: 
+// ========================================================
+// fnName()					refer to ED_Functions file
+// initName()				refer to ED_Functions file
+// fnsName()				refer to ED_StateTracker file
+// tgName()					refer to ED_Toggles file
+// mName					refer to ED_Macros file
+// MapKey statements		refer to ED_MapKeyAssignment file
+// Global Defines			refer to ED_Defines file
+// Global Variables			refer to ED_GlobalVars file
+// User Config Settings		refer to ED_UserSettings file
+// ========================================================
+
+// START
+
+//----------------//
+// DEFAULT STATES //   					// GLOBAL VARIABLE INITIALISATION, DESCRIPTION & USAGE
+//----------------//
+
+	int Debug				= 0;		// Debug mode for testing. 0 = OFF, 1 = ON. Prints additional info to console
+	int ShowFlags			= 0;		// Set/Reset in fnDebug() and used in fnsProcessFlags()
+		
+	int VoiceExists;					// Initialised here and set in initTextToSpeech()
+	int SounderExists;					// Initialised here and set in initSoundFX()
+	
+//	char SysCmd;						// We build SysCmd dynamically in functions which want to send a "system(&SysCmd);"
+
+//	int SliderCurve;					// Used to define the LIST and can use within EXEC
+		
+	int StartupLock			= 1;		// Prevent triggering keystrokes during initialisation
+	int GameLoaded			= 0;		// Set in fnGameStarted() when game is detected as running (ie Flags != 0)
+	int ConnectionStatus	= 0;		// Track if "ShowConnectionStatus" is on or off to avoid accidental toggle off during mode switch
+//	int SRVBeam				= 1;		// SRV Lights Flag
+//	int	JSProfile 			= 1;		// Used in fnSetJoystickCurves() and fnEnhancedFAOFF() (see EDFunctions.tmh) Values = 0, 1 or 2
+	int ReverseThrust		= 0;		// Set/Reset in tgReverseThrust()
+	int SpeedbrakeDeployed	= 0;		// Set/Reset in tgReverseThrust() and used in tgLandingGear()
+	int FSSMode				= 0;		// Set/Reset in tgFSSMode()
+	int SAAMode				= 0;		// Used in tgPlanetView()
+	int CameraMode			= 0;		// Set/Reset in tgExtCamera() and used in fnAdvancedSCB() and fnHeatsink() (for console Zoom messages)
+	int SelectDrop			= 0;		// Use to detect if Supercruise drop was selected or forced
+	int InHanger			= 0;		// Set/Reset in fnHangerServices()
+	int OrbitalCruise		= 0;		// Track when entering Orbital Cruise
+	int FireModeP			= 0;		// 0 = Press to fire/Release to Stop, 1 = Press to fire, Press again to stop
+	int FireModeS			= 0;		// 0 = Press to fire/Release to Stop, 1 = Press to fire, Press again to stop
+	int ShipDismissed		= 0;		// Assume the ship is landed nearby when in SRV
+
+	int PIPMode;						// Set/Reset via H4P and fnPIPMode() and used in fnPIPManager() to change PIP management profile  (see EDFunctions.tmh)
+	int PIPTxt;							// PIPMode descriptor
+
+	define SYS				1			// Used in fnPIPMapper for managing System  PIPs (see EDFunctions.tmh) (DO NOT modify!)
+	define ENG				2			// Used in fnPIPMapper for managing Engine  PIPs (see EDFunctions.tmh) (DO NOT modify!)
+	define WEP				3			// Used in fnPIPMapper for managing Weapon  PIPs (see EDFunctions.tmh) (DO NOT modify!)
+	define MID				4			// Used in fnPIPMapper for managing Balance PIPs (see EDFunctions.tmh) (DO NOT modify!)
+
+	define ON				1
+	define OFF				0
+	
+	define TRUE				1
+	define FALSE			0
+
+	define DEPLOY			1
+	define RETRACT			0
+	define RECOVER			0
+	
+	define DebugON			1
+	define DebugOFF			0
+	
+	define INCREASE			1
+	define DECREASE			0
+	
+	define NUL				0
+	define NONE				0			// used for fnSetJoyStickCurves()
+	define MILD				1			// used for fnSetJoyStickCurves()
+	define MEDIUM			2			// used for fnSetJoyStickCurves()
+	define SLOW				3			// used for fnSetJoyStickCurves()
+	define NOPRINT			0			// suppress console message
+	define PRINT			1			// don't
+	define SAVE				1			// used in fnsMyStates()
+	define LOAD				0			// used in fnsMyStates()
+	
+	int JSCurveSetting;
+	int DXCurveSetting;
+	
+//------------//
+// LED Status //						// For Status LED tracking (future functionality)
+//------------//
+	
+	int LED1Status			= 0;		
+	int LED2Status			= 0;
+	int LED3Status			= 0;
+	int LED4Status			= 0;
+	int LED5Status			= 0;	
+
+//------------------------//
+// STATUS.JSON FLAG MASKS //
+//------------------------//
+
+	define ED_Docked               	0x0000000000000001
+	define ED_Landed               	0x0000000000000002
+	define ED_LandingGearDown      	0x0000000000000004
+	define ED_ShieldsUp            	0x0000000000000008
+
+	define ED_Supercruise          	0x0000000000000010
+	define ED_FlightAssistOff      	0x0000000000000020
+	define ED_HardpointsDeployed   	0x0000000000000040
+	define ED_InWing               	0x0000000000000080
+
+	define ED_LightsOn             	0x0000000000000100
+	define ED_CargoScoopDeployed   	0x0000000000000200
+	define ED_SilentRunning        	0x0000000000000400
+	define ED_ScoopingFuel         	0x0000000000000800
+
+	define ED_SRVHandbrake         	0x0000000000001000
+	define ED_SRVTurret            	0x0000000000002000
+	define ED_SRVTurretRetracted   	0x0000000000004000
+	define ED_SRVDriveAssist       	0x0000000000008000
+
+	define ED_FSDMassLocked        	0x0000000000010000
+	define ED_FSDCharging          	0x0000000000020000
+	define ED_FSDCooldown          	0x0000000000040000
+	define ED_LowFuel              	0x0000000000080000
+
+	define ED_OverHeating          	0x0000000000100000
+	define ED_HasLatLong           	0x0000000000200000
+	define ED_IsInDanger           	0x0000000000400000
+	define ED_BeingInterdicted     	0x0000000000800000
+
+	define ED_InMainShip           	0x0000000001000000
+	define ED_InFighter            	0x0000000002000000
+	define ED_InSRV                	0x0000000004000000
+	define ED_HudInAnalysisMode    	0x0000000008000000
+
+	define ED_NightVision			0x0000000010000000
+	define ED_AltFromAvgRad	    	0x0000000020000000
+	define ED_FSDJump				0x0000000040000000	
+	define ED_SRVHiBeam				0x0000000080000000	
+
+//--------------------------------//
+//  Corresponding Flag Variables  //
+//--------------------------------//
+
+	int Flags = 0;					// contains the Flags key value integer
+	int OldFlags = 0;				// track when Flags key value changes
+	
+	int fDocked				=	0;
+	int fLanded				=	0;
+	int fLandingGear		=	0;
+	int fShieldsUp			=	0;
+	int fSupercruise		=	0;
+	int fFAOff				=	0;
+	int fHardpoints			=	0;
+	int fInWing				=	0;
+	int fLights				=	0;
+	int fCargoScoop			=	0;
+	int fSilentRunning		=	0;
+	int fFuelScoop			=	0;
+	int fSRVHandbrake		=	0;
+	int fSRVTurretView		=	0;
+	int fSRVTurretRetracted	=	0;
+	int fSRVDriveAssist		=	0;
+	int fMassLocked			=	0;
+	int fFSDCharging		=	0;
+	int fFSDCooldown		=	0;
+	int fLowFuel			=	0;
+	int fOverHeating		=	0;
+	int fLatLong			=	0;
+	int fDanger				=	0;
+	int fInterdicted		=	0;
+	int fMainShip			=	0;
+	int fFighter			=	0;
+	int fSRV				=	0;
+	int fHUDAnalysis		=	0;
+	int fNightVision		=	0;
+	int	fAltFromAvgRad		=	0;
+	int fsdJump				=	0;
+	int fSRVHiBeam			=	0;
+
+//--------------------//
+// GUIFocus Variables //
+//--------------------//
+
+	define GUI_None				0
+	define GUI_SystemPanel		1
+	define GUI_TargetPanel		2
+	define GUI_CommsPanel		3
+	define GUI_RolePanel		4
+	define GUI_StationSvcs		5
+	define GUI_GalaxyMap		6
+	define GUI_SystemMap		7
+	define GUI_OrreryMap		8
+	define GUI_FSSMode			9
+	define GUI_SAAMode			10
+	define GUI_Codex			11
+			
+// END

@@ -1,0 +1,841 @@
+//----------------------------------------------------------------------//
+//	CMDR Clicker's Elite Dangerous Thrustmaster Warthog + TFRP Script	//
+//----------------------------------------------------------------------//
+
+// This file: ED_MapKeyAssignment.tmh (v4.2.0) ... supports Elite Dangerous v3.7 (Fleet Carriers)
+
+// Contains MapKey Statements for all button and switch actions
+// Contains MapKey Statements to announce via TextToSpeech and printf for each button or switch action (training mode)
+
+// Refer Change Log.txt in same folder
+
+// LEGEND: 
+// ========================================================
+// fnName()					refer to ED_Functions file
+// initName()				refer to ED_Functions file
+// fnsName()				refer to ED_StateTracker file
+// tgName()					refer to ED_Toggles file
+// mName					refer to ED_Macros file
+// MapKey statements		refer to ED_MapKeyAssignment file
+// Global Defines			refer to ED_Defines file
+// Global Variables			refer to ED_GlobalVars file
+// User Config Settings		refer to ED_UserSettings file
+// ========================================================
+
+// Index:	Line		FUNCTION
+//			Line 38: 	int MainKeyMap()
+//			Line 464: 	int TrainingKeyMap()
+
+
+// START
+
+// -------------------------- //
+//  KeyMaps for Running Game  //
+// -------------------------- //
+
+	// FUNCTION:	This MapKey set is called from fnGameStarted() when we detect Game is running
+	
+	int MainKeyMap() {
+	
+// ---------------------------------------- //
+// Map Joystick triggers, switches and hats //
+// ---------------------------------------- //
+
+		// Include MapKey for everything.
+		// Include MapKeyR only where used.
+
+//		(Gun Trigger - Primary Fire)
+//		----------------------------
+
+		MapKeyIOUMD(&Joystick, TG1,		// (Gun Trigger - Stage 1)
+			0,																								// IU -
+			SEQ(REXEC(0, 7000, "ActKey(PULSE+KEYON+PrimaryFire);", RNOSTOP), EXEC("StopAutoRepeat(0);")),	// OU - Fires every 7 seconds until stopped (eg pulse wave scanner)
+			0,																								// IM -
+			EXEC("fnAdvFireControl(0);"),																	// OM - default Primary Fire action
+			EXEC("tgTriggerMode(1);"),																		// ID - Swap trigger action between timed and press-to-fire/press-to-stop
+			EXEC("fnAdvFireControl(1);")																	// OD - Shifted Primary Fire action
+			);
+			
+		MapKeyRUMD(&Joystick, TG1,		// TG1 RELEASE
+			0,																								// RU -
+			EXEC("ActKey(PrimaryFire);"),																	// RM - Release trigger 
+			0																								// RD - 
+			);
+			
+		MapKey(&Joystick, TG2, 0);		// (Gun Trigger - Stage 2)											// <not currently used>
+
+//		(Master Mode Control Button)
+//		----------------------------
+
+		MapKeyUMD(&Joystick, S1,
+			EXEC("tgHUDMode();"),																			// U - Toggle - Analysis/Combat Mode
+			EXEC("tgHardpoints();"),																		// M - Deploy/Retract Hard-points
+			0																								// D -
+			);
+
+//		(Weapons Release Button - Secondary Fire)
+//		-----------------------------------------
+
+		MapKeyIOUMD(&Joystick, S2,
+			0,																								// IU -
+			SEQ(REXEC(1, 7000, "ActKey(PULSE+KEYON+SecondaryFire);", RNOSTOP), EXEC("StopAutoRepeat(1);")),	// OU - Fires every 7 seconds until stopped (eg pulse wave scanner)
+			0,																								// IM - 
+			EXEC("fnAdvFireControl(2);"),																	// OM - default Secondary Fire action
+			EXEC("tgTriggerMode(2);"),																		// ID - Swap trigger action between timed and press-to-fire/press-to-stop
+			EXEC("fnAdvFireControl(3);")																	// OD - Shifted Secondary Fire action
+			);
+			
+		MapKeyRUMD(&Joystick, S2,		// S2 RELEASE
+			0,																								// RU -
+			EXEC("ActKey(SecondaryFire);"),																	// RM - Release trigger 
+			0																								// RD -
+			);
+
+// 		(Nosewheel Steering Button)
+//		---------------------------
+
+		MapKey(&Joystick, S3, 0);																			//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
+
+//		(Joystick Pinky Lever Switch)
+//		-----------------------------
+
+		MapKey(&Joystick, S4, EXEC("tgEnhancedFAOFF();"));												// TOGGLE: FA-OFF/ON
+
+//		China Hat (Trim Switch)
+//		-----------------------
+
+		MapKeyUMD(&Joystick, H1U,
+			EXEC("tgFSSMode();"),																		// U - Toggle FSS Mode
+			PULSE+NextFireGroup,																		// M - Select Next Fire Group
+			PULSE+DSSModeOFF																			// D - Toggle DSSMode
+			);
+
+		MapKey(&Joystick, H1D, PULSE+PrevFireGroup);													// Select Previous Fire Group
+		
+		MapKey(&Joystick, H1L, TEMPO(0, EXEC("tgLandingGear(0);"), LongPress));							// Long Press = Toggle Landing Gear (avoids accidental toggle)
+		
+		MapKeyUMD(&Joystick, H1R,
+			EXEC("tgLights(1);"),																		// U - Turn on Night Vision
+			TEMPO(0,	EXEC("tgLights(0);"), LongPress),												// M - Long Press = Toggle Ship Lights (avoids accidental toggle)
+			0																							// D - 
+			);
+
+//		(Target Management Switch)		// Target Designator
+//		--------------------------
+
+		MapKeyUMD(&Joystick, H2U,
+			EXEC("tgPlanetView();"),																	// U - Toggle - Front/Back view of planet
+			PULSE+SelectTargetAhead,																	// M - Target ahead
+			PULSE+SelectTargetAhead																		// D - Target ahead
+			);
+			
+		MapKeyUMD(&Joystick, H2D,
+			0,																							// U
+			PULSE+SelectHighestThreat,																	// M - default - Target highest threat
+			PULSE+WingmanTarget																			// D - Select currently selected wing-man's target
+			);
+			
+		MapKeyUMD(&Joystick, H2L,
+			0,																							// U
+			PULSE+SelectNextShip,																		// M - default - Cycle selection of Next Ship
+			SEQ(PULSE+SelectWingman1, PULSE+SelectWingman2, PULSE+SelectWingman3)						// D - Cycle selection of Wing-men
+			);
+			
+		MapKeyUMD(&Joystick, H2R,
+			0,																							// U
+			PULSE+SelectNextHostileShip,																// M - default - Cycle selection of Next Hostile
+			PULSE+WingmanNavlock																		// D - Select currently selected wing-man's NAV target
+			);
+
+//		(Data Management Switch)		// Power (PIP) Management
+//		------------------------
+
+		MapKey(&Joystick, H3U, EXEC("fnPIPManager(ENG);"));												// Fire Engine focussed PIP sequence
+		MapKey(&Joystick, H3D, PULSE+BalancePower);														// Balance PIP sequence
+		MapKey(&Joystick, H3L, EXEC("fnPIPManager(SYS);"));												// Fire System focussed PIP sequence
+		MapKey(&Joystick, H3R, EXEC("fnPIPManager(WEP);"));												// Fire Weapon focussed PIP sequence
+		
+//		(Countermeasures Management Switch)		// Countermeasures and camera/FSS Zoom
+//		-----------------------------------
+
+		MapKeyUMD(&Joystick, H4U,
+			EXEC("fnAdvancedSCB(2);"),																	// U - Double Bank + 1 Heatsink
+			TEMPO(EXEC("fnAdvancedSCB(0);"), EXEC("fnAdvancedSCB(1);"), LongPress),						// M - Fire Shield Cell Bank
+			CameraZoomIn																				// D - Camera/FSS Zoom - IN
+			);
+			
+		MapKeyUMD(&Joystick, H4D,
+			0,																							// U -
+			EXEC("fnHeatsink();"),																		// M - Fire Heat Sink
+			CameraZoomOut																				// D - Camera/FSS Zoom - OUT
+			);
+
+		MapKeyUMD(&Joystick, H4L,
+			0,																							// U -
+			EXEC("ActKey(KEYON+ChargeECM); printf(\"! ECM Charging...\");"),							// M - Charge ECM (Electronic Counter Measures)
+			CameraBlurOut																				// D - Camera Blur - OUT
+			);
+
+		MapKeyRUMD(&Joystick, H4L,				// RELEASE
+			0,																							// RU - 
+			EXEC("ActKey(ChargeECM); printf(\"Fired !\\x0a\");"),										// RM - Fire ECM when trigger is released
+			0																							// RD - 
+			);
+
+		MapKeyUMD(&Joystick, H4R,
+			0,																							// U -
+			EXEC("fnChaff();"),																			// M - Fire Chaff
+			CameraBlurIn																				// D - Camera Blur - IN
+			);
+			
+		MapKeyUMD(&Joystick, H4P,
+			EXEC("fnPIPMode(0);"),																		// U - Reset PIPMode 
+			EXEC("fnPIPMode(1);"),																		// M - Increment PIPMode
+			EXEC("fnPIPMode(2);")																		// D - Decrement PIPMode 
+			);
+
+// ------------------------------------ //
+// Map Throttle LEVER switches and hats //
+// ------------------------------------ //
+
+//		(Slew Control Button)		// Miscellaneous
+//		---------------------
+
+		MapKeyUMD(&Throttle, SC,
+			PULSE+ShowConnectionStatus,							// U - Display Bandwidth counters only. Alt = "mShowGameStats"
+			PULSE+ResetHeadOrientation,							// M - default - reset EDTracker centre
+			0													// D - 
+			);
+
+// 		(Left Throttle Button)	// Headlook On/Off / External Camera
+//		----------------------
+
+		MapKeyUMD(&Throttle, LTB, 
+			EXEC("tgExtCamera();"),								// U - Turn External camera On/Off
+			PULSE+LookOnOff,									// M - Toggle HeadLook On/Off
+			0													// D - 
+			);
+
+//		(Pinky Switch)		// Shift Modifier Switch
+//		--------------
+
+		MapKey(&Throttle, PSF, 0);								//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
+		MapKey(&Throttle, PSM, 0);								//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
+		MapKey(&Throttle, PSB, 0);								//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
+
+//		(Coolie Switch)		// Frame Shift Drive functions
+//		---------------
+
+		MapKey(&Throttle, CSU, EXEC("tgWarpDrive(0);"));		// Toggle: Engage Super-cruise Engine
+		MapKey(&Throttle, CSD, EXEC("tgWarpDrive(1);"));		// Toggle: Initiate Hyper Jump
+		MapKey(&Throttle, CSL, PULSE+SelectNextSystemInRoute);	// Select Next System in Route
+		MapKey(&Throttle, CSR, PULSE+OrbitLines);				// Toggle: Turn Orbit lines ON/OFF
+
+//		(Mike Switch)		// Communications Controller functions
+//		-------------
+
+		if (CommsModule) {
+		// Use IO so we don't accidentally change channels when we push-to-talk
+
+			MapKeyIO(&Throttle, MSU,
+				EXEC("fnChannelSelect(CHNLUP);"),					// I - Channel Up
+				0													// O - do nothing
+				);
+				
+			MapKeyIO(&Throttle, MSD, 
+				EXEC("fnChannelSelect(CHNLDN);"),					// I - Channel Down
+				0													// O - do nothing
+				);
+				
+			// Use IO so we don't accisnetally toggle PTT mode when we push-to-talk
+				
+			MapKeyIO(&Throttle, MSL, 
+				EXEC("tgPTTMode();"), 								// I - Toggle PTT Mode
+				0													// O - do nothing
+				);
+				
+			MapKeyIO(&Throttle, MSR, 
+				EXEC("tgPTTMode();"), 								// I - Toggle PTT Mode
+				0													// O - do nothing
+				);
+			
+			MapKeyIO(&Throttle, MSP, 
+				EXEC("fnCommStatus();"),							// I - Announce current Comms Status
+				EXEC("fnMicControl(1);")							// O - Push to Talk
+				);
+				
+			MapKeyRIO(&Throttle, MSP, 			// RELEASE	
+				0, 													// RI - do nothing
+				EXEC("fnMicControl(0);")							// RO - Release PTT 
+				);
+		}
+		else {
+		
+			MapKey(&Throttle, MSU, 0);								// Reserved for Communications functions
+			MapKey(&Throttle, MSD, 0);								// Reserved for Communications functions
+			MapKey(&Throttle, MSL, 0);								// Reserved for Communications functions
+			MapKey(&Throttle, MSR, 0);								// Reserved for Communications functions
+			MapKey(&Throttle, MSP, 0);								// Reserved for Communications functions
+			
+		}
+		
+//		(Speed Brake)		// Reverse Throttle function modifiers
+//		-------------
+
+		MapKeyUMD(&Throttle, SPDF,
+			EXEC("tgReverseThrust(0);"),						// U - Reverse Only			- No Speedbrake
+			EXEC("tgReverseThrust(1);"),						// M - Standard Reverse		- Deploy Speedbrake if Hardpoints deployed
+			EXEC("tgReverseThrust(2);")							// D - Align Switch only	- Deploy Speedbrake only (no Reverse)
+			);
+
+		MapKeyR(&Throttle, SPDF, EXEC("tgReverseThrust(1);"));	// RELEASE - Turn off Reverse Throttle
+		
+		MapKey(&Throttle, SPDB, PULSE+EngineBoost);				// Boost
+
+//		(Boat Switch)		//
+//		-------------
+
+		MapKeyUMD(&Throttle, BSF, 
+			SEQ(PULSE+mNAVBeaconWing, PULSE+mNAVBeaconOff),							// U - NAV Beacon WING/OFF
+			0,																		// M - 
+			EXEC("tgTxt2Speech();")													// D - Toggle EnableVoice (TextToSpeech)
+			);
+			
+		MapKey(&Throttle, BSM, 0);													// <not currently used>
+		
+		MapKeyUMD(&Throttle, BSB, 
+			PULSE+mReportCrimesToggle,												// U - Report crimes against me ON/OFF
+			0,																		// M -
+			0																		// D -
+			);
+
+//		(China Hat)			// Subsystem Targetting
+//		-----------
+
+		MapKey(&Throttle, CHF, PULSE+TargetNextSubsystem);
+		MapKey(&Throttle, CHB, PULSE+TargetPrevSubsystem);
+
+// ---------------------------------------//
+// Map Throttle BASE buttons and switches //
+// ---------------------------------------//
+
+//		(AutoPilot Select)	// JoystickCurves Selector
+//		------------------
+
+		MapKey(&Throttle, APPAT, EXEC("fnSetJoystickCurves(NONE, PRINT);"));		// Set Joystick curves = NONE
+		MapKey(&Throttle, APAH,  EXEC("fnSetJoystickCurves(MILD, PRINT);"));		// Set Joystick curves = MILD
+		MapKey(&Throttle, APALT, EXEC("fnSetJoystickCurves(MEDIUM, PRINT);"));		// Set Joystick curves = MEDIUM
+
+//		(Enhanced Attitude Control (EAC) Arm/Off)
+//		-----------------------------------------
+		
+		MapKey(&Throttle, EACON, EXEC("tgSilentRunning(ON);"));
+		MapKey(&Throttle, EACOFF, EXEC("tgSilentRunning(OFF);"));
+
+//		(Radar Altimeter)
+//		-----------------
+
+		MapKey(&Throttle, RDRNRM, EXEC("tgCargoScoop(DEPLOY);"));
+		MapKey(&Throttle, RDRDIS, EXEC("tgCargoScoop(RETRACT);"));
+
+//		(Landing Gear Horn)
+//		-------------------
+
+		MapKeyIO(&Throttle, LDGH, 
+			PULSE+mClearAllChatBox,													// Clear all 3 chat box windows
+			PULSE+mClearChatBox														// Clear currently selected chat box window
+			);
+
+//		(Autopilot Engage)
+//		------------------
+
+		MapKeyUMD(&Throttle, APENG, 
+			0,																				// U -
+			EXEC("fnRequestDock();"),														// M - Request Docking
+			EXEC("fnHangerServices(1);")													// D - Hanger Services
+			);
+
+//		(Flaps)
+//		-------
+
+		MapKeyUMD(&Throttle, FLAPU,
+			EXEC("fnVoiceVolume(INCREASE);"),												// U - Increase TextToSpeech volume
+			PULSE+GalaxyMap,																// M - Galaxy Map - ON
+			0																				// D - 
+			);
+			
+		MapKeyRUMD(&Throttle, FLAPU,				// RELEASE
+			0,																				// RU -
+			PULSE+GalaxyMap,																// RM - Galaxy View - OFF
+			0																				// RD -
+			);
+			
+		MapKey(&Throttle, FLAPM, 0);
+			
+		MapKeyUMD(&Throttle, FLAPD,
+			EXEC("fnVoiceVolume(DECREASE);"),												// U - Decrease TextToSpeech volume
+			PULSE+SystemMap,																// M - System Map view - ON
+			PULSE+LED(&Throttle, LED_INTENSITY, 0)											// D - Turn Throttle Base LEDs off 
+			);
+			
+		MapKeyRUMD(&Throttle, FLAPD,				// RELEASE
+			0,																				// RU -
+			PULSE+SystemMap,																// RM - System Map - OFF
+			PULSE+LED(&Throttle, LED_INTENSITY, SetLED)										// RD - Turn Throttle Base LEDs on
+			);
+
+//		(Auxiliary Power Unit)
+//		----------------------
+
+		MapKey(&Throttle, APUON, EXEC("fnDeploySRV(DEPLOY);"));								// "Start"	- Deploy SRV
+		MapKey(&Throttle, APUOFF, EXEC("fnDeploySRV(RECOVER);"));							// "OFF"	- Board Ship
+
+//		(Engine Operate - Right)
+//		------------------------
+
+//		MapKey(&Throttle, EORIGN, PULSE+SRVRecallDismissShip);								// From SRV - Recall/Dismiss Ship
+		MapKey(&Throttle, EORIGN, EXEC("fnDRShip();"));										// From SRV - Recall/Dismiss Ship
+		MapKey(&Throttle, EORNORM, 0);														// <not currently used>
+		MapKey(&Throttle, EORMOTOR, PULSE+HideShipGUI);										// Toggle: Ship GUI OFF
+		MapKeyR(&Throttle, EORMOTOR, PULSE+HideShipGUI);									// Toggle: Ship GUI ON
+
+//		(Engine Operate - Left)
+//		-----------------------
+
+		MapKeyUMD(&Throttle, EOLIGN,														// Menu Log to ...
+			 EXEC("fnModeSwitch(0);"),														// U - OPEN Mode
+			 EXEC("fnModeSwitch(1);"),														// M - PRIVATE Mode
+			 EXEC("fnModeSwitch(2);")														// D - SOLO Mode
+			 );
+			 
+		MapKey(&Throttle, EOLNORM, 0);														// <not currently used>
+		MapKey(&Throttle, EOLMOTOR, 0);														// <not currently used>
+
+//		(Engine Fuel Flow - Right)
+//		--------------------------
+
+		MapKeyUMD(&Throttle, EFRNORM,
+			EXEC("GameLoaded = 0;"),														// U - Reset GameLoaded flag
+			EXEC("fnSetLEDs();"),															// M - Reset Status LEDs
+			EXEC("fnPrintState();")															// D - Print Status Page
+			);
+			
+		MapKey(&Throttle, EFROVER, 0);														// <not currently used>
+
+//		(Engine Fuel Flow - Left)
+//		-------------------------
+
+		MapKeyUMD(&Throttle, EFLNORM,
+			EXEC("fnDebug(2);"),															// U - Debug tool: Turn ShowFlags ON
+			EXEC("fnDebug(1);"),															// M - Debug tool: Turn Debug ON
+			EXEC("fnDebug(3);")																// D - Debug tool: Turn Debug and ShowFlags ON		
+			);
+
+		MapKeyR(&Throttle, EFLNORM, EXEC("fnDebug(0);"));									// Debug tool: Turn Debug and ShowFlags OFF 
+			
+		MapKey(&Throttle, EFLOVER, 0);														// <not currently used>
+
+//		(Engine Idle - Left)
+//		--------------------
+
+		MapKey(&Throttle, IDLELON, EXEC("fnHangerServices(1);"));							// Enter Hanger and Station Services
+		MapKey(&Throttle, IDLELOFF, EXEC("fnHangerServices(0);"));							// Exit Hanger, Lift off.
+
+//		(Engine Idle - Right)
+//		---------------------
+		
+		MapKey(&Throttle, IDLERON, 0);														// <not currently used>
+		MapKey(&Throttle, IDLEROFF, 0);														// <not currently used>
+
+	}	// end of MainKeyMap
+	
+
+// =============================================================================================================================================
+// =============================================================================================================================================
+
+
+// --------------------------- //
+//  KeyMaps for Training Mode  //
+// --------------------------- //
+
+	// FUNCTION:	This MapKey set is called at startup if game is not running and user setting 'TrainingEnabled' is set to 1
+	//				Also called from fnsProcessFlags() when we detect Game has halted
+
+	int TrainingKeyMap() {
+
+// ---------------------------------------- //
+// Map Joystick triggers, switches and hats //
+// ---------------------------------------- //
+
+
+//		(Gun Trigger - Primary Fire)
+//		----------------------------
+
+		MapKeyIOUMD(&Joystick, TG1,		// (Gun Trigger - Stage 1)
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Pulse Wave Scanner\");"),
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Primary Fire\");"),
+			EXEC("fnVPOutput(\"Toggle Trigger  Mode\");"),
+			EXEC("fnVPOutput(\"Discovery scanner, or, Mining Laser mode\");")
+			);
+						
+		MapKey(&Joystick, TG2, EXEC("fnVPOutput(\"Not mapped\");"));	// (Gun Trigger - Stage 2)
+
+//		(Master Mode Control Button)
+//		----------------------------
+
+		MapKeyUMD(&Joystick, S1, 
+			EXEC("fnVPOutput(\"Toggle HUD Mode\");"),
+			EXEC("fnVPOutput(\"Toggle Hardpoints\");"),
+			EXEC("fnVPOutput(\"Not mapped\");")
+			);
+
+//		(Weapons Release Button - Secondary Fire)
+//		-----------------------------------------
+
+		MapKeyIOUMD(&Joystick, S2,
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Pulse Wave Scanner\");"),
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Secondary Fire\");"),
+			EXEC("fnVPOutput(\"Toggle Trigger  Mode\");"),
+			EXEC("fnVPOutput(\"Discovery scanner, or, Mining Laser mode\");")
+			);
+			
+// 		(Nosewheel Steering Button)
+//		---------------------------
+
+		MapKey(&Joystick, S3, TEMPO(EXEC("fnVPOutput(\"I O layer button\");"), 0));
+
+//		(Joystick Pinky Lever Switch)
+//		-----------------------------
+
+		MapKey(&Joystick, S4, EXEC("fnVPOutput(\"Toggle Flight Assist OFF\");"));
+
+//		China Hat (Trim Switch)
+//		-----------------------
+
+		MapKeyUMD(&Joystick, H1U,
+			EXEC("fnVPOutput(\"Toggle F S S Mode\");"),
+			EXEC("fnVPOutput(\"Select next fire group\");"),
+			EXEC("fnVPOutput(\"Exit D S S Mode\");")
+			);
+
+		MapKey(&Joystick, H1D, EXEC("fnVPOutput(\"Select Previous fire group\");"));
+		
+		MapKey(&Joystick, H1L, EXEC("fnVPOutput(\"Hold for half second to Toggle Landing gear\");"));
+
+		
+		MapKeyUMD(&Joystick, H1R,
+			EXEC("fnVPOutput(\"Toggle Night Vision\");"),
+			EXEC("fnVPOutput(\"Hold for half second to toggle ship lights\");"),
+			EXEC("fnVPOutput(\"Not mapped\");")
+			);
+
+//		(Target Management Switch)		// Target Designator
+//		--------------------------
+
+		MapKeyUMD(&Joystick, H2U,
+			EXEC("fnVPOutput(\"Toggle Front-Back view of planet in DSS Mode\");"),
+			EXEC("fnVPOutput(\"Select target ahead\");"),
+			EXEC("fnVPOutput(\"Select target ahead\");")
+			);
+			
+		MapKeyUMD(&Joystick, H2D,
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Target highest threat\");"),
+			EXEC("fnVPOutput(\"Target wingmans target\");")
+			);
+			
+		MapKeyUMD(&Joystick, H2L,
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Target next ship\");"),
+			EXEC("fnVPOutput(\"Select next wingman\");")
+			);
+			
+		MapKeyUMD(&Joystick, H2R,
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Target next hostile\");"),
+			EXEC("fnVPOutput(\"Select Wingmans NAV Lock\");")
+			);
+
+//		(Data Management Switch)		// Power (PIP) Management
+//		------------------------
+
+		MapKey(&Joystick, H3U, EXEC("fnVPOutput(\"PIP Manager, Engine Focussed\");"));
+		MapKey(&Joystick, H3D, EXEC("fnVPOutput(\"PIP Manager, Balance PIPs\");"));
+		MapKey(&Joystick, H3L, EXEC("fnVPOutput(\"PIP Manager, System Focussed\");"));
+		MapKey(&Joystick, H3R, EXEC("fnVPOutput(\"PIP Manager, Weapon Focussed\");"));
+		
+//		(Countermeasures Management Switch)		// Countermeasures and camera/FSS Zoom
+//		-----------------------------------
+
+		MapKeyUMD(&Joystick, H4U,
+			EXEC("fnVPOutput(\"Double Shield Cell plus one heat sink\");"),
+			EXEC("fnVPOutput(\"Short press for single shield cell bank, hold for half second to include a heatsink\");"),
+			EXEC("fnVPOutput(\"Camera zoom in\");")
+			);
+			
+		MapKeyUMD(&Joystick, H4D,
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Fire a heat sink\");"),
+			EXEC("fnVPOutput(\"Camera zoom out\");")
+			);
+
+		MapKeyUMD(&Joystick, H4L,
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Hold to charge ECM, release to fire\");"),
+			EXEC("fnVPOutput(\"Camera blur out\");")
+			);
+
+		MapKeyUMD(&Joystick, H4R,
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Fire chaff\");"),
+			EXEC("fnVPOutput(\"Camera blur in\");")
+			);
+			
+		MapKeyUMD(&Joystick, H4P,
+			EXEC("fnVPOutput(\"Reset PIP Mode\");"),
+			EXEC("fnVPOutput(\"Increment PIP Mode\");"),
+			EXEC("fnVPOutput(\"Decrement PIP Mode\");")
+			);
+
+// ------------------------------------ //
+// Map Throttle LEVER switches and hats //
+// ------------------------------------ //
+
+//		(Slew Control Button)		// Miscellaneous
+//		---------------------
+
+		MapKeyUMD(&Throttle, SC,
+			EXEC("fnVPOutput(\"Show connection status\");"),
+			EXEC("fnVPOutput(\"Re-centre E D Tracker\");"),
+			EXEC("fnVPOutput(\"Not mapped\");")
+			);
+
+// 		(Left Throttle Button)	// Headlook On/Off / External Camera
+//		----------------------
+
+		MapKeyUMD(&Throttle, LTB,
+			EXEC("fnVPOutput(\"Toggle External Camera\");"),
+			EXEC("fnVPOutput(\"Toggle Head look\");"),
+			EXEC("fnVPOutput(\"Not mapped\");")
+			);
+
+//		(Pinky Switch)		// Shift Modifier Switch
+//		--------------
+
+		MapKey(&Throttle, PSF, TEMPO(EXEC("fnVPOutput(\"Up Layer modifier\");"), 0, LongPress));
+		MapKey(&Throttle, PSB, TEMPO(EXEC("fnVPOutput(\"Down Layer modifier\");"), 0, LongPress));
+
+//		(Coolie Switch)		// Frame Shift Drive functions
+//		---------------
+
+		MapKey(&Throttle, CSU, EXEC("fnVPOutput(\"Toggle Supercruise\");"));
+		MapKey(&Throttle, CSD, EXEC("fnVPOutput(\"Toggle Hyperjump\");"));
+		MapKey(&Throttle, CSL, EXEC("fnVPOutput(\"Select new system in route\");"));
+		MapKey(&Throttle, CSR, EXEC("fnVPOutput(\"Toggle orbit lines\");"));
+
+//		(Mike Switch)		// Communications Controller functions
+//		-------------
+
+		if (CommsModule) {
+			MapKeyIO(&Throttle, MSU, 
+				EXEC("fnVPOutput(\"Channel select up\");"),
+				EXEC("fnVPOutput(\"Not mapped\");")
+				);
+				
+			MapKeyIO(&Throttle, MSD, 
+				EXEC("fnVPOutput(\"Channel select down\");"),
+				EXEC("fnVPOutput(\"Not mapped\");")
+				);
+				
+			MapKeyIO(&Throttle, MSL, 
+				EXEC("fnVPOutput(\"Toggle Push-to-talk mode\");"),
+				EXEC("fnVPOutput(\"Not mapped\");")
+				);
+				
+			MapKeyIO(&Throttle, MSR, 
+				EXEC("fnVPOutput(\"Toggle push-to-talk mode\");"),
+				EXEC("fnVPOutput(\"Not mapped\");")
+				);
+				
+			MapKeyIO(&Throttle, MSP, 
+				EXEC("fnVPOutput(\"announce comms status\");"),
+				EXEC("fnVPOutput(\"Push to Talk\");")
+				);		
+		}
+		else {
+			MapKey(&Throttle, MSU, EXEC("fnVPOutput(\"Not mapped\");"));
+			MapKey(&Throttle, MSD, EXEC("fnVPOutput(\"Not mapped\");"));
+			MapKey(&Throttle, MSL, EXEC("fnVPOutput(\"Not mapped\");"));
+			MapKey(&Throttle, MSR, EXEC("fnVPOutput(\"Not mapped\");"));
+			MapKey(&Throttle, MSP, EXEC("fnVPOutput(\"Not mapped\");"));
+		}
+		
+//		(Speed Brake)		// Reverse Throttle function modifiers
+//		-------------
+
+		MapKeyUMD(&Throttle, SPDF,
+			EXEC("fnVPOutput(\"Reverse thrusters, no speed brake\");"),
+			EXEC("fnVPOutput(\"Reverse thrusters with speed brake\");"),
+			EXEC("fnVPOutput(\"Fix Switch position alignment to match in game for reverse thrust\");")
+			);
+
+		MapKeyR(&Throttle, SPDF, EXEC("fnVPOutput(\"Forward Thrusters\");"));		// RELEASE
+
+		MapKey(&Throttle, SPDB, EXEC("fnVPOutput(\"Engine Boost\");"));
+
+//		(Boat Switch)		//
+//		-------------
+
+		MapKeyUMD(&Throttle, BSF, 
+			EXEC("fnVPOutput(\"Toggle NAV Beacon on and off\");"),
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Toggle Text to speech function off and on\");")
+			);
+					
+		MapKeyUMD(&Throttle, BSB, 
+			EXEC("fnVPOutput(\"Toggle report crimes against me on and off\");"),
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Not mapped\");")
+			);
+
+//		(China Hat)			// Subsystem Targetting
+//		-----------
+
+		MapKey(&Throttle, CHF, EXEC("fnVPOutput(\"Target Next Subsystem\");"));
+		MapKey(&Throttle, CHB, EXEC("fnVPOutput(\"Target Previous Subsystem\");"));
+
+// ---------------------------------------//
+// Map Throttle BASE buttons and switches //
+// ---------------------------------------//
+
+//		(AutoPilot Select)	// JoystickCurves Selector
+//		------------------
+
+		MapKey(&Throttle, APPAT, EXEC("fnVPOutput(\"Set joystick curves to off\");"));
+		MapKey(&Throttle, APAH,  EXEC("fnVPOutput(\"Set joystick curves to mild\");"));
+		MapKey(&Throttle, APALT, EXEC("fnVPOutput(\"Set joystick curves to medium\");"));
+
+//		(Enhanced Attitude Control (EAC) Arm/Off)
+//		-----------------------------------------
+		
+		MapKey(&Throttle, EACON, EXEC("fnVPOutput(\"Engage Silent running\");"));
+		MapKey(&Throttle, EACOFF, EXEC("fnVPOutput(\"Disengage Silent Running\");"));
+
+//		(Radar Altimeter)
+//		-----------------
+
+		MapKey(&Throttle, RDRNRM, EXEC("fnVPOutput(\"Deploy cargo scoop\");"));
+		MapKey(&Throttle, RDRDIS, EXEC("fnVPOutput(\"Retract cargo scoop\");"));
+
+//		(Landing Gear Horn)
+//		-------------------
+
+		MapKeyIO(&Throttle, LDGH, 
+			EXEC("fnVPOutput(\"Clear all chat boxes\");"),
+			EXEC("fnVPOutput(\"Clear currently selected chat box\");")
+			);
+
+//		(Autopilot Engage)
+//		------------------
+
+		MapKeyUMD(&Throttle, APENG, 
+			EXEC("fnVPOutput(\"Not mapped\");"),
+			EXEC("fnVPOutput(\"Request docking permission\");"),
+			EXEC("fnVPOutput(\"Enter Hanger services\");")
+			);
+
+//		(Flaps)
+//		-------
+
+		MapKeyUMD(&Throttle, FLAPU,
+			EXEC("fnVPOutput(\"Increase voice feedback volume\");"),
+			EXEC("fnVPOutput(\"Open Galaxy Map\");"),
+			EXEC("fnVPOutput(\"Not mapped\");")
+			);
+
+		MapKeyRUMD(&Throttle, FLAPU,		// RELEASE
+			0,
+			EXEC("fnVPOutput(\"Close Galaxy Map\");"),
+			0
+			);
+
+
+		MapKeyUMD(&Throttle, FLAPD,
+			EXEC("fnVPOutput(\"Decrease voice feedback volume\");"),
+			EXEC("fnVPOutput(\"Open System Map\");"),
+			EXEC("fnVPOutput(\"Turn Throttle LEDs off\");")
+			);
+
+		MapKeyRUMD(&Throttle, FLAPD,		// RELEASE
+			0,
+			EXEC("fnVPOutput(\"Close System Map\");"),
+			EXEC("fnVPOutput(\"Turn Throttle LEDs on\");")
+			);
+
+
+//		(Auxiliary Power Unit)
+//		----------------------
+
+		MapKey(&Throttle, APUON, EXEC("fnVPOutput(\"Deploy S R V\");"));
+		MapKey(&Throttle, APUOFF, EXEC("fnVPOutput(\"Recover S R V\");"));
+
+//		(Engine Operate - Right)
+//		------------------------
+
+		MapKey(&Throttle, EORIGN, EXEC("fnVPOutput(\"Dismiss or recall ship\");"));
+		MapKey(&Throttle, EORMOTOR, EXEC("fnVPOutput(\"Toggle Ship GUI off\");"));
+		MapKeyR(&Throttle, EORMOTOR, EXEC("fnVPOutput(\"Toggle ship GUI on\");"));
+	
+//		(Engine Operate - Left)
+//		-----------------------
+
+		MapKeyUMD(&Throttle, EOLIGN,
+			 EXEC("fnVPOutput(\"Switch Game mode to Open\");"),
+			 EXEC("fnVPOutput(\"Switch Game mode to Private Group\");"),
+			 EXEC("fnVPOutput(\"Switch Game mode to solo\");")
+			 );
+			 
+		MapKey(&Throttle, EOLMOTOR, EXEC("fnVPOutput(\"Not mapped\");"));
+		MapKeyR(&Throttle, EOLMOTOR, EXEC("fnVPOutput(\"Not mapped\");"));
+
+//		(Engine Fuel Flow - Right)
+//		--------------------------
+
+		MapKeyUMD(&Throttle, EFRNORM,
+			EXEC("fnVPOutput(\"Set Gameloaded flag to off\");"),
+			EXEC("fnVPOutput(\"Print status page to console\");"),
+			EXEC("fnVPOutput(\"Reset status LEDs\");")
+			);
+			
+		MapKey(&Throttle, EFROVER, EXEC("fnVPOutput(\"Not mapped\");"));
+
+//		(Engine Fuel Flow - Left)
+//		-------------------------
+
+		MapKeyUMD(&Throttle, EFLNORM,
+			EXEC("fnVPOutput(\"Turn Showflags on\");"),
+			EXEC("fnVPOutput(\"Turn Debug on\");"),
+			EXEC("fnVPOutput(\"Turn Debug and Showflags on\");")
+			);
+
+		MapKeyR(&Throttle, EFLNORM, EXEC("fnVPOutput(\"Turn Debug and Showflags off\");"));
+
+
+//		(Engine Idle - Left)
+//		--------------------
+
+		MapKey(&Throttle, IDLELON, EXEC("fnVPOutput(\"Enter hanger services\");"));
+		MapKey(&Throttle, IDLELOFF, EXEC("fnVPOutput(\"Exit Hanger services and lift off\");"));
+
+//		(Engine Idle - Right)
+//		---------------------
+		
+		MapKey(&Throttle, IDLERON, 0);
+		MapKey(&Throttle, IDLEROFF, 0);
+	
+	}	// end of TrainingKeyMap
+
