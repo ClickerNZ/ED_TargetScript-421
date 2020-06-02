@@ -3,7 +3,7 @@
 //	CMDR Clicker's Elite Dangerous Thrustmaster Warthog + TFRP Script	//
 //----------------------------------------------------------------------//
 
-// This file: ED_MacrosFC.ttm (v4.2.0) ... supports Elite Dangerous v3.7 (Fleet Carriers)
+// This file: ED_MacrosFC.ttm (v4.2.1) ... supports Elite Dangerous v3.7 (Fleet Carriers)
 
 // Refer Change Log.txt in same folder
 
@@ -310,12 +310,12 @@
 		// Issue: Rise time varies between ships and thruster power.
 		// Issue: Don't set throttle to 25%
 		mLaunch = CHAIN(
-			LOCK+PULSE+UIDown, D(500),							// down, down, spc, (wait 19), R (hold for 1.5), L
+			LOCK+PULSE+UIDown, D(500),							// down, down, spc, (wait 20), R (hold for 1.5), L
 			PULSE+UIDown, D(500),
 			PULSE+UISelect, D(20000),
 			DOWN+ThrustUp, D(1500),								// Hold down for 1.5
 			UP+ThrustUp, D(500),
-			PULSE+LandingGear, D(1000),
+			PULSE+LandingGear,
 			LOCK);
 			
 	}	// End of fnCustomCommands()
