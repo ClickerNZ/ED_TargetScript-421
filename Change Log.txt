@@ -1,8 +1,8 @@
 // CMDR Clicker Thrustmaster TARGET Script Change Log //
 
-v4.2.1	- New Point Release
+v4.2.1	-
 
-v4.2.0	- Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
+v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
 		- Update Enter Hanger Macro to cater for new menus
 		- Added index section to function .tmh files
@@ -43,6 +43,11 @@ v4.2.0	- Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Refactor several functions parameters as optional where it makes sense (eg. functions with > 1 argument can now be called via DeferCall)
 		- Add test in fnModeSwitch() function to disallow console logging during battle or interdictions
 		- Create 'ED_TargetScript User Reference Guide' PDF
+		- Add Jetison Cargo to RDRNRM via IOUMD (S3+PSF+RDRNRM)
+		- Add binding for Toggle Roll/Yaw (Numpad Enter) and map to S1 (PSB+S1)
+		- Create EnableTFRPRudder define so user can indicate if they have rudder pedals 
+		- Add mapping to enable alternate Roll/Yaw via Mike switch if EnableTFRPRudder=0
+		- Tidy up.
 
 v4.1.0b	- created forked branch - this version uses REXEC to read status.json in the background every 500ms.
 		- (it no longer uses TCPCallback)
@@ -174,7 +179,7 @@ v4.0.0
 v3.4.0 
 	New Minor Version
 	Fix macros due to April 2019 Update (v3.4 ?)
-		- NAV Beacon ON/OFF
+		- Wingman Beacon WING/OFF
 		- Report Crimes ON/OFF
 		- Menulog OPEN/PG/SOLO
 	Rename file extensions for EDMacros (.tmh) and EDKeymap (.ttm)

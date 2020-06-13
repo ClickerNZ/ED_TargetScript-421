@@ -23,9 +23,9 @@
 // ========================================================
 
 // Index:	Line		FUNCTION
-//			Line 36:	includes statements
-//			Line 62: 	int main()
-//			Line 135:	int EventHandle()
+//			Line 37:	include statements
+//			Line 60: 	int main()
+//			Line 120:	int EventHandle()
 
 
 // START
@@ -45,13 +45,12 @@ include "target.tmh"
 include "ED_GlobalVars.tmh"				// The order that these files are 'included' matters
 include "ED_Defines.ttm"
 include "ED_UserSettings.tmh"
+include "ED_Macros.tmh"
 include "ED_MapKeyAssignment.tmh"
 include "ED_Functions.tmh"
 include "ED_StateTracker.tmh"
 include "ED_Toggles.tmh"
-include "ED_Macros.tmh"
 //include "ED_MacrosFC.tmh"				// Enter Hanger macro changed for Fleet Carriers BETA
-//include "ED_CommsControl.tmh"			// Under development
 
 
 // --------------- //
@@ -82,12 +81,9 @@ include "ED_Macros.tmh"
 // Initialise LEDs, variables and functions //
 // ---------------------------------------- //
 
-		SetKBRate(PulseTime, DelayTime);										// Base Settings 	(See EDSettings.tmh)
-		SetKBLayout(KBLayout);
-
-//		ActKey(PULSE+KEYON+LED(&Throttle, LED_INTENSITY, SetLED)); 				// Set overall LED back-light intensity...
-//		fnSetLEDs();
-		
+		SetKBRate(PulseTime, DelayTime);										// Base Settings 	(See ED_UserSettings.tmh)
+		SetKBLayout(KBLayout);													//					(See ED_Defines.ttm)
+	
 		fnCustomCommands();														// Initialise Custom Macros (See EDMacros.tmh)
 		fnPIPMode(0);															// Reset PIPMode
 
@@ -96,7 +92,6 @@ include "ED_Macros.tmh"
 		fnsStartCheck();														// Check for vital files and game start		
 		initTextToSpeech();														// Initialise Text-To-Speech engine
 		initSoundFX();															// Initialise Sound Effects engine
-//		initCommsChannels();													// Initialise Voice Communications 
 
 
 // -------------------------- //
@@ -114,10 +109,8 @@ include "ED_Macros.tmh"
 		else {
 			printf("Rudder Axis	... disabled		");
 		}
-
-//		fnSetJoystickCurves(MILD, NOPRINT);										// Initialise for default position of Autopilot switch
 		
-		StartupLock = 0;														// Set in EDSettings.tmh. Reset now initialisation is complete
+//		StartupLock = 0;		// Move to fnGameStarted						// Set in EDSettings.tmh. Reset now initialisation is complete
 		
 		if(Flags == 0) printf("\x0aWaiting for Game to load...\x0a");
 

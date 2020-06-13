@@ -36,21 +36,15 @@
 	int JSProfile;						// Used in fnSetJoystickCurves() and fnEnhancedFAOFF() (see EDFunctions.tmh) Values = 0, 1 or 2
 	int JSCurveSetting;
 	int DXCurveSetting;
-			
+
 	int PIPMode;						// Set/Reset via H4P and fnPIPMode() and used in fnPIPManager() to change PIP management profile  (see EDFunctions.tmh)
 	int PIPTxt;							// PIPMode descriptor
 
-//	char SysCmd;						// We build SysCmd dynamically in functions which want to send a "system(&SysCmd);"
-//	int SliderCurve;					// Used to define the LIST and can use within EXEC
-
 	int Debug				= 0;		// Debug mode for testing. 0 = OFF, 1 = ON. Prints additional info to console
 	int ShowFlags			= 0;		// Set/Reset in fnDebug() and used in fnsProcessFlags()
-		
 	int StartupLock			= 1;		// Prevent triggering keystrokes during initialisation
 	int GameLoaded			= 0;		// Set in fnGameStarted() when game is detected as running (ie Flags != 0)
 	int ConnectionStatus	= 0;		// Track if "ShowConnectionStatus" is on or off to avoid accidental toggle off during mode switch
-//	int SRVBeam				= 1;		// SRV Lights Flag
-//	int	JSProfile 			= 1;		// Used in fnSetJoystickCurves() and fnEnhancedFAOFF() (see EDFunctions.tmh) Values = 0, 1 or 2
 	int ReverseThrust		= 0;		// Set/Reset in tgReverseThrust()
 	int SpeedbrakeDeployed	= 0;		// Set/Reset in tgReverseThrust() and used in tgLandingGear()
 	int FSSMode				= 0;		// Set/Reset in tgFSSMode()
@@ -61,7 +55,7 @@
 	int OrbitalCruise		= 0;		// Track when entering Orbital Cruise
 	int FireModeP			= 0;		// 0 = Press to fire/Release to Stop, 1 = Press to fire, Press again to stop
 	int FireModeS			= 0;		// 0 = Press to fire/Release to Stop, 1 = Press to fire, Press again to stop
-	int ShipDismissed		= 0;		// Assume the ship is landed nearby when in SRV
+	int ShipDismissed		= 0;		// Track when Ship is dismissed/recalled via EORIGN-U 
 
 	define SYS				1			// Used in fnPIPMapper for managing System  PIPs (see EDFunctions.tmh) (DO NOT modify!)
 	define ENG				2			// Used in fnPIPMapper for managing Engine  PIPs (see EDFunctions.tmh) (DO NOT modify!)
@@ -74,6 +68,9 @@
 	define TRUE				1
 	define FALSE			0
 
+	define BASIC			0
+	define FULL				1
+	
 	define DEPLOY			1
 	define RETRACT			0
 	define RECOVER			0
@@ -94,15 +91,6 @@
 	define SAVE				1			// used in fnsMyStates()
 	define LOAD				0			// used in fnsMyStates()
 		
-//------------//
-// LED Status //						// For Status LED tracking (future functionality)
-//------------//
-	
-	int LED1Status			= 0;		
-	int LED2Status			= 0;
-	int LED3Status			= 0;
-	int LED4Status			= 0;
-	int LED5Status			= 0;	
 
 //------------------------//
 // STATUS.JSON FLAG MASKS //
@@ -152,8 +140,8 @@
 //  Corresponding Flag Variables  //
 //--------------------------------//
 
-	int Flags				=	0;	// contains the Flags key value integer
-	int OldFlags			=	0;	// track when Flags key value changes
+	int Flags 				=	0;		// contains the Flags key value integer
+	int OldFlags			=	0;		// track when Flags key value changes
 	
 	int fDocked				=	0;
 	int fLanded				=	0;

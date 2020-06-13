@@ -21,38 +21,39 @@
 // ========================================================
 
 // Index:	Line		FUNCTION
-//			Line 62: 	int initJoystickAxis()
-//			Line 71: 	int initThrottleAxis()
-//			Line 87: 	int initTFRPRudder()
-//			Line 93: 	int initTextToSpeech()
-//			Line 108: 	int initSoundFX()
-//			Line 128: 	int fnNotValid()
-//			Line 143: 	int fnSetJoystickCurves()
-//			Line 197: 	int fnSetSliderCurve()
-//			Line 226: 	int fnGetFlightMode()
-//			Line 245: 	int fnFlashLED()
-//			Line 256: 	int fnSetLEDs()
-//			Line 288: 	int fnFlashStart()
-//			Line 314: 	int fnTextToSpeech()
-//			Line 344: 	int fnVoiceVolume()
-//			Line 399: 	int fnSoundFX()
-//			Line 420: 	int fnGameStarted()
-//			Line 474: 	int fnPIPMode()
-//			Line 527: 	int fnPIPManager()
-//			Line 564: 	int fnPIPMapper()
-//			Line 604: 	int fnAdvFireControl()
-//			Line 660: 	int fnAdvancedSCB()
-//			Line 692: 	int fnHeatsink()
-//			Line 706: 	int fnChaff()
-//			Line 724: 	int fnDeploySRV()
-//			line 761:	int fnDRShip()
-//			Line 790: 	int fnRequestDock()
-//			Line 809: 	int fnHangerServices()
-//			Line 855: 	int fnModeSwitch()
-//			Line 913:	int fnVPOutput()
-//			Line 909: 	int fnPrintState()
-//			Line 920: 	int fnStateDump()
-//			Line 1019: 	int fnDebug()
+//			Line 65: 	int initJoystickAxis()
+//			Line 75: 	int initThrottleAxis()
+//			Line 92: 	int initTFRPRudder()
+//			Line 100: 	int initTextToSpeech()
+//			Line 116: 	int initSoundFX()
+//			Line 136: 	int fnNotValid()
+//			Line 151: 	int fnSetJoystickCurves()
+//			Line 209: 	int fnSetSliderCurve()
+//			Line 243: 	int fnGetFlightMode()
+//			Line 262: 	int fnFlashLED()
+//			Line 273: 	int fnSetLEDs()
+//			Line 305: 	int fnFlashStart()
+//			Line 331: 	int fnTextToSpeech()
+//			Line 364: 	int fnVoiceVolume()
+//			Line 418: 	int fnSoundFX()
+//			Line 439: 	int fnGameStarted()
+//			Line 518: 	int fnPIPMode()
+//			Line 569: 	int fnPIPManager()
+//			Line 606: 	int fnPIPMapper()
+//			Line 646: 	int fnAdvFireControl()
+//			Line 702: 	int fnAdvancedSCB()
+//			Line 734: 	int fnHeatsink()
+//			Line 748: 	int fnChaff()
+//			Line 766: 	int fnDeploySRV()
+//			line 805:	int fnDRShip()
+//			Line 835: 	int fnRequestDock()
+//			Line 857: 	int fnHangerServices()
+//			Line 901:	int fnIdleLock()
+//			Line 935: 	int fnModeSwitch()
+//			Line 996:	int fnVPOutput()
+//			Line 1008: 	int fnPrintState()
+//			Line 1019: 	int fnStateDump()
+//			Line 1118: 	int fnDebug()
 
 // START
 
@@ -68,6 +69,7 @@
 		MapAxis(&Joystick, JOYY, DX_Y_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
 		printf("Joystick Axis	... done		");
 	}
+
 
 	//FUNCTION: Initialise Throttle Axes
 	int initThrottleAxis() {																	// Set Default Throttle Axis
@@ -85,12 +87,14 @@
 		MapAxis(&Throttle, SCY, DX_YROT_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);						// Set Slew Control Y Axis
 	}
 
+
 	// FUNCTION: Initialise Rudder
 	int initTFRPRudder() {																		// Initialise Thrustmaster TFRP Rudder
 		MapAxis(&TFRPRudder, TRUDDER, DX_Z_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
 		printf("Rudder Axis	... done\x0a");
-		printf("-----------------------------------------------------------------------------------------------------------------------------------------------\x0a");
+		printf("-----------------------------------------------------------------------------------------------------------------------------------------------\x0a");		
 	}
+
 
 	// FUNCTION: Initialise Text To Speech Engine	
 	int initTextToSpeech() {
@@ -106,6 +110,7 @@
 			printf("\x0a\Voice feedback via 'fnTextToSpeech()' will not available\x0a");
 		}
 	}
+
 
 	// FUNCTION: Initialise Sound Effacts Engine 
 	int initSoundFX() {
@@ -268,7 +273,6 @@
 	int fnSetLEDs(int dummy=0) {
 	
 		ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT+LED0)); 		// set GLOBAL LED ON
-//		ActKey(PULSE+KEYON+LED(&Throttle, LED_INTENSITY, SetLED)); 				// Set overall LED back-light intensity...
 		ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT-LED1)); 		// set LED 1 OFF
 		ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT-LED2)); 		// set LED 2 OFF
 		ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT-LED3)); 		// set LED 3 OFF
@@ -336,7 +340,12 @@
 		}
 				
 		if (EnableVoice) {
-			sprintf(&SysCmd, "start %s -v %s %s %s", &VoicePath, &volume, &VoiceCMD, text);
+			if (!GameLoaded) {
+				sprintf(&SysCmd, "%s -v %s %s %s", &VoicePath, &volume, &VoiceCMD, text);			
+			}
+			else {
+				sprintf(&SysCmd, "start %s -v %s %s %s", &VoicePath, &volume, &VoiceCMD, text);
+			}
 
 			if (Debug) {
 				printf("\x0a\Function: fnTextToSpeech();\x0a");
@@ -347,7 +356,8 @@
 			system(&SysCmd);										// send command to Windows
 		}
 	}
-	
+
+
 	// FUNCTION:	Volume Controller for 'voice' exe / fnTextToSpeech()
 	// Parameter:	'x'. x=0 Decrease, x=1 Increase
 	
@@ -388,8 +398,6 @@
 
 		sprintf(&c, "Voice volume %s %d percent", VolTxt, VoiceVolume);
 		
-//		printf("%s\x0a", &c);										// print our string
-//		fnTextToSpeech(&c);											// send to TextToSpeech
 		fnVPOutput(&c);
 	}
 
@@ -433,12 +441,20 @@
 		int VA = "0";
 		int VAStatus = "";
 		int VoiceStatus = "";
+		int SoundFXStatus = "";
 		
 		printf("\x0a  !!! GAME STARTED !!!\x0a\x0a");
-		GameLoaded = 1;
 		
 		MainKeyMap();													// MapKey profile for 'Game Running'
-				
+		
+		if (SwapRoll4Yaw) {
+			DeferCall(1000, &ActKey, PULSE+KEYON+SwapRollYaw);			// Give above 'MainKeyMap()' call a chance to finish
+		}
+
+		GameLoaded = 1;
+		StartupLock = 0;
+		
+
 		DefEventHandler(EV_HID_INPUT_DATA, &Throttle, THR_FC);			// Forces re-read of slider axis								
 		
 		fnFlashStart();
@@ -477,9 +493,9 @@
 		else {
 			VoiceStatus = "Disabled";
 		}
-		printf("VoiceStatus	= %d - %s\x0a", EnableVoice, VoiceStatus);
+		printf("VoiceStatus	= %s\x0a", VoiceStatus);
 		printf("VoiceVolume	= %d\x0a", VoiceVolume);
-
+		
 		if(EnableSoundFX) {
 			SoundFXStatus = "Enabled";
 		}
@@ -503,48 +519,46 @@
 
 		int VoiceTxt;
 		
-//		if (!StartupLock) {
-			if (x == 0) {
-				PIPMode = DefaultPIPMode;			// Set in ED_UserSettings.tmh
-			}
-			if (x == 1) {
-				PIPMode = PIPMode + 1;
-				if (PIPMode > 5) PIPMode = 0;
-			}
-			if (x == 2) {
-				PIPMode = PIPMode - 1;
-				if (PIPMode < 0) PIPMode = 5;
-			}
-			
-			if (PIPMode == 0) {
-				PIPTxt = "Single	";
-				VoiceTxt = "Pipmode 0 Single";
-			}
-			if (PIPMode == 1) {										
-				PIPTxt = "Double	";
-				VoiceTxt = "Pipmode 1 Double";
-			}
-			if (PIPMode == 2) {
-				PIPTxt = "Attack	";
-				VoiceTxt = "Pipmode 2 Attack";
-			}
-			if (PIPMode == 3) {
-				PIPTxt = "Defend	";
-				VoiceTxt = "Pipmode 3 Defend";
-			}
-			if (PIPMode == 4) {
-				PIPTxt = "Recharge";
-				VoiceTxt = "Pipmode 4 Recharge";
-			}
-			if (PIPMode == 5) {
-				PIPTxt = "GP 3+3	";
-				VoiceTxt = "Pipmode 5 3+3";
-			}
-			if (StartupLock == 0) {
-				fnTextToSpeech(VoiceTxt);
-				printf("PIPMode(%d):		%s	>>\x0a", PIPMode, PIPTxt);
-			}
-//		}
+		if (x == 0) {
+			PIPMode = DefaultPIPMode;			// Set in ED_UserSettings.tmh
+		}
+		if (x == 1) {
+			PIPMode = PIPMode + 1;
+			if (PIPMode > 5) PIPMode = 0;
+		}
+		if (x == 2) {
+			PIPMode = PIPMode - 1;
+			if (PIPMode < 0) PIPMode = 5;
+		}
+		
+		if (PIPMode == 0) {
+			PIPTxt = "Single	";
+			VoiceTxt = "Pipmode 0 Single";
+		}
+		if (PIPMode == 1) {										
+			PIPTxt = "Double	";
+			VoiceTxt = "Pipmode 1 Double";
+		}
+		if (PIPMode == 2) {
+			PIPTxt = "Attack	";
+			VoiceTxt = "Pipmode 2 Attack";
+		}
+		if (PIPMode == 3) {
+			PIPTxt = "Defend	";
+			VoiceTxt = "Pipmode 3 Defend";
+		}
+		if (PIPMode == 4) {
+			PIPTxt = "Recharge";
+			VoiceTxt = "Pipmode 4 Recharge";
+		}
+		if (PIPMode == 5) {
+			PIPTxt = "GP 3+3	";
+			VoiceTxt = "Pipmode 5 3+3";
+		}
+		if (StartupLock == 0) {
+			fnTextToSpeech(VoiceTxt);
+			printf("PIPMode(%d):		%s	>>\x0a", PIPMode, PIPTxt);
+		}
 	}
 
 
@@ -736,7 +750,7 @@
 		int reason;
 		
 		if(!fSupercruise) {
-			ActKey(PULSE+KEYON+FireChaffLauncher);
+			ActKey(PULSE+KEYON+FireChaff);
 			printf("!!!   Chaff  Fired   !!!\x0a");
 		}
 		else {
@@ -752,33 +766,35 @@
 	int fnDeploySRV(int x) {
 		int fnName;
 		int reason;
-		
-		if (x == DEPLOY) {
-			fnName = "Deploy SRV";
-			if (fLanded & fMainShip) {									// DEPLOY
-				ActKey(PULSE+KEYON+mDeploySRV);
-				printf("SRV:			DEPLOYED	>>\x0a");
-			}
-			else {
-				reason = "we are not landed";
-				fnNotValid(fnName, reason);
-			}
-		}
-		else {															// RECOVER
-			fnName = "Recover SRV";
-			if (fSRV & fSRVTurretRetracted) {	
-				ActKey(PULSE+KEYON+mBoardShip);
-				printf("SRV:			RECOVERED	<<\x0a");
-				DeferCall(14000, &fnPIPMapper, SYS);					// PIPs to Shields 
-			}
-			else {
-				if (!fSRV) {
-					reason = "not in SRV";
+
+		if (!StartupLock) {
+			if (x == DEPLOY) {
+				fnName = "Deploy SRV";
+				if (fLanded & fMainShip) {									// DEPLOY
+					ActKey(PULSE+KEYON+mDeploySRV);
+					printf("SRV:			DEPLOYED	>>\x0a");
 				}
-				if (!fSRVTurretRetracted) {
-					reason = "turret not retracted";
+				else {
+					reason = "we are not landed";
+					fnNotValid(fnName, reason);
 				}
-				fnNotValid(fnName, reason);
+			}
+			else {															// RECOVER
+				fnName = "Recover SRV";
+				if (fSRV & fSRVTurretRetracted) {	
+					ActKey(PULSE+KEYON+mBoardShip);
+					printf("SRV:			RECOVERED	<<\x0a");
+					DeferCall(14000, &fnPIPMapper, SYS);					// PIPs to Shields 
+				}
+				else {
+					if (!fSRV) {
+						reason = "not in SRV";
+					}
+					if (!fSRVTurretRetracted) {
+						reason = "turret not retracted";
+					}
+					fnNotValid(fnName, reason);
+				}
 			}
 		}
 	}
@@ -799,9 +815,7 @@
 				VoiceTxt = "Ship dismissed";
 			}
 			ActKey(PULSE+KEYON+SRVRecallDismissShip);
-//			fnTextToSpeech(VoiceTxt);
-//			printf("Ship status: %s\x0a", VoiceTxt);
-
+			
 			printf("Ship Status: ");
 			fnVPOutput(VoiceTxt);
 			
@@ -812,8 +826,7 @@
 		else {
 			reason = "we are not in the S R V";
 			fnNotValid(fnName, reason);
-		}
-			
+		}			
 	}
 
 
@@ -852,8 +865,6 @@
 				if(x) {	
 					if(!InHanger) {
 						VoiceTxt = "Enter Hanger and Station Services";
-//						printf("%s\x0a", VoiceTxt);
-//						fnTextToSpeech(VoiceTxt);
 						fnVPOutput(VoiceTxt);
 						fnPIPMapper();
 						ActKey(PULSE+KEYON+mEnterHanger);
@@ -869,8 +880,6 @@
 					}
 					else {	
 						VoiceTxt = "Initiating launch sequence";
-//						printf("%s\x0a", VoiceTxt);
-//						fnTextToSpeech(VoiceTxt);
 						fnVPOutput(VoiceTxt);
 						ActKey(PULSE+KEYON+mLaunch);
 						InHanger = 0;
@@ -881,6 +890,38 @@
 				reason = "You are not docked at a station services facility";
 				fnNotValid(fnName, reason);
 			}
+		}
+	}
+
+
+	// FUNCTION:	If in Ship Enter Hanger/Lift Off Macros
+	//				if in SRV apply/release handbrake
+	// Parameter:	x, 1 = Enter Hanger Services, 0 = Lift off 
+
+	int fnIdleLock(int x) {
+		int VoiceTxt;
+		int fName = "Idle Lock";
+		
+		if (fMainShip) {
+			if (x == 1) {
+				fnHangerServices(1);				// Enters hanger services 
+			}
+			else {
+				fnHangerServices(0);				// Exit hanger services and lift off
+			}
+		}
+		else if (fSRV) {
+			if (fSRVHandbrake) {
+				VoiceTxt = "Handbrake:	OFF";
+			}
+			else {
+				VoiceTxt = "Handbrake:	ON";
+			}
+			fnVPOutput(VoiceTxt);
+			ActKey(PULSE+KEYON+SRVHandbrake);		// Toggle SRV Handbrake
+		}
+		else {
+			fnNotValid(fName);		
 		}
 	}
 
@@ -930,8 +971,6 @@
 			}
 
 			sprintf(&VoiceTxt, "Mode switch to %s selected, please wait for game reload", Mode);
-//			fnTextToSpeech(&VoiceTxt);
-//			printf("\x0a\Wait for game to finish loading ");
 			printf("\x0a");
 			fnVPOutput(&VoiceTxt);
 
@@ -955,8 +994,8 @@
 	// Parameter:	vpOutput string to send to fnTextToSpeech() and printf
 
 	int fnVPOutput(int VPOutput, int VolumeOverride=0) {
-		fnTextToSpeech(VPOutput, VolumeOverride);
 		printf("%s\x0a", VPOutput);		
+		fnTextToSpeech(VPOutput, VolumeOverride);
 	}
 
 

@@ -46,7 +46,7 @@
 
 	define VMajor		 						4						// Script Version Major Value			ie. 2.x.x
 	define VMinor		 						2						// Script Version Minor Value			ie. x.3.x
-	define VPoint								"1_DEV"					// Script Version Point Update			ie. x.x.4
+	define VPoint								"1_DEV"						// Script Version Point Update			ie. x.x.4
 
 //----------------------------------------------------------------------//
 // BINDINGS																//
@@ -56,11 +56,11 @@
 //			This includes the commented ones!
 
 		// WEAPON CONTROL //
-	define PrimaryFire 							DX1						// JOY 1 (Also mapped to RSHIFT+1 in ED Bindings)
-//	define PrimaryFire 							R_SHIFT+USB[0x1E]		// JOY 1 (for Event Tester)
+//	define PrimaryFire 							DX1						// JOY 1 (Also mapped to LSHIFT+1 in ED Bindings)	
+	define PrimaryFire 							'!'						// LSHIFT+1 - FOR TESTING VIA EVENT TESTER
 	
-	define SecondaryFire 						DX2						// JOY 2 (Also mapped to RSHIFT+2 in ED Bindings)
-//	define SecondaryFire 						R_SHIFT+USB[0x1F]		// JOY 2 (for Event Tester)
+//	define SecondaryFire 						DX2						// JOY 2 (Also mapped to LSHIFT+2 in ED Bindings)
+	define SecondaryFire 						'@'						// LSHIFT+2 - FOR TESTING VIA EVENT TESTER
 	
 	define DeployHardpoints 					USB[0x18] 				// U
 	define NextFireGroup 						USB[0x36]				// ,
@@ -84,12 +84,15 @@
 //	define ThrustRight 							USB[0x08]				// E
 //	define ThrustForward								 				// <not mapped>
 //	define ThrustBack									 				// <not mapped>
-//	define PitchUp								R_SHIFT+USB[0x17]		// RSHIFT+T
-//	define PitchDown							R_SHIFT+USB[0x0A]		// RSHIFT+G
-//	define YawLeft								R_SHIFT+USB[0x14]		// RSHIFT+Q
-//	define YawRight								R_SHIFT+USB[0x08]		// RSHIFT+E
-	define EngineBoost 							R_SHIFT+USB[0x05]		// RSHIFT+B
-	define FrameshiftDrive 						USB[0x0D] 				// J
+//	define PitchUp								'T'						// LSHIFT+T
+//	define PitchDown							'G'						// LSHIFT+G
+	define RollLeft								'W'						// LSHIFT+W 
+	define RollRight							'S'						// LSHIFT+S 
+	define YawLeft								'Q'						// LSHIFT+Q
+	define YawRight								'E'						// LSHIFT+E
+	define SwapRollYaw							USB[0x58]				// NUMPAD ENTER
+	define EngineBoost 							'B'						// LSHIFT+B
+	define HyperJump 							USB[0x0D] 				// J
 	define Supercruise 							USB[0x54]				// NUMPAD /
 //	define SetSpeedNeg100 						USB[0x56] 				// NUMPAD -
 //	define SetSpeedNeg75 						USB[0x61] 				// NUMPAD 9
@@ -114,31 +117,31 @@
 
 		// SHIP SYSTEMS //
 	define CargoScoop 							USB[0x4A] 				// HOME
-//	define JettisonAllCargo 					USB[0x4D] 				// END
+	define JettisonAllCargo 					USB[0x4D] 				// END
 	define LandingGear 							USB[0x0F] 				// L
 	define ShipLights 							USB[0x49] 				// INSERT
 	define NightVision							L_ALT+USB[0x49]			// LALT+INSERT
 	define HUDMode								USB[0x38]				// /
-	define FSSModeON							R_SHIFT+USB[0x38]		// RSHIFT+/
-	define FSSModeOFF							R_SHIFT+USB[0x38]		// RSHIFT+/
+	define FSSModeON							'?'						// LSHIFT+/
+	define FSSModeOFF							'?'						// LSHIFT+/
 	define FSSZoomIN 							USB[0x30]				// ]	(same as CameraZoomIn)
 	define FSSZoomOUT 							USB[0x2F] 				// [	(same as CameraZoomOut)
 	define DSSModeON							USB[0x2D]				// -  (should be USB[0x38] '/' ??)
 	define DSSModeOFF							USB[0x2A]				// BACKSPACE
-	define FBView								R_SHIFT+USB[0x31]		// RSHIFT+\
-	define PowerEng 							R_SHIFT+USB[0x52]		// RSHIFT+UP Arrow
-	define PowerWep 							R_SHIFT+USB[0x4F]		// RSHIFT+RIGHT Arrow
-	define PowerSys 							R_SHIFT+USB[0x50]		// RSHIFT+LEFT Arrow
-	define BalancePower 						R_SHIFT+USB[0x51]		// RSHIFT+DOWN Arrow
+	define FBView								'|'						// LSHIFT+\
+	define PowerEng 							L_SHIFT+USB[0x52]		// LSHIFT+UP Arrow
+	define PowerWep 							L_SHIFT+USB[0x4F]		// LSHIFT+RIGHT Arrow
+	define PowerSys 							L_SHIFT+USB[0x50]		// LSHIFT+LEFT Arrow
+	define BalancePower 						L_SHIFT+USB[0x51]		// LSHIFT+DOWN Arrow
 	define SensorZoomUP		 					USB[0x4B] 				// PAGE UP		(PGUP)
 	define SensorZoomDN 						USB[0x4E] 				// PAGE DOWN	(PGDN)
 
 		// COOLING & COUNTERMEASURES //
 	define SilentRunning 						USB[0x4C] 				// DELETE (called "ToggleButtonUpInput" within the .bind file)
 	define DeployHeatSink 						USB[0x19] 				// V
-	define FireChaffLauncher 					USB[0x06] 				// C
+	define FireChaff		 					USB[0x06] 				// C
 	define UseShieldCell 						USB[0x34]				// '
-	define ChargeECM 							R_SHIFT+USB[0x06]		// RSHIFT+C
+	define ChargeECM 							'C'						// LSHIFT+C
 
 		// WINGS & FIGHTERS //
 	define SelectWingman1 						USB[0x25] 				// 8
@@ -147,13 +150,13 @@
 	define WingmanTarget 						USB[0x22]				// 5
 	define WingmanNavlock 						USB[0x23]				// 6
 //	define FighterDock 							L_ALT+USB[0x05]			// LALT+B
-//	define FighterDefensive 					L_ALT+USB[0x07]			// LALT+D
-//	define FighterAggressive 					L_ALT+USB[0x04]			// LALT+A
-//	define FighterFocusAttack					L_ALT+USB[0x17]			// LALT+T
-//	define FighterHoldFire 						L_ALT+USB[0x0B]			// LALT+H
-//	define FighterHoldPosition 					L_ALT+USB[0x16]			// LALT+S
+//	define FighterDefend	 					L_ALT+USB[0x07]			// LALT+D
+//	define FighterAggr		 					L_ALT+USB[0x04]			// LALT+A
+//	define FighterAttack						L_ALT+USB[0x17]			// LALT+T
+//	define FighterNoFire 						L_ALT+USB[0x0B]			// LALT+H
+//	define FighterHold		 					L_ALT+USB[0x16]			// LALT+S
 //	define FighterFollow 						L_ALT+USB[0x09]			// LALT+F
-//	define FighterOrders 						L_ALT+USB[0x12]			// LALT+O
+//	define FighterOpen	 						L_ALT+USB[0x12]			// LALT+O
 
 		// UI NAVIGATION //
 	define UISelect 							USB[0x2C] 				// Space
@@ -172,7 +175,7 @@
 	define UIEscape 							USB[0x29] 				// Escape
 	define MenuLog								USB[0x13]				// P
 	define SystemMap 							USB[0x33] 				// ;
-	define GalaxyMap 							R_SHIFT+USB[0x33] 		// RSHIFT+:
+	define GalMap 								':'				 		// LSHIFT+:
 //	define FriendsView									 				// <not mapped>
 
 		// MULTICREW //							(Note: These are not currently mapped in ED)
@@ -190,24 +193,24 @@
 //	define HoloMEMouseRotation											// mapped to Mouse 3 in ED Bindings
 
 		// GALNET AUDIO //
-//	define GalNetAudioPlayPause					R_ALT+USB[0x44]			// RALT+F11
-//	define GalNetAudioPrev						R_ALT+USB[0x43]			// RALT+F10
-//	define GalNetAudioNext						R_ALT+USB[0x45]			// RALT+F12
-//	define GalNetAudioClearQueue				R_ALT+USB[0x42]			// RALT+F9
+//	define GalNetPlay							R_ALT+USB[0x44]			// RALT+F11
+//	define GalNetPrev							R_ALT+USB[0x43]			// RALT+F10
+//	define GalNetNext							R_ALT+USB[0x45]			// RALT+F12
+//	define GalNetClear							R_ALT+USB[0x42]			// RALT+F9
 
 		// GALAXY MAP //						(Note: These are mapped in ED Bindings directly)
-//	define GalaxyMapPitchUp						USB[0x17]				// T
-//	define GalaxyMapPitchDown					USB[0x0A]				// G
-//	define GalaxyMapYawLeft						USB[0x14]				// Q
-//	define GalaxyMapYawRight					USB[0x08]				// E
-//	define GalaxyMapTranslateForward			USB[0x1A]				// W
-//	define GalaxyMapTranslateBack				USB[0x16]				// S
-//	define GalaxyMapTranslateLeft				USB[0x04]				// A
-//	define GalaxyMapTranslateRight				USB[0x07]				// D
-//	define GalaxyMapTranslateUp					USB[0x15]				// R
-//	define GalaxyMapTranslateDown				USB[0x09]				// F
-//	define GalaxyMapZoomIn						USB[0x1D]				// Z
-//	define GalaxyMapZoomOut						USB[0x1B]				// X
+//	define GalMapPitchUp						USB[0x17]				// T
+//	define GalMapPitchDown						USB[0x0A]				// G
+//	define GalMapYawLeft						USB[0x14]				// Q
+//	define GalMapYawRight						USB[0x08]				// E
+//	define GalMapTranslateForward				USB[0x1A]				// W
+//	define GalMapTranslateBack					USB[0x16]				// S
+//	define GalMapTranslateLeft					USB[0x04]				// A
+//	define GalMapTranslateRight					USB[0x07]				// D
+//	define GalMapTranslateUp					USB[0x15]				// R
+//	define GalMapTranslateDown					USB[0x09]				// F
+//	define GalMapZoomIn							USB[0x1D]				// Z
+//	define GalMapZoomOut						USB[0x1B]				// X
 
 		// HEADLOOK //
 //	define LookUp 										 				// <not mapped>
@@ -247,7 +250,7 @@
 //	define CameraWorldLock 									 			// <not mapped>
 //	define CameraZoomDOFToggle											// Mouse3
 	define CameraBlurIn 						USB[0x06] 				// C
-	define CameraBlurOut 						R_SHIFT+USB[0x06]		// RSHIFT+C
+	define CameraBlurOut 						'C'						// LSHIFT+C
 //	define CameraFocusIn												// Same as ZoomIn
 //	define CameraFocusOut												// Same as ZoomOut
 
@@ -261,10 +264,9 @@
 	define ShowFramerate 						L_CTL+USB[0x09] 		// LCTRL+F
 	define ShowConnectionStatus 				L_CTL+USB[0x05]			// LCTRL+B
 //	define ShowCQCScoreboard 					L_ALT+USB[0x3E]			// LALT+F5
-//	define PinkyTriggerDefault					DX4						// JOY 4
 //	define HighResScreenshot 					L_ALT+USB[0x43]			// LALT+F10
-//	define ChangeWeaponColor 					L_ALT+USB[0x1E]			// LALT+1
-//	define ChangeEngineColor 					L_ALT+USB[0x1F]			// LALT+2
+//	define WeaponColour		 					L_ALT+USB[0x1A]			// LALT+W
+//	define EngineColour 						L_ALT+USB[0x08]			// LALT+E
 
 		// EXTERNAL BINDINGS //
 	define ResetHeadOrientation 				USB[0x35] 				// ~

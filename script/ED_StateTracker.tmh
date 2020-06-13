@@ -21,13 +21,13 @@
 // ========================================================
 
 // Index:	Line		FUNCTION
-//			Line 53: 	int fnsGetStatusFileInfo()
-//			Line 98: 	int fnsReadStatusJson()
-//			Line 171: 	int fnsGetKeyValue()
-//			Line 309: 	int fnsProcessFlags()
-//			Line 514: 	int fnsProcessGuiFocus()
-//			Line 552: 	int fnsStartCheck()
-//			line 604:	int fnsMyStates()
+//			Line 52: 	int fnsGetStatusFileInfo()
+//			Line 88: 	int fnsReadStatusJson()
+//			Line 153: 	int fnsGetKeyValue()
+//			Line 284: 	int fnsProcessFlags()
+//			Line 506: 	int fnsProcessGuiFocus()
+//			Line 545: 	int fnsStartCheck()
+//			line 597:	int fnsMyStates()
 	
 // START
 
@@ -71,15 +71,7 @@
 		}
 		else {
 			printf("C:\\status.json.path.txt file not found.\x0a");
-		}
-	
-//		if (Debug) {
-//			printf("\x0a\Function: fnsGetStatusFileInfo()\x0a");
-//			printf("myResult	= %d \x0a", myResult);
-//			printf("StatusFile  = %s \x0a", &StatusFile);
-//			printf("strlen(StatusFile) = %d\x0a", strlen(&StatusFile));
-//		}
-
+		}	
 	}
 
 
@@ -120,8 +112,7 @@
 				ReadErrorSent = 0;
 				strdel(&myJson, myResult-1, buf);					// removes trailing NUL/garbage
 				
-																	//ED_TCPCallback equivalent functionality
-				newJson = strcmp(&myJson, &lastJson);				// <<< from here...
+				newJson = strcmp(&myJson, &lastJson);
 				if (newJson != 0) {
 					if (Debug) {
 						printf("Function: fnsReadStatusJson();\x0a"); 
@@ -133,29 +124,18 @@
 					OldFlags = Flags;
 				}
 				
-				sprintf(&lastJson, "%s", &myJson);					// <<< ... to here
+				sprintf(&lastJson, "%s", &myJson);
 
-//				if (Debug) {
-//					printf("status.json read successfully\x0a");
-//				}
 			}
 		}
 		else {
-//			VoiceVolume = 100;
-//			VoiceTxt = "FATAL ERROR: Status.jason file not found";
-//			printf("\x0a\FATAL ERROR: Status.json file not found\x0a");
-//			fnTextToSpeech(VoiceTxt, 100);
 			printf("\x0a");
 			VPOutput("FATAL ERROR: Status.jason file not found", 100);
 			Abort();
-		}
-		
-//		if (Debug) {
-//			printf("myJson	  = %s \x0a", &myJson);
-//			printf("strlen(myJson) = %d\x0a\x0a", strlen(&myJson));	
-//		}
+		}		
 	}
-	
+
+
 	// FUNCTION:	Extract json key value from status.json:
 	// Input:		Key (pattern = string), value vtype (0=float, 1=int, 2=string)
 	// Output:		Return key value
@@ -250,10 +230,6 @@
 			if (myResult == 0 & (vtype == 0 | vtype == 1)) EndValue = 1;
 			
 			if (EndValue == 0) strcat(&keyvalue, &thischr);
-
-//			if (Debug) {
-//				printf("chrpnt = %2d thischr = %s keyvalue = %s\x0a", chrpnt, &thischr, &keyvalue);
-//			}
 			
 			while (EndValue == 0 & chrpnt < 20) {
 				chrpnt = chrpnt + 1;
@@ -276,9 +252,6 @@
 				
 				if (EndValue == 0) strcat(&keyvalue, &thischr);
 				
-//				if (Debug) {
-//					printf("chrpnt = %2d thischr = %s keyvalue = %s\x0a", chrpnt, &thischr, &keyvalue);
-//				}
 			}			
 		}
 		
@@ -334,11 +307,11 @@
 		// Process 'Flags' value...most significant bit order
 		
 		if (Flags == 0) {		
-			if(GameLoaded == 1) {
+			if(GameLoaded == 1) {										// Detects when Game halts
 				GameLoaded = 0;
 
 				if(TrainingEnabled){
-					TrainingKeyMap();									// Load KeyMap profile for training
+					TrainingMain();									// Load KeyMap profile for training
 					VoiceTxt = "Game halted. Training mode enabled -";
 				}
 				else {
@@ -355,7 +328,6 @@
 				
 				fnSetLEDs();											// Turn off Status LEDs
 				fnsMyStates(SAVE);				
-//				ActKey(PULSE+KEYON+LED(&Throttle, LED_INTENSITY, 0));	// Set LED back-light OFF
 			}
 		}
 		else {		// Flags != 0
@@ -458,7 +430,7 @@
 					if (AutoGearUP) {
 						ActKey(PULSE+KEYON+LandingGear);
 					}
-					ShipDismissed = 0;
+					ShipDismissed = 0;			
 				}
 			}
 			
@@ -478,7 +450,7 @@
 			}
 									
 			if (fa != fFAOff | lt != fLights | sr != fSilentRunning | cs != fCargoScoop | lg != fLandingGear | sh != fMainShip) UpdateLEDs = 1;
-			
+
 			if(GameLoaded == 0) {			// Game started...as opposed to re-started.
 				fnGameStarted();
 			}
@@ -523,14 +495,7 @@
 				if (fLanded) 				printf("Landed on planet\x0a");
 				if (fDocked) 				printf("Docked\x0a");
 				printf("===============\x0a");
-			}
-			
-//			if (UpdateLEDs) fnSetLEDs();
-
-//			if(GameLoaded == 0) {			// Game started...as opposed to re-started.
-//				fnGameStarted();
-//			}
-//			OldFlags = Flags;				// Keep track of last Flags Value to track when Flags Changes
+			}			
 		}
 	}
 	// END of fnsProcessFlags()
@@ -668,8 +633,6 @@
 				fclose(fp);
 				
 				if (fpresult == 0) {
-//					fnTextToSpeech("Error writing MyStates to status file", 100);
-//					printf("Error writing MyStates to status file\x0a");
 					fnVPOutput("Error writing MyStates to status file", 100);
 				}	
 				else {
@@ -713,8 +676,6 @@
 					}					
 				}
 				else {
-//					fnTextToSpeech("Error reading MyStates from status file", 100);
-//					printf("Error reading MyStates from status file\x0a");
 					fnVPOutput("Error reading MyStates from status file", 100);
 				}
 			}

@@ -1,8 +1,9 @@
 
 Version 4.2.1
 
-STATUS: BETA
-Under development. Changes happening often.
+STATUS: 
+
+BETA
 
 HISTORY:
 
@@ -67,25 +68,7 @@ When publishing or sharing this script the following should be included in the z
 
 INSTALLATION:
 
-1) Copy the .bind file in the package's 'Bindings' folder to your Elite Dangerous bind file folder.
-This is usually at "c:\users\%username%\AppData\Local\Frontier Developments\Elite Dangerous\Options\Bindings"
-As 'AppData' can usually be hidden you may need to unhide it via the folder view options in Windows if navigating
-via the windows explorer. Or, you should be able to cut/paste the path above into a run box or address bar.
-
-2) Unzip the script files anywhere on your disk that you can easily find/get to.
-Example c:\Thrustmaster\ED_TargetScript 
-
-3) Copy voice.exe and sounder to c:\Thrustmaster\ED_TargetScript\ and set correct path in the ED_UserSettings.tmh file for
-both VoicePath and VoiceCMD variables
-
-4) Copy Sounds folder to c:\Thrustmaster\ED_TargetScript\ and set correct path in ED_UserSettings file 
-
-5) Print out and/or study the image files within the 'Maps' folder and have a read of the user reference guide.
-
-6) The Preferred method of running the script is via a Windows batch file.
-ED_Launcher.cmd batch file is included in this package and is best copied to wherever you copied the scripts to in "step 2" above.
-I recommend you create a shortcut to this batch file on your desktop and run it as administrator.
-Please read the comments in the batch file for more information
+Refer User Reference guide for complete installation instructions 
 
 USER SETTINGS:
 

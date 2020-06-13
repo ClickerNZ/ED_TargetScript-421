@@ -3,7 +3,7 @@
 //	CMDR Clicker's Elite Dangerous Thrustmaster Warthog + TFRP Script	//
 //----------------------------------------------------------------------//
 
-// This file: ED_Macros.ttm (v4.1.0b) ... supports Elite Dangerous v3.4 (Beyond Chapter 4)
+// This file: ED_MacrosFC.ttm (v4.2.1) ... supports Elite Dangerous v3.7 (Fleet Carriers)
 
 // Refer Change Log.txt in same folder
 
@@ -22,20 +22,20 @@
 
 // Index:	Line		FUNCTION
 //			Line 50:	fnCustomCommands()
-//			Line 62:	mRequestDock 
-//			Line 75:	mDeploySRV 
-//			Line 87:	mBoardShip 
-//			Line 104:	mShowGameStats
-//			Line 109:	mFastModeSwitch0 
-//			Line 120:	mFastModeSwitch1 
-//			Line 134:	mFastModeSwitch2
-//			Line 147:	mReportCrimesToggle
-//			Line 168:	mNAVBeaconWing
-//			Line 193:	mNAVBeaconOff
-//			Line 217:	mClearAllChatBox
+//			Line 61:	mRequestDock 
+//			Line 74:	mDeploySRV 
+//			Line 86:	mBoardShip 
+//			Line 103:	mShowGameStats
+//			Line 108:	mFastModeSwitch0 
+//			Line 119:	mFastModeSwitch1 
+//			Line 133:	mFastModeSwitch2
+//			Line 146:	mReportCrimesToggle
+//			Line 167:	mNAVBeaconWing
+//			Line 192:	mNAVBeaconOff
+//			Line 216:	mClearAllChatBox
 //			Line 256:	mClearChatBox
 //			Line 268:	mEnterHanger
-//			Line 297:	mLaunch
+//			Line 295:	mLaunch
 
 
 // START
@@ -50,13 +50,13 @@
 
 	int fnCustomCommands() {
 
-		// Initialise char arrays for various functions
-		Dim(&myJson, 512);			// Initilise status.json string variables
+		// Initialise char arrays for status.json
+		Dim(&myJson, 512);
 		myJson[0] = 0;
 
 		Dim(&lastJson, 512); 
 		lastJson[0]=0;
-		
+
 		// Select MapKey Assignment profile
 		if (Flags == 0 & TrainingEnabled) {
 			TrainingKeyMap();
@@ -72,7 +72,7 @@
 			}
 			printf("\x0a\Training Mode Disabled\x0a");
 		}
-		
+
 		// Initialise macros
 
 		// MACRO: Auto-Docking Request
@@ -114,7 +114,7 @@
 			PULSE+UIDown, D(200),
 			PULSE+UIUp, D(200),
 			PULSE+UIUp, D(200),
-//			PULSE+UISelect, D(500),								// Testing...until the macro is reliable
+			PULSE+UISelect, D(500),			// Testing...until the macro is reliable
 			LOCK);
 
 		// MACRO: Display the combined OSD FPS & Bandwidth meters
@@ -280,44 +280,42 @@
 			PULSE+'r', D(),
 			PULSE+QuickCommsPanel, D(500),
 			LOCK);
-			
+
 		// MACRO: Enter hanger then facilities + refuel/repair/restock
 		mEnterHanger = CHAIN(
-			LOCK+PULSE+UIDown, D(),								// down, spc, up, spc, right, right, down, spc, down, spc, down, spc
-			PULSE+UISelect, D(750),								// Enter hanger
-			PULSE+UIUp, D(),
-			PULSE+UISelect, D(5000),							// Station Services
+			LOCK,
+			// Fleet Carriers New Menu items when docked
+			PULSE+UISelect, D(2000),							//Refuel
 			PULSE+UIRight, D(),
+			PULSE+UISelect, D(2000),							//Repair
 			PULSE+UIRight, D(),
-			PULSE+UIDown, D(),
-			PULSE+UISelect, D(1750),							// Refuel
-			PULSE+UIDown, D(),
-			PULSE+UISelect, D(1750),							// Repair
-			PULSE+UIDown, D(),
-			PULSE+UISelect, D(1750),							// Restock
-			PULSE+UIUp, D(),									// up, up, up, spc, right, right, spc, left, left, spc
-			PULSE+UIUp, D(),									// Go back up to very top...
-			PULSE+UIUp, D(),									// ...because there are 3, sometimes 4 menu items below...
-			PULSE+UIUp, D(),									// 
-			PULSE+UISelect, D(1250),							// Advanced Maintenance
+			PULSE+UISelect, D(2000),							//Restock
 			PULSE+UIRight, D(),
-			PULSE+UIRight, D(),			
-			PULSE+UISelect, D(2000),							// Repair Ship Integrity
-			PULSE+UILeft, D(),			
-			PULSE+UILeft, D(),			
-			PULSE+UISelect, D(),								// Back to main Station Services Menu
+			PULSE+UISelect, D(2000),							//Enter Hanger		
+			PULSE+UIDown, D(),
+//			PULSE+UISelect, D(5500),							//Starport/Carrier Services
+//			PULSE+UIRight, D(),
+//			PULSE+UIRight, D(),
+//			PULSE+UIUp, D(),									// ... we want be be positioned over bottom selection
+//			PULSE+UISelect, D(2000),							// 
+//			PULSE+UIRight, D(),
+//			PULSE+UIRight, D(),			
+//			PULSE+UISelect, D(2000),							// Repair all
+//			PULSE+UILeft, D(),
+//			PULSE+UILeft, D(),
+			PULSE+UISelect, D(),								// Back			
 			LOCK);
 			
 		// MACRO: Launch the ship (from Launchpad screen)
 		// Issue: Rise time varies between ships and thruster power.
 		// Issue: Don't set throttle to 25%
 		mLaunch = CHAIN(
-			LOCK+PULSE+UIDown, D(500),							// down, down, spc, (wait 19), R (hold for 1.5), L
+			LOCK+PULSE+UIDown, D(500),							// down, down, spc, (wait 20), R (hold for 1.5), L
 			PULSE+UIDown, D(500),
 			PULSE+UISelect, D(20000),
 			DOWN+ThrustUp, D(1500),								// Hold down for 1.5
 			UP+ThrustUp, D(500),
-			PULSE+LandingGear, D(1000),
+			PULSE+LandingGear,
 			LOCK);
 			
 	}	// End of fnCustomCommands()

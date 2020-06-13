@@ -23,18 +23,18 @@
 // Index:	Line		FUNCTION
 //			Line 48: 	int tgTxt2Speech()
 //			Line 71: 	int tgEnhancedFAOFF()
-//			Line 98: 	int tgTriggerMode()
-//			Line 134: 	int tgLights()
-//			Line 195: 	int tgSilentRunning()
-//			Line 226: 	int tgCargoScoop()
-//			Line 257: 	int tgLandingGear()
-//			Line 293: 	int tgReverseThrust()
-//			Line 323: 	int tgHardpoints()
-//			Line 360: 	int tgHUDMode()
-//			Line 375: 	int tgFSSMode()
-//			Line 402: 	int tgPlanetView()
-//			Line 425: 	int tgWarpDrive()
-//			Line 482: 	int tgExtCamera()
+//			Line 103: 	int tgTriggerMode()
+//			Line 137: 	int tgLights()
+//			Line 199: 	int tgSilentRunning()
+//			Line 231: 	int tgCargoScoop()
+//			Line 262: 	int tgLandingGear()
+//			Line 299: 	int tgReverseThrust()
+//			Line 330: 	int tgHardpoints()
+//			Line 368: 	int tgHUDMode()
+//			Line 384: 	int tgFSSMode()
+//			Line 412: 	int tgPlanetView()
+//			Line 436: 	int tgWarpDrive()
+//			Line 493: 	int tgExtCamera()
 	
 	
 // START
@@ -58,8 +58,6 @@
 				VoiceTxt = "Text to speech: Disabled";
 				EnableVoice = 0;
 			}
-//			printf("%s\x0a", VoiceText);
-//			fnTextToSpeech(VoiceTxt);
 			fnVPOutput(VoiceTxt);
 		}
 		else {
@@ -115,8 +113,6 @@
 				VoiceTxt = "Primary trigger action, discovery scanner mode";
 			}
 			
-//			fnTextToSpeech(VoiceTxt);
-//			printf("%s\x0a", VoiceTxt);
 			fnVPOutput(VoiceTxt);
 		}
 		
@@ -129,8 +125,6 @@
 				VoiceTxt = "Secondary trigger action, discovery scanner mode";
 			}
 		
-//			fnTextToSpeech(VoiceTxt);
-//			printf("%s\x0a", VoiceTxt);
 			fnVPOutput(VoiceTxt);
 		}
 	}
@@ -197,6 +191,7 @@
 		}
 	}
 
+
 	// TOGGLE: Silent Running - LED3
 	// Parameter: 'x' Valid = 0 (OFF), 1 (ON)
 	// NOTE: Aligns across menulog/restart
@@ -227,6 +222,7 @@
 			fnNotValid(fnName, reason);			
 		}
 	}
+
 
 	// TOGGLE: Cargo Scoop - LED4
 	// Parameter: 'x' Valid: 1 = Deploy, 0 = Retract
@@ -297,6 +293,7 @@
 		}
 	}
 
+
 	// TOGGLE: Reverse Thrusters
 
 	int tgReverseThrust(int EnableSpeedBrake) {
@@ -326,6 +323,7 @@
 			fnNotValid(fnName, reason);
 		}
 	}
+
 
 	// TOGGLE: Hardpoints
 
@@ -364,6 +362,7 @@
 			tgHUDMode();											// If we're in Supercruise, just toggle the HUD Mode
 	}
 
+
 	// TOGGLE: Analysis/Combat HUD Modes
 
 	int tgHUDMode() {
@@ -378,6 +377,7 @@
 		}
 		ActKey(PULSE+KEYON+HUDMode);							// Switch HUD Modes
 	}
+
 
 	// TOGGLE: Enter/Exit FSS Mode
 
@@ -405,7 +405,8 @@
 			fnNotValid(fnName, reason);
 		}
 	}
-	
+
+
 	//TOGGLE: Planet View.
 
 	int tgPlanetView() {
@@ -427,6 +428,7 @@
 		}
 	}
 
+
 	// TOGGLE: Warp Drive
 	// Parameter: 'JumpType'. Valid: 0 = Supercruise, 1 = Frameshift Drive
 	// Flags: fSupercruise, fsdJump
@@ -441,7 +443,7 @@
 		if (JumpType) {
 			fnName = "Warp Drive";
 			EngineText = "Warp Drive:	";
-			WarpDrive = FrameshiftDrive;		// USB[0x0D] = "J"
+			WarpDrive = HyperJump;		// USB[0x0D] = "J"
 		}
 		else {
 			fnName = "Supercruise";
@@ -485,6 +487,7 @@
 		}
 	}
 
+
 	// TOGGLE: External Camera
 
 	int tgExtCamera() {
@@ -492,7 +495,6 @@
 		ActKey(PULSE+KEYON+ExtCamera);
 		if(CameraMode) {
 			printf("External Camera:	ON\x0a");
-//			Sleep(100);
 			DeferCall(100, &ActKey, PULSE+KEYON+EnterFreeCameraMode);
 			DeferCall(200, &ActKey, PULSE+KEYON+HideCameraGUI);
 		}
