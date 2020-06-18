@@ -3,7 +3,7 @@
 //	CMDR Clicker's Elite Dangerous Thrustmaster Warthog + TFRP Script	//
 //----------------------------------------------------------------------//
 
-// This file: ED_MacrosFC.ttm (v4.2.1) ... supports Elite Dangerous v3.7 (Fleet Carriers)
+// This file: ED_Macros.ttm (v4.2.1) ... supports Elite Dangerous v3.7 (Fleet Carriers)
 
 // Refer Change Log.txt in same folder
 
@@ -20,22 +20,22 @@
 // User Config Settings		refer to ED_UserSettings file
 // ========================================================
 
-// Index:	Line		FUNCTION
-//			Line 50:	fnCustomCommands()
-//			Line 61:	mRequestDock 
-//			Line 74:	mDeploySRV 
-//			Line 86:	mBoardShip 
-//			Line 103:	mShowGameStats
-//			Line 108:	mFastModeSwitch0 
-//			Line 119:	mFastModeSwitch1 
-//			Line 133:	mFastModeSwitch2
-//			Line 146:	mReportCrimesToggle
-//			Line 167:	mNAVBeaconWing
-//			Line 192:	mNAVBeaconOff
-//			Line 216:	mClearAllChatBox
-//			Line 256:	mClearChatBox
-//			Line 268:	mEnterHanger
-//			Line 295:	mLaunch
+// Index:	Line			FUNCTION
+//			Line 51:		fnCustomCommands()
+//			Line 80: 		mRequestDock
+//			Line 93: 		mDeploySRV
+//			Line 105: 		mBoardShip
+//			Line 122: 		mShowGameStats
+//			Line 127: 		mFastModeSwitch0
+//			Line 138: 		mFastModeSwitch1
+//			Line 152: 		mFastModeSwitch2
+//			Line 165: 		mReportCrimesToggle
+//			Line 186: 		mNAVBeaconWing
+//			Line 211: 		mNAVBeaconOff
+//			Line 235: 		mClearAllChatBox
+//			Line 274: 		mClearChatBox
+//			Line 286: 		mEnterHanger
+//			Line 312: 		mLaunch
 
 
 // START
@@ -59,20 +59,20 @@
 
 		// Select MapKey Assignment profile
 		if (Flags == 0 & TrainingEnabled) {
-			TrainingKeyMap();
+			printf("\x0a\Training Mode Enabled\x0a");		
 			if (AnnounceTraining) {
-				DeferCall(1000, &fnTextToSpeech, "Training mode ON, press a button or switch to hear what it does");
+				fnTextToSpeech("Training mode enabled, press a button or switch to hear what it does");
 			}
-			printf("\x0a\Training Mode Enabled\x0a");
+			TrainingMain();
 		}
 		else {
-			MainKeyMap();
-			if (AnnounceTraining) {			
-				DeferCall(1000, &fnTextToSpeech, "Training mode not available, enable this feature via E D User Settings file");
+			printf("\x0a\Training Mode Disabled\x0a");			
+			if (AnnounceTraining) {
+				fnTextToSpeech("Training mode disabled. Enable this feature via E D User Settings file");
 			}
-			printf("\x0a\Training Mode Disabled\x0a");
+			MainKeyMap();
 		}
-
+		
 		// Initialise macros
 
 		// MACRO: Auto-Docking Request
@@ -89,7 +89,7 @@
 			LOCK);
 
 		// MACRO: SRV - Deploy
-		mDeploySRV = CHAIN (
+		mDeploySRV = CHAIN(
 			LOCK+PULSE+RolePanel, D(500),						// 3, down, spc, down, down, up, up, spc
 			PULSE+UIDown, D(),
 			PULSE+UISelect, D(500),
@@ -101,7 +101,7 @@
 			LOCK);
 
 		// MACRO: SRV - Board Ship
-		mBoardShip = CHAIN (
+		mBoardShip = CHAIN(
 			LOCK+PULSE+RolePanel, D(250),						// 3, spc, down, down, down, down, down, up, up, spc
 			PULSE+UISelect, D(1500),
 			PULSE+UIDown, D(200),
@@ -181,7 +181,7 @@
 			PULSE+UIBack,
 			LOCK);
 
-		// MACRO: Toggle 'NAV Beacon' ON
+		// MACRO: Toggle 'Wingman Beacon' - WING
 		mNAVBeaconWing = CHAIN(
 			LOCK+PULSE+SystemPanel, D(500),						// 4, e, e, e, right, down, down, down, down, spc, down, spc, up, up, up, up, left, q, q, q, 4
 			PULSE+UINextPanel, D(),								// Limitation: This will only work correctly if Target Panel cursor in
@@ -206,7 +206,7 @@
 			PULSE+UIBack,
 			LOCK);
 
-		// MACRO: Toggle 'NAV Beacon' OFF
+		// MACRO: Toggle 'Wingman Beacon' - OFF
 		mNAVBeaconOff = CHAIN(
 			LOCK+PULSE+SystemPanel, D(500),						// 4, e, e, e, right, down, down, down, down, spc, spc, up, up, up, up, left, q, q, q, 4
 			PULSE+UINextPanel, D(),								// Limitation: This will only work correctly if Target Panel cursor in
@@ -308,14 +308,15 @@
 			
 		// MACRO: Launch the ship (from Launchpad screen)
 		// Issue: Rise time varies between ships and thruster power.
-		// Issue: Don't set throttle to 25%
+
 		mLaunch = CHAIN(
 			LOCK+PULSE+UIDown, D(500),							// down, down, spc, (wait 20), R (hold for 1.5), L
 			PULSE+UIDown, D(500),
 			PULSE+UISelect, D(20000),
 			DOWN+ThrustUp, D(1500),								// Hold down for 1.5
 			UP+ThrustUp, D(500),
-			PULSE+LandingGear,
+			PULSE+LandingGear, D(500),							// Retract gear
+			PULSE+SetSpeed25,									// Forward 25%
 			LOCK);
 			
 	}	// End of fnCustomCommands()
