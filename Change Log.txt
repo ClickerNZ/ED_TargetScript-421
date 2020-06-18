@@ -1,6 +1,6 @@
 // CMDR Clicker Thrustmaster TARGET Script Change Log //
 
-v4.2.1	-
+v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
 
 v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
