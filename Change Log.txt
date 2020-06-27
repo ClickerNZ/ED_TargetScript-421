@@ -1,6 +1,17 @@
 // CMDR Clicker Thrustmaster TARGET Script Change Log //
 
 v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
+		- Expand tgSilentRunning() to include a 'strobe' option (ON/OFF every 2 seconds)
+		- Create 'AutoStrobe' define in ED_UserSettings.tmh and code in ED_StateTracker.tmh to strobe silent running if in danger and shields drop
+		- Create 'AutoHUD' define in ED_UserSettings to enable HUD=Analysis Mode on FSD 
+		- Create 'AutoHeatsink' define in ED_UserSettings.tmh and code in ED_StateTracker.tmh to fire heatsink if Heat > 100% automatically
+		- Use AutoRepeat() instead of REXEC() for PWS trigger modes and recode TG1 and S2 triggers
+		- Remove fnsGetStatusFileInfo() from ED_StateTracker.tmh. Script relies solely on 'StatusFile' alias to be set correctly in ED_UserSettings.tmh
+		- Rename fnSetJoystickCurves() as fnSetCurves()
+		- Tweak fnSetCurves() to include 5 profiles. Move OFF to APAH. APPAT-O = MILD, APPAT-I = MEDIUM, APALT-O = SLOW, APALT-I = SLOWEST
+		- Include UserSetting to disable Flashing LEDs
+		- On the fly LED brightness level adjustment via PSB+FlapsUp
+		- On the fly Weapon and Engine colour toggle
 
 v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
@@ -141,7 +152,7 @@ v4.0.1 - mostly maintenance build
 	Add voice.exe functionality to send text to voice messages
 	Change Vertical Thrust button for SRV to Slew UP in Control bindings (in game)
 	Create fnTextToSpeech() to dynamically build and send system() commands for voice.exe
-	Modify fnSetJoystickCurves() and fnPIPMode() to use fnTextToSpeech()
+	Modify fnSetCurves() and fnPIPMode() to use fnTextToSpeech()
 	Create tgTxt2Speech() to toggle EnableVoice on/off and map to Throttle Boat Switch (Down)
 	Remove voice.exe lag delay by using "start" command
 		
@@ -249,7 +260,7 @@ v3.3.0 (* Reqd for Beyond Chapter 4)
 	Changed a bunch of key binds to consolidate modifier keys
 	Tweaked PIP Power management
 	Simplified enhanced FA-OFF function
-	Simplify fnSetJoystickCurves(). Parse profile# when calling
+	Simplify fnSetCurves(). Parse profile# when calling
 	Remove "Mute Teamspeak" mapping (was S4) - use mute button on headset
 	Moved FA-OFF back to S4 (from boat switch)
 	Moved NAVBeacon WING/OFF and ToggleReportCrimes functions to Boat Switch (from S4)
