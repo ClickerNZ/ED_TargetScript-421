@@ -35,14 +35,15 @@
 //			Line 235: 		mClearAllChatBox
 //			Line 274: 		mClearChatBox
 //			Line 286: 		mEnterHanger
-//			Line 312: 		mLaunch
+//			Line 311: 		mLaunch
+//			Line 322:		mChangeColours
 
 
 // START
 
 	int	mRequestDock, mDeploySRV, mShowGameStats, mReportCrimesToggle, mNAVBeaconWing, mNAVBeaconOff;
 	int	mFastModeSwitch0, mFastModeSwitch1, mFastModeSwitch2, mClearAllChatBox, mClearChatBox, mBoardShip;
-	int mEnterHanger, mLaunch;
+	int mEnterHanger, mLaunch, mChangeColours;
 
 //---------------//
 // CUSTOM MACROS //			// MACROS Include a series of automated key presses to perform a specific task.
@@ -308,7 +309,6 @@
 			
 		// MACRO: Launch the ship (from Launchpad screen)
 		// Issue: Rise time varies between ships and thruster power.
-
 		mLaunch = CHAIN(
 			LOCK+PULSE+UIDown, D(500),							// down, down, spc, (wait 20), R (hold for 1.5), L
 			PULSE+UIDown, D(500),
@@ -318,6 +318,12 @@
 			PULSE+LandingGear, D(500),							// Retract gear
 			PULSE+SetSpeed25,									// Forward 25%
 			LOCK);
+			
+		// MACRO: Change Engine and Weapon Colours	
+		mChangeColours = CHAIN(
+			PULSE+EngineColour, D(),
+			PULSE+WeaponColour, D()
+			);
 			
 	}	// End of fnCustomCommands()
 
