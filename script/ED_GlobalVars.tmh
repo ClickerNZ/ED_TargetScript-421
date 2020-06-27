@@ -33,12 +33,14 @@
 	int VoiceExists;					// Initialised here and set in initTextToSpeech()
 	int SounderExists;					// Initialised here and set in initSoundFX()
 
-	int JSProfile;						// Used in fnSetJoystickCurves() and fnEnhancedFAOFF() (see EDFunctions.tmh) Values = 0, 1 or 2
+	int JSProfile;						// Used in fnSetCurves() and fnEnhancedFAOFF() (see EDFunctions.tmh) Values = 0, 1 or 2
 	int JSCurveSetting;
 	int DXCurveSetting;
 
 	int PIPMode;						// Set/Reset via H4P and fnPIPMode() and used in fnPIPManager() to change PIP management profile  (see EDFunctions.tmh)
 	int PIPTxt;							// PIPMode descriptor
+	
+	int	SetLED;							// SetLED determines LED brightness. Refer fnLEDBrightness()		
 
 	int Debug				= 0;		// Debug mode for testing. 0 = OFF, 1 = ON. Prints additional info to console
 	int ShowFlags			= 0;		// Set/Reset in fnDebug() and used in fnsProcessFlags()
@@ -55,21 +57,24 @@
 	int OrbitalCruise		= 0;		// Track when entering Orbital Cruise
 	int FireModeP			= 0;		// 0 = Press to fire/Release to Stop, 1 = Press to fire, Press again to stop
 	int FireModeS			= 0;		// 0 = Press to fire/Release to Stop, 1 = Press to fire, Press again to stop
-	int ShipDismissed		= 0;		// Track when Ship is dismissed/recalled via EORIGN-U 
+	int ShipDismissed		= 0;		// Track when Ship is dismissed/recalled via EORIGN-U
+	int SilentStrobe		= 0;		// Used to track when we are using the Silent Running Strobe feature
 
 	define SYS				1			// Used in fnPIPMapper for managing System  PIPs (see EDFunctions.tmh) (DO NOT modify!)
 	define ENG				2			// Used in fnPIPMapper for managing Engine  PIPs (see EDFunctions.tmh) (DO NOT modify!)
 	define WEP				3			// Used in fnPIPMapper for managing Weapon  PIPs (see EDFunctions.tmh) (DO NOT modify!)
 	define MID				4			// Used in fnPIPMapper for managing Balance PIPs (see EDFunctions.tmh) (DO NOT modify!)
 
-	define ON				1
 	define OFF				0
+	define ON				1
+	define STROBE			2			// Used in tgSilentRunning()
 	
 	define TRUE				1
 	define FALSE			0
 
 	define BASIC			0
 	define FULL				1
+	define CUSTOM			2
 	
 	define DEPLOY			1
 	define RETRACT			0
@@ -78,14 +83,16 @@
 	define DebugON			1
 	define DebugOFF			0
 	
-	define INCREASE			1
 	define DECREASE			0
+	define INCREASE			1
+	define NOCHANGE			2
 	
 	define NUL				0
-	define NONE				0			// used for fnSetJoyStickCurves()
-	define MILD				1			// used for fnSetJoyStickCurves()
-	define MEDIUM			2			// used for fnSetJoyStickCurves()
-	define SLOW				3			// used for fnSetJoyStickCurves()
+	define NONE				0			// used for fnSetCurves()
+	define MILD				1			// used for fnSetCurves()
+	define MEDIUM			2			// used for fnSetCurves()
+	define SLOW				3			// used for fnSetCurves()
+	define SLOWEST			4			// used for fnSetCurves()
 	define NOPRINT			0			// suppress console message
 	define PRINT			1			// don't
 	define SAVE				1			// used in fnsMyStates()
