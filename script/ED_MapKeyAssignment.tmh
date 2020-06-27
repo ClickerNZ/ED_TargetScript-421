@@ -24,7 +24,7 @@
 
 // Index:	Line		FUNCTION
 //			Line 38: 	int MainKeyMap()
-//			Line 601: 	int TrainingMain()
+//			Line 605: 	int TrainingMain()
 
 
 // START
@@ -51,23 +51,16 @@
 			MapKey(&Joystick, TG1, PrimaryFire);
 		}
 		else {
-			MapKeyIOUMD(&Joystick, TG1,			// (Gun Trigger - Stage 1)
-				0,																								// IU -
-				SEQ(REXEC(0, 7000, "ActKey(PULSE+KEYON+PrimaryFire);", RNOSTOP), EXEC("StopAutoRepeat(0);")),	// OU - Fires every 7 seconds until stopped (eg pulse wave scanner)
-				0,																								// IM -
-				EXEC("fnAdvFireControl(0);"),																	// OM - default Primary Fire action
-				EXEC("tgTriggerMode(1);"),																		// ID - Swap trigger action between timed and press-to-fire/press-to-stop
-				EXEC("fnAdvFireControl(1);")																	// OD - Shifted Primary Fire action
+			MapKeyUMD(&Joystick, TG1,			// (Gun Trigger - Stage 1)
+				EXEC("tgTriggerMode(1);"),																		// U - Increment trigger mode for shifted Primary Fire
+				EXEC("fnAdvFireControl(0);"),																	// M - Default Primary Fire action
+				EXEC("fnAdvFireControl(1);")																	// D - Shifted Primary Fire action
 				);
 				
-			MapKeyRIOUMD(&Joystick, TG1,		// TG1 RELEASE
-				0,																								// IU -
-				0,																								// OU -
-				0,																								// IM -
-//				EXEC("ActKey(PrimaryFire);"),																	// OM - Release trigger 
-				PrimaryFire,																					// OM - Release trigger
-				0,																								// ID -
-				0																								// OD -			
+			MapKeyRUMD(&Joystick, TG1,			// TG1 RELEASE
+				0,																								// U -
+				PrimaryFire,																					// M - Release trigger
+				0																								// D -			
 				);
 		}
 				
@@ -94,22 +87,16 @@
 			MapKey(&Joystick, S2, SecondaryFire);
 		}
 		else {		
-			MapKeyIOUMD(&Joystick, S2,
-				0,																								// IU -
-				SEQ(REXEC(1, 7000, "ActKey(PULSE+KEYON+SecondaryFire);", RNOSTOP), EXEC("StopAutoRepeat(1);")),	// OU - Fires every 7 seconds until stopped (eg pulse wave scanner)
-				0,																								// IM - 
-				EXEC("fnAdvFireControl(2);"),																	// OM - default Secondary Fire action
-				EXEC("tgTriggerMode(2);"),																		// ID - Swap trigger action between timed and press-to-fire/press-to-stop
-				EXEC("fnAdvFireControl(3);")																	// OD - Shifted Secondary Fire action
+			MapKeyUMD(&Joystick, S2,
+				EXEC("tgTriggerMode(2);"),																		// U - Swap trigger action between timed and press-to-fire/press-to-stop
+				EXEC("fnAdvFireControl(2);"),																	// M - Default Secondary Fire action
+				EXEC("fnAdvFireControl(3);")																	// D - Shifted Secondary Fire action
 				);
 				
-			MapKeyRIOUMD(&Joystick, S2,				// S2 RELEASE
-				0,																								// IU -
-				0,																								// OU -
-				0,																								// IM -
-				SecondaryFire,																					// OM - Release trigger 
-				0,																								// ID -
-				0																								// OD -
+			MapKeyRUMD(&Joystick, S2,				// S2 RELEASE
+				0,																								// U -
+				SecondaryFire,																					// M - Release trigger 
+				0																								// D -
 				);
 		}
 	
@@ -389,9 +376,17 @@
 			MapKey(&Throttle, APALT, 0);
 		}
 		else {
-			MapKey(&Throttle, APPAT, EXEC("fnSetJoystickCurves(NONE, CurveInfo);"));		// Set Joystick curves = NONE
-			MapKey(&Throttle, APAH,  EXEC("fnSetJoystickCurves(MILD, CurveInfo);"));		// Set Joystick curves = MILD
-			MapKey(&Throttle, APALT, EXEC("fnSetJoystickCurves(MEDIUM, CurveInfo);"));		// Set Joystick curves = MEDIUM
+			MapKeyIO(&Throttle, APPAT,
+			EXEC("fnSetCurves(MEDIUM, CurveInfo);"),									// I - Set Curves = MEDIUM
+			EXEC("fnSetCurves(MILD, CurveInfo);")										// O - Set Curves = MILD
+			);
+			
+			MapKey(&Throttle, APAH,  EXEC("fnSetCurves(OFF, CurveInfo);"));				// Set Curves = OFF
+			
+			MapKeyIO(&Throttle, APALT, 
+				EXEC("fnSetCurves(SLOWEST, CurveInfo);"),								// I - Set Curves = SLOWEST 
+				EXEC("fnSetCurves(SLOW, CurveInfo);")									// O - Set Curves = SLOW
+				);
 		}
 		
 //		(Enhanced Attitude Control (EAC) Arm/Off)
@@ -402,7 +397,11 @@
 			MapKey(&Throttle, EACOFF, PULSE+SilentRunning);
 		}
 		else {
-			MapKey(&Throttle, EACON, EXEC("tgSilentRunning(ON);"));
+			MapKeyIO(&Throttle, EACON,
+				EXEC("tgSilentRunning(STROBE);"),												// I - Strobe Silent running every 2 seconds
+				EXEC("tgSilentRunning(ON);")													// O - Engage Silent Running
+			);
+			
 			MapKey(&Throttle, EACOFF, EXEC("tgSilentRunning(OFF);"));
 		}
 		
@@ -458,7 +457,9 @@
 		if (MapKeyProfile == BASIC) {
 			MapKey(&Throttle, FLAPU, PULSE+GalMap);
 			MapKeyR(&Throttle, FLAPU,  PULSE+GalMap);		// RELEASE
+			
 			MapKey(&Throttle, FLAPM, 0);
+			
 			MapKey(&Throttle, FLAPD, PULSE+SystemMap);
 			MapKeyR(&Throttle, FLAPD,  PULSE+SystemMap);	// RELEASE			
 			}
@@ -466,7 +467,7 @@
 			MapKeyUMD(&Throttle, FLAPU,
 				EXEC("fnVoiceVolume(INCREASE);"),												// U - Increase TextToSpeech volume
 				PULSE+GalMap,																	// M - Galaxy Map - ON
-				0																				// D - 
+				EXEC("fnLEDBrightness(INCREASE);")												// D - Increase LED Brightness 
 				);
 				
 			MapKeyRUMD(&Throttle, FLAPU,				// RELEASE
@@ -486,7 +487,7 @@
 			MapKeyRUMD(&Throttle, FLAPD,				// RELEASE
 				0,																				// RU -
 				PULSE+SystemMap,																// RM - System Map - OFF
-				PULSE+LED(&Throttle, LED_INTENSITY, SetLED)										// RD - Turn Throttle Base LEDs on
+				EXEC("fnLEDBrightness();")														// RD - Turn Throttle Base LEDs on
 				);
 		}
 		
@@ -512,8 +513,8 @@
 			MapKey(&Throttle, EORIGN, EXEC("fnDRShip();"));										// From SRV - Recall/Dismiss Ship
 		}
 		
-		MapKey(&Throttle, EORMOTOR, PULSE+HideShipGUI);										// Toggle: Ship GUI OFF
-		MapKeyR(&Throttle, EORMOTOR, PULSE+HideShipGUI);	// RELEASE						// Toggle: Ship GUI ON
+		MapKey(&Throttle, EORMOTOR, PULSE+HideShipGUI);											// Toggle: Ship GUI OFF
+		MapKeyR(&Throttle, EORMOTOR, PULSE+HideShipGUI);	// RELEASE							// Toggle: Ship GUI ON
 
 //		(Engine Operate - Left)
 //		-----------------------
@@ -529,8 +530,8 @@
 				 );
 		}
 				 
-		MapKey(&Throttle, EOLNORM, 0);														// <not currently used>
-		MapKey(&Throttle, EOLMOTOR, 0);														// <not currently used>
+		MapKey(&Throttle, EOLNORM, 0);															// <not currently used>
+		MapKey(&Throttle, EOLMOTOR, PULSE+mChangeColours);										// Toggle Engine and Weapon Colours
 
 //		(Engine Fuel Flow - Right)
 //		--------------------------
@@ -612,13 +613,10 @@
 			MapKey(&Joystick, TG1, EXEC("fnVPOutput(\"Primary Fire\");"));
 		}
 		else {
-			MapKeyIOUMD(&Joystick, TG1,		// (Gun Trigger - Stage 1)
-				EXEC("fnVPOutput(\"Not mapped\");"),
-				EXEC("fnVPOutput(\"Pulse Wave Scanner\");"),
-				EXEC("fnVPOutput(\"Not mapped\");"),
+			MapKeyUMD(&Joystick, TG1,		// (Gun Trigger - Stage 1)
+				EXEC("fnVPOutput(\"Toggle Primary Trigger Mode\");"),
 				EXEC("fnVPOutput(\"Primary Fire\");"),
-				EXEC("fnVPOutput(\"Toggle Trigger  Mode\");"),
-				EXEC("fnVPOutput(\"Discovery scanner, or, Mining Laser mode\");")
+				EXEC("fnVPOutput(\"Advanced Primary trigger mode\");")
 				);
 		}
 							
@@ -645,13 +643,10 @@
 			MapKey(&Joystick, S2, EXEC("fnVPOutput(\"Secondary Fire\");"));
 		}
 		else {		
-			MapKeyIOUMD(&Joystick, S2,
-				EXEC("fnVPOutput(\"Not mapped\");"),
-				EXEC("fnVPOutput(\"Pulse Wave Scanner\");"),
-				EXEC("fnVPOutput(\"Not mapped\");"),
+			MapKeyUMD(&Joystick, S2,
+				EXEC("fnVPOutput(\"Toggle Secondary Trigger Mode\");"),
 				EXEC("fnVPOutput(\"Secondary Fire\");"),
-				EXEC("fnVPOutput(\"Toggle Trigger  Mode\");"),
-				EXEC("fnVPOutput(\"Discovery scanner, or, Mining Laser mode\");")
+				EXEC("fnVPOutput(\"Advanced Secondary trigger mode\");")
 				);
 		}
 				
@@ -918,9 +913,17 @@
 			MapKey(&Throttle, APALT, EXEC("fnVPOutput(\"Not mapped\");"));
 		}
 		else {
-			MapKey(&Throttle, APPAT, EXEC("fnVPOutput(\"Set joystick curves to off\");"));
-			MapKey(&Throttle, APAH,  EXEC("fnVPOutput(\"Set joystick curves to mild\");"));
-			MapKey(&Throttle, APALT, EXEC("fnVPOutput(\"Set joystick curves to medium\");"));
+			MapKeyIO(&Throttle, APPAT, 
+			EXEC("fnVPOutput(\"Set axis curves medium\");"),
+			EXEC("fnVPOutput(\"Set axis curves mild\");")
+			);
+			
+			MapKey(&Throttle, APAH,  EXEC("fnVPOutput(\"Set axis curves off\");"));
+			
+			MapKeyIO(&Throttle, APALT, 
+				EXEC("fnVPOutput(\"Set axis curves slowest\");"),
+				EXEC("fnVPOutput(\"Set axis curves slow\");")
+				);
 		}
 	
 //		(Enhanced Attitude Control (EAC) Arm/Off)
@@ -987,7 +990,7 @@
 			MapKeyUMD(&Throttle, FLAPU,
 				EXEC("fnVPOutput(\"Increase voice feedback volume\");"),
 				EXEC("fnVPOutput(\"Open Galaxy Map\");"),
-				EXEC("fnVPOutput(\"Not mapped\");")
+				EXEC("fnVPOutput(\"Increase LED brightness\");")
 				);
 	
 			MapKeyRUMD(&Throttle, FLAPU,		// RELEASE
@@ -1051,7 +1054,7 @@
 				 );
 		}
 				 
-		MapKey(&Throttle, EOLMOTOR, EXEC("fnVPOutput(\"Not mapped\");"));		
+		MapKey(&Throttle, EOLMOTOR, EXEC("fnVPOutput(\"Toggle Engine and Weapon colours\");"));		
 
 //		(Engine Fuel Flow - Right)
 //		--------------------------
