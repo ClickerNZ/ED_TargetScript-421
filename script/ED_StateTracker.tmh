@@ -43,40 +43,9 @@
 	// End of Global Variables
 	//============================================================================================================================
 
-	
-	// FUNCTION:	Get file path + info for status.json
-	
-	// NOTE:		This function can be made redundant by declaring 'alias StatusPath' and
-	//				set StatusInfo = 1 in the ED_UserSettings file and set 'StatusInfoRun = 1, above
-
-	int fnsGetStatusFileInfo() {
-
-		int fp;														// general purpose file pointer
-		int myResult;												// general purpose result variable
-
-		int buf = 255;												//
-		Dim(&StatusFile, buf);										//
-		StatusFile[0] = 0;											//
-		
-		fp = fopen("c:\\status.json.path.txt", "r");
-		if (fp) {
-			myResult = fread(&StatusFile, 1, buf, fp);				// read in the path...
-			fclose(fp);
-			if (myResult == 0) {
-				printf("File Read Error: %s\x0a", &StatusFile);
-			}
-			else {
-				strdel(&StatusFile, myResult-1, buf);				// removes trailing NUL
-			}
-		}
-		else {
-			printf("C:\\status.json.path.txt file not found.\x0a");
-		}	
-	}
-
 
 	// FUNCTION:	Read in status.json into 'myJson'
-	// Requires:	'StatusFile' string variable to be correctly set in ED_UserSettings file, or via 'fnsGestStatusInfo()'
+	// Requires:	'StatusFile' string variable to be correctly set in ED_UserSettings file
 
 	// GlobalVars
 	
@@ -291,6 +260,9 @@
 		int sh = fMainShip;												// Track in/out of MainShip
 		int dk = fDocked;												// Track when we dock in station or star port
 		int ld = fLanded;												// Track when landed
+		int oh = fOverHeating;											// Track when we overheat
+		int su = fShieldsUp;											// Track when shields drop
+		int dg = fDanger;												// Track when we are in ganger
 		
 		int fa = fFAOff;												// LED 1 Tracking
 		int lt = fLights;												// LED 2 Tracking
@@ -382,14 +354,15 @@
 						
 						if (OrbitalCruise & !fInterdicted) {
 							VoiceTxt = "Entering Glide Mode";
-							printf("%s\x0a", VoiceTxt);
+//							printf("%s\x0a", VoiceTxt);
 						}
 						else { 
 							VoiceTxt = "Drop detected";
-							printf("Uninitiated %s\x0a", VoiceTxt);
+//							printf("Uninitiated %s\x0a", VoiceTxt);
 						}
 						
-						fnTextToSpeech(VoiceTxt);
+//						fnTextToSpeech(VoiceTxt);
+						fnVPOutput(VoiceTxt);
 						
 						if (fInterdicted | fDanger) {
 							printf("!!! DANGER DETECTED !!!\x0a");
@@ -399,7 +372,7 @@
 							if (!fHardpoints) {
 								tgHardpoints();
 							}
-							DeferCall(1000, &ActKey, PULSE+KEYON+SelectHighestThreat);
+							DeferCall(1500, &ActKey, PULSE+KEYON+SelectHighestThreat);
 							
 							fnTextToSpeech("Warning! Danger! Combat Mode Initiated", 100);				// Sound warning 
 						}
@@ -415,8 +388,20 @@
 
 			if (fsdJump != wd) {
 				if (fsdJump) {
-					if (!fHUDAnalysis) {
+					if (!fHUDAnalysis & AutoHUD) {
 						tgHUDMode();		
+					}
+				}
+			}
+			
+			if (!fShieldsUp & su & !fSilentRunning) {		// Shields just dropped
+				if (fDanger) {
+					if (AutoStrobe) {
+						DeferCall(750, &fnVPOutput, "Activating Silent Strobe");
+						tgSilentRunning(STROBE);
+					}
+					else {
+						DeferCall(750, &fnTextToSpeech, "Consider using Silent Strobe commander");
 					}
 				}
 			}
@@ -446,6 +431,16 @@
 					if (AutoGearUP) {
 						DeferCall(1500, &ActKey, PULSE+KEYON+LandingGear);
 					}					
+				}
+			}
+			
+			if (fOverHeating & !oh) {
+				if (AutoHeatsink) {		// Fire a heatsink if we have one
+					fnVPOutput("Auto Heat sink engaged!");
+					ActKey(PULSE+KEYON+DeployHeatSink);
+				}
+				else {
+					fnTextToSpeech("Consider firing a heat sink commander", 100);
 				}
 			}
 									
@@ -553,21 +548,11 @@
 			printf("\x0a\status.json file set correctly in ED_UserSettings");
 		}
 		else {
-			printf("status.json file not set in ED_UserSettings...trying 'fnsGetStatusFileInfo()'\x0a");
-			fnsGetStatusFileInfo();
-			fp = fopen(&StatusFile, "r");
-			if (fp) {
-				fclose(fp);
-				ValidStatusFile = 1;
-				printf("status.json found via 'fnsGetStatusFileInfo()'\x0a");
-			}
-			else {
-				printf("\x0a\x0a\!!! FATAL ERROR !!!\x0a\x0a");
-				printf("status.json file not found.\x0a\x0a");
-				printf("Please set 'StatusFile' alias correctly in ED_UserSettings file\x0a");
-				printf("Refer ED_UserSettings.tmh file or supplied 'Readme.md' file for instructions.\x0a");
-				Abort();
-			}
+			printf("\x0a\x0a\!!! FATAL ERROR !!!\x0a\x0a");
+			printf("status.json file not found.\x0a\x0a");
+			printf("Please set 'StatusFile' alias correctly in ED_UserSettings file\x0a");
+			printf("Refer ED_UserSettings.tmh file for instructions.\x0a");
+			Abort();
 		}
 		
 		if (StartupLock) {
