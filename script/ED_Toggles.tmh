@@ -26,15 +26,15 @@
 //			Line 103: 	int tgTriggerMode()
 //			Line 137: 	int tgLights()
 //			Line 199: 	int tgSilentRunning()
-//			Line 231: 	int tgCargoScoop()
-//			Line 262: 	int tgLandingGear()
-//			Line 299: 	int tgReverseThrust()
-//			Line 330: 	int tgHardpoints()
-//			Line 368: 	int tgHUDMode()
-//			Line 384: 	int tgFSSMode()
-//			Line 412: 	int tgPlanetView()
-//			Line 436: 	int tgWarpDrive()
-//			Line 493: 	int tgExtCamera()
+//			Line 242: 	int tgCargoScoop()
+//			Line 273: 	int tgLandingGear()
+//			Line 310: 	int tgReverseThrust()
+//			Line 341: 	int tgHardpoints()
+//			Line 379: 	int tgHUDMode()
+//			Line 395: 	int tgFSSMode()
+//			Line 423: 	int tgPlanetView()
+//			Line 447: 	int tgWarpDrive()
+//			Line 504: 	int tgExtCamera()
 	
 	
 // START
@@ -77,18 +77,20 @@
 				if (CurveInfo == PRINT) {
 					printf("FA-ON Curves:\x0a");
 				}
-				if (Throttle[APPAT])	fnSetJoystickCurves(NONE, CurveInfo);
-				if (Throttle[APAH])		fnSetJoystickCurves(MILD, CurveInfo);
-				if (Throttle[APALT])	fnSetJoystickCurves(MEDIUM, CurveInfo);
+//				if (Throttle[APPAT])	fnSetCurves(MILD, CurveInfo);
+//				if (Throttle[APAH])		fnSetCurves(NONE, CurveInfo);
+//				if (Throttle[APALT])	fnSetCurves(SLOW, CurveInfo);
+				fnSetCurves(OldCurves, CurveInfo);
 			}
 			else {
 				if (CurveInfo == PRINT) {
 					printf("FA-OFF Curves:\x0a");
 				}
-				fnSetJoystickCurves(FAOFFCurves, CurveInfo);
+				OldCurves = JSCurveSetting;
+				fnSetCurves(FAOFFCurves, CurveInfo);
 			}			
 			ActKey(PULSE+KEYON+FlightAssist);
-			fnFlashLED(LED1);
+//			fnFlashLED(LED1);
 		}
 		else {
 			reason = "we are currently in Supercruise";
@@ -105,28 +107,36 @@
 		int VoiceTxt;
 		
 		if (x == 1) {
-			FireModeP = !FireModeP;
-			if(FireModeP) {
-				VoiceTxt = "Primary trigger action, mining laser mode";
-			}
-			else {
-				VoiceTxt = "Primary trigger action, discovery scanner mode";
-			}
+			FireModeP = FireModeP + 1;
+			if (FireModeP > 2) FireModeP = 0;
 			
-			fnVPOutput(VoiceTxt);
+			if (FireModeP == 0) {
+				VoiceTxt = "Primary trigger action, discovery scanner";
+			}
+			if (FireModeP == 1) {
+				VoiceTxt = "Primary trigger action, mining laser";
+			}
+			if (FireModeP == 2) {
+				VoiceTxt = "Primary Trigger action, pulse wave scanner";
+			}
 		}
 		
 		if (x == 2) {
-			FireModeS = !FireModeS;
-			if(FireModeS) {
-				VoiceTxt = "Secondary trigger action, mining laser mode";
+			FireModeS = FireModeS + 1;
+			if (FireModeS > 2) FireModeS = 0;
+			
+			if (FireModeS == 0) {
+				VoiceTxt = "Secondary trigger action, discovery scanner";
 			}
-			else {
-				VoiceTxt = "Secondary trigger action, discovery scanner mode";
+			if (FireModeS == 1) {
+				VoiceTxt = "Secondary trigger action, mining laser";
 			}
-		
-			fnVPOutput(VoiceTxt);
+			if (FireModeS == 2) {
+				VoiceTxt = "Secondary trigger action, pulse wave scanner";
+			}		
 		}
+		
+		fnVPOutput(VoiceTxt);		
 	}
 	
 	
@@ -147,13 +157,13 @@
 				if (!fLights) {				// Transition: Off to LO
 					lstate = "LO";
 					arrows = ">>";
-					fnFlashLED(LED2);
+//					fnFlashLED(LED2);
 				}
 				else {
 					if (fSRVHiBeam) {		// Transition: HI to OFF
 						lstate = "OFF";
 						arrows = "<<";
-						fnFlashLED(LED2);	
+//						fnFlashLED(LED2);	
 					}
 					else {					// Transition: LO to HI
 						lstate = "HI";
@@ -163,7 +173,7 @@
 			}
 			else {							// ...otherwise, we're in the ship...
 				ltext = "Ship";
-				fnFlashLED(LED2);
+//				fnFlashLED(LED2);
 				if (!fLights) {				// If lights are off, turn them on
 					lstate = "ON";
 					arrows = ">>";
@@ -193,33 +203,44 @@
 
 
 	// TOGGLE: Silent Running - LED3
-	// Parameter: 'x' Valid = 0 (OFF), 1 (ON)
+	// Parameter: 'x': 0 (OFF), 1 (ON), 2 (STROBE)
 	// NOTE: Aligns across menulog/restart
 
 	int tgSilentRunning(int x) {
 		int fnName = "Silent Running";
 		int reason;
-		
-		if (!fSupercruise & !fSRV) {		
-			if(!fSilentRunning) {									// Was OFF, turn on...
-				printf("Silent Running:		ACTIVATED	!!\x0a");
-			}
-			else {													// Was ON, turn off...
-				printf("Silent Running:		DEACTIVATED	<<\x0a");
-			}
-			if (x != fSilentRunning) {
-				ActKey(PULSE+KEYON+SilentRunning);
-				fnFlashLED(LED3);
-			}	
-		}
-		else if (x) {
+				
+		if (x == ON | x == STROBE) {											// Toggle Silent Running - ON 
 			if (fSupercruise) {
-				reason = "we are in supercruise";
+				fnNotValid(fnName, "we are in supercruise");
 			}
-			if (fSRV) {
-				reason = "we are in the SRV";
+			else if (fSRV) {
+				fnNotValid(fnName, "we are in the SRV");
 			}
-			fnNotValid(fnName, reason);			
+			else {
+				if (x == STROBE & SilentStrobe == 0) {
+					AutoRepeat(5, 2000, &ActKey, PULSE+KEYON+SilentRunning);	// Strobe Silent Running 
+					SilentStrobe = 1;
+					fnVPOutput("Silent Strobe:		ACTIVATED	!!");
+				}
+				else if (x == ON) {
+					ActKey(PULSE+KEYON+SilentRunning);
+					fnVPOutput("Silent Running:		ACTIVATED	!!");
+				}
+			}
+		}		
+		else if (x == OFF) {													// Toggle Silent Running - OFF
+			if (fSilentRunning) {
+				ActKey(PULSE+KEYON+SilentRunning);
+			}						
+			if (SilentStrobe) {								
+				StopAutoRepeat(5);											// Stop Strobe 
+				SilentStrobe = 0;
+				fnVPOutput("Silent Strobe:		DEACTIVATED	!!");
+			}
+			else {
+				fnVPOutput("Silent Running:		DEACTIVATED	!!");
+			}
 		}
 	}
 
@@ -241,7 +262,7 @@
 			}
 			if (x != fCargoScoop) {
 				ActKey(PULSE+KEYON+CargoScoop);
-				fnFlashLED(LED4);
+//				fnFlashLED(LED4);
 			}				
 		}
 		else if (x) {
@@ -277,7 +298,7 @@
 				}
 			}
 			ActKey(PULSE+KEYON+LandingGear);
-			fnFlashLED(LED5);
+//			fnFlashLED(LED5);
 		}
 		else {
 			if (fSupercruise) {
