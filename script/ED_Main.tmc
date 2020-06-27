@@ -88,7 +88,8 @@ include "ED_Toggles.tmh"
 		fnPIPMode(0);															// Reset PIPMode
 
 		fnsMyStates(LOAD);														// Load my ststaus variables
-		
+
+		fnLEDBrightness();														// Set initial LED Brightness levels
 		fnsStartCheck();														// Check for vital files and game start		
 		initTextToSpeech();														// Initialise Text-To-Speech engine
 		initSoundFX();															// Initialise Sound Effects engine
