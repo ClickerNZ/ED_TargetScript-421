@@ -27,9 +27,10 @@
 //			Line 100: 	int initTextToSpeech()
 //			Line 116: 	int initSoundFX()
 //			Line 136: 	int fnNotValid()
-//			Line 151: 	int fnSetJoystickCurves()
+//			Line 151: 	int fnSetCurves()
 //			Line 209: 	int fnSetSliderCurve()
 //			Line 243: 	int fnGetFlightMode()
+//			Line xxx:	int fnLEDBrightness()
 //			Line 262: 	int fnFlashLED()
 //			Line 273: 	int fnSetLEDs()
 //			Line 305: 	int fnFlashStart()
@@ -63,7 +64,7 @@
 
 	// FUNCTION: Initialise Joystick
 	int initJoystickAxis() { 																	// Set Default Joystick Axis
-		printf("\x0a\Initialising:\x0a");
+		printf("\x0a\Initialising: v%d.%d.%s\x0a", VMajor, VMinor, VPoint);
 		printf("-----------------------------------------------------------------------------------------------------------------------------------------------\x0a");
 		MapAxis(&Joystick, JOYX, DX_X_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
 		MapAxis(&Joystick, JOYY, DX_Y_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
@@ -148,23 +149,31 @@
 	// Parameter:	Profile = 0, 1 or 2 (see JSProfile in EDGlobalVars)
 	// Parameter:	print = 0 to supress console print of Curve settings, 1 to print
 
-	int fnSetJoystickCurves(int profile, int print=0, int announce=1) {
+	int fnSetCurves(int profile, int print=0, int announce=1) {
 
 		int VoiceTxt;
 
 		JSProfile = profile;
 		
-		if (profile == 0) {
+		if (profile == NONE) {
 			JSCurveSetting = "NONE";
 			VoiceTxt = "Curves None";
 		}
-		if (profile == 1) {
+		if (profile == MILD) {
 			JSCurveSetting = "MILD";
 			VoiceTxt = "Curves mild";
 		}
-		if (profile == 2) {
+		if (profile == MEDIUM) {
 			JSCurveSetting = "MEDIUM";
 			VoiceTxt = "Curves medium";			
+		}
+		if (profile == SLOW) {
+			JSCurveSetting = "SLOW";
+			VoiceTxt = "Curves slow";					
+		}
+		if (profile == SLOWEST) {
+			JSCurveSetting = "SLOWEST";
+			VoiceTxt = "Curves slowest";					
 		}
 
 		// Set Joystick curves and force re-read of axes
@@ -256,14 +265,37 @@
 	}
 
 
+	// FUNCTION:	Increase LED Brightness
+	// Parameter:	x = INCREASE, DECREASE, NOCHANGE
+	
+	int fnLEDBrightness(int x = NOCHANGE) {
+		if (x == INCREASE) {
+			LEDLevel = LEDLevel + 1;
+			if (LEDLevel > 5) LEDLevel = 0;
+		}
+		if (x == DECREASE) {
+			LEDLevel = LEDLevel - 1;
+			if (LEDLevel < 0) LEDLevel = 5;
+		}
+		SetLED = (42*LEDLevel)+LEDLevel;
+		ActKey(PULSE+KEYON+LED(&Throttle, LED_INTENSITY, SetLED));
+		printf("LED Brightness [Level %d]:	%d\x0a", LEDLevel, SetLED);
+	}
+	
+	
 	// FUNCTION:	Flashes state LED when toggled
 	// Parameter:	"LEDx" where x = 1 - 5
 
-	int fnFlashLED(int x) {
-		int counter = 0;																			// Flashes LED# (parsed as parameter when calling) odd number of times.
-		while (counter < 11) {																		// Odd number TOGGLES LED.
-			DeferCall(counter*100, &ActKey, PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT^x));	// Loop effectively issues 11 DeferCalls at ~100 mSec apart
-			counter = counter + 1;
+	int fnFlashLED(int x) {																			// Flashes LED# (parsed as parameter when calling) odd number of times.
+		int counter = 0;
+		if (FlashLEDs) {
+			while (counter < 11) {																		// Odd number TOGGLES LED.
+				DeferCall(counter*100, &ActKey, PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT^x));	// Loop effectively issues 'counter' DeferCalls at ~100 mSec apart
+				counter = counter + 1;
+			}
+		}
+		else {
+			ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT^x));
 		}
 	}
 
@@ -304,11 +336,13 @@
 
 	int fnFlashStart() {
 		int i = 0;
-
-		while (i < 5) {
-			DeferCall(200*i, &ActKey, PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT^LED0));
-			DeferCall((200*i)+100, &ActKey, PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT^LED0));
-			i = i + 1;
+		
+		if (FlashLEDs) {
+			while (i < 5) {
+				DeferCall(200*i, &ActKey, PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT^LED0));
+				DeferCall((200*i)+100, &ActKey, PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT^LED0));
+				i = i + 1;
+			}
 		}
 	}
 
@@ -466,9 +500,9 @@
 		if (Throttle[SPDF])		DeferCall(999, &tgReverseThrust, 0);
 
 		// Align Joystick curves
-		if (Throttle[APPAT])	fnSetJoystickCurves(NONE, NOPRINT, 0);
-		if (Throttle[APAH])		fnSetJoystickCurves(MILD, NOPRINT, 0);
-		if (Throttle[APALT])	fnSetJoystickCurves(MEDIUM, NOPRINT, 0);		
+		if (Throttle[APPAT])	fnSetCurves(NONE, NOPRINT, 0);
+		if (Throttle[APAH])		fnSetCurves(MILD, NOPRINT, 0);
+		if (Throttle[APALT])	fnSetCurves(MEDIUM, NOPRINT, 0);		
 		
 		if (fDocked) 			InHanger = 1;
 		
@@ -647,48 +681,65 @@
 
 		// Primary Trigger Action
 		if (x == 0) {
-			ActKey(KEYON+PrimaryFire);							// Normal press to fire, release to stop firing
+			ActKey(KEYON+PrimaryFire);										// Normal press to fire, release to stop firing
 		}
 		if (x == 1) {
 			if (fSupercruise & FireModeP) {
 				tgTriggerMode(1);
 			}
 			if (FireModeP == 0) {
-				ActKey(KEYON+PrimaryFire);	 					// Press to fire...
-				DeferCall(DiscoDelay, &ActKey, PrimaryFire);	// Release automatically after 6.1 seconds
+				ActKey(KEYON+PrimaryFire);	 								// Press to fire...
+				DeferCall(DiscoDelay, &ActKey, PrimaryFire);				// Release automatically after 6.1 seconds
 			}
-			else {
+			if (FireModeP == 1) {
 				if (!TriggerStateP) {
-					ActKey(KEYON+DOWN+PrimaryFire);				// Press to fire...
+					ActKey(KEYON+DOWN+PrimaryFire);							// Press to fire...
 				}
 				else {
-					ActKey(KEYON+UP+PrimaryFire);				// Press to stop firing
+					ActKey(KEYON+UP+PrimaryFire);							// Press to stop firing
 				}
 				TriggerStateP = !TriggerStateP;				
 			}
-			
+			if (FireModeP == 2) {
+				if (!TriggerStateP) {
+					AutoRepeat(0, 7000, &ActKey, PULSE+KEYON+PrimaryFire);	// Pulse Wave Scanner
+				}
+				else {
+					StopAutoRepeat(0);										// Press to stop PWS
+				}
+				TriggerStateP = !TriggerStateP;								
+			}
 		}
 		
 		// Secondary Trigger Action
 		if (x == 2) {
-			ActKey(KEYON+SecondaryFire);						// Normal press to fire, release to stop firing
+			ActKey(KEYON+SecondaryFire);									// Normal press to fire, release to stop firing
 		}
 		if (x == 3) {
 			if (fSupercruise & FireModeS) {
 				tgTriggerMode(2);
 			}
 			if (FireModeS == 0) {
-				ActKey(KEYON+SecondaryFire); 					// Press to fire...
-				DeferCall(DiscoDelay, &ActKey, SecondaryFire);	// Release automatically after 6.1 seconds
+				ActKey(KEYON+SecondaryFire); 								// Press to fire...
+				DeferCall(DiscoDelay, &ActKey, SecondaryFire);				// Release automatically after 6.1 seconds
 			}
-			else {
+			if (FireModeS == 1) {
 				if (!TriggerStateS) {
-					ActKey(KEYON+DOWN+SecondaryFire);			// Press to fire...
+					ActKey(KEYON+DOWN+SecondaryFire);						// Press to fire...
 				}
 				else {
-					ActKey(KEYON+UP+SecondaryFire);				// Press to stop firing
+					ActKey(KEYON+UP+SecondaryFire);							// Press to stop firing
 				}
 				TriggerStateS = !TriggerStateS;
+			}
+			if (FireModeS == 2) {
+				if (!TriggerStateS) {
+					AutoRepeat(1, 7000, &ActKey, PULSE+KEYON+SecondaryFire);// Pulse Wave Scanner
+				}
+				else {
+					StopAutoRepeat(1);										// Press to stop PWS
+				}
+				TriggerStateS = !TriggerStateS;			
 			}		
 		}
 	}
