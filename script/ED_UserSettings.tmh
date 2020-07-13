@@ -26,21 +26,23 @@
 // MapKey Profile //
 //----------------//
 
-	define	MapKeyProfile		FULL					// Valid Settings are FULL or BASIC 
+	define	MapKeyProfile		FULL					// Valid Settings are FULL, BASIC or CUSTOM 
 														// FULL uses all the advanced functions available for Axis, Switches, Triggers and Buttons
 														// BASIC sends simple, plain keystrokes...no macro or function calls, no smarts...great for beginners
+														// CUSTOM is yet to be implemented
 
-//---------------//
-// LED intensity //
-//---------------//
-	
-	define	SetLED	 			43						// Set LED Backlight Level on Throttle
-														// Level 0: 0	- 42 (off)
-														// Level 1: 43	- 85 (dimmest)
-														// Level 2: 86	- 128
-														// Level 3: 129 - 171
-														// Level 4: 172	- 214
-														// Level 5: 215 - 255 (brightest)
+//--------------//
+// LED settings //
+//--------------//
+
+	define	FlashLEDs			1							// Enable to Flash the Status LEDs when status changes. 0 = Disabled
+	int		LEDLevel			= 1;						// Default starting LED Level. Valid Levels = 0 - 5. Refer fnLEDBrightness()
+															// LEDLevel 0: 0	- 42 (off)
+															// LEDLevel 1: 43	- 85 (dimmest)
+															// LEDLevel 2: 86	- 128
+															// LEDLevel 3: 129 - 171
+															// LEDLevel 4: 172	- 214
+															// LEDLevel 5: 215 - 255 (brightest)
 
 //----------------//
 // Status.json    //
@@ -53,7 +55,8 @@
 	//				The below path is usually where the Elite Dangerous journal file can be found.
 	//				Just replace '<username>' with your windows username.
 	
-//	alias StatusFile			= "C:\\Users\\<username>\\Saved Games\\Frontier Developments\\Elite Dangerous\\status.json";
+//	alias	JournalFolder		= "C:\\Users\\<username>\\Saved Games\\Frontier Developments\\Elite Dangerous\\";
+//	alias	StatusFile			= "C:\\Users\\<username>\\Saved Games\\Frontier Developments\\Elite Dangerous\\status.json";
 
 //	here's mine as an example...
 
@@ -90,11 +93,11 @@
 	int		VoiceVolume			= 75;					// Default Volume set at 75% Settable via fnVoiceVolume()
 														// Note: VoiceVolume gets saved to MyStatus file when game halts and is reloaded at script start
 
-//	alias	VoiceCMD			= "-r 0 -n \"Microsoft Catherine\"";
-	alias	VoiceCMD			= "";
+	alias	VoiceCMD			= "-r 0 -n \"Microsoft Catherine\"";
+//	alias	VoiceCMD			= "";
 	
 	define	TrainingEnabled		1						// 0 = Disable, 1 = Enable. When game stopped pressing a button/switch announces basic function
-	define	AnnounceTraining	1						// 0 = Do not annnounce training mode, 1 = Announce training mode
+	define	AnnounceTraining	0						// 0 = Do not annnounce training mode, 1 = Announce training mode
 
 //------------------//
 // WAV Sound Player //
@@ -152,18 +155,19 @@
 //--------------------------//
 
 	define	AutoHanger			0					 		// !! TESTING !!	// 1 = Initiate Hanger+Station Services automatically when docked, 0 = don't
-															// !! TESTING !!	// Hanger services on Carrier is completely different to a station in the Beta
-	define	AutoGearUP			0	 						//	Enable to toggle landing gear when lifting off
-	define	AutoGearDOWN		0	 						//	Enable to toggle landing gear when request docking	
-	define	CommsModule			0	 						//	Required whilst ED_CommsControl not loaded
+															// !! TESTING !!	// Hanger services on Carrier is completely different to stations
+															
+	define	AutoHUD				0							//	Enable to toggle HUD to Analysis Mode when FSD engaged
+	define	AutoGearUP			0	 						//	Enable to retract landing gear when lifting off
+	define	AutoGearDOWN		0	 						//	Enable to deploy landing gear when request docking
+	define	AutoHeatsink		1							//	Enable to fire a heatsink when temp > 100% (requires launcher and ammo)
+	define	AutoStrobe			1							//	Enable to strobe silent running if in danger and shields drop
+	
+	define	CommsModule			0	 						//	ED_CommsControl still in testing
 
 //-------------//
 // Axis Curves //
 //-------------//
-
-	define	CurveInfo			NOPRINT						// Set if you want curve info printed to console each time we change. Valid settings = PRINT or NOPRINT
-	define	EnableTFRPRudder	1							// Set to 0 if you do not have a Thrustmaster TFRP Rudder.
-	define	SwapRoll4Yaw		0							// Set to 1 if you wish to swap Roll and Yaw Axes
 
 	// Refer "Axes" chapter (p27) in the Target Script Editor Basics v1.5 manual for more detail
 	// The below constructs support S-Curves
@@ -185,21 +189,25 @@
 	define	Slew_R_DZ			0							// Set Slew Right		Deadzone
 	define	Slew_Zoom			0							// Set Slew Zoom factor 
 
+	define	FAOFFCurves			SLOW						// Set Curve profile desired for FA-OFF. Valid settings = OFF, MILD, MEDIUM or SLOW (see below) 
+	define	CurveInfo			NOPRINT						// Set if you want curve info printed to console each time we change. Valid settings = PRINT or NOPRINT
+	define	EnableTFRPRudder	1							// Set to 0 if you do not have a Thrustmaster TFRP Rudder.
+	define	SwapRoll4Yaw		0							// Set to 1 if you wish to swap Roll and Yaw Axes
+
 	// The below curve arrays are set for "off", "mild", "medium" or "slow" and controlled via the Autopilot switch
-	// Eg 	AP Switch set at APPAT	= (Curve = 0)
-	//		AP Switch set to APAH	= (Curve = 1)
-	//		AP Switch set to APALT	= (Curve = 3)
-	// 
-
-	define	FAOFFCurves				MEDIUM					// Set Curve profile desired for FA-OFF. Valid settings = OFF, MILD, MEDIUM or SLOW (see below) 
-
+	// Eg 	AP Switch set at APPAT-O	= (Curve = 1)
+	//		AP Switch set at APPAT-I	= (Curve = 2)
+	//		AP Switch set to APAH		= (Curve = 0)
+	//		AP Switch set to APALT-O	= (Curve = 3)
+	//		AP Switch set to APALT-I	= (Curve = 4)
+	 
 	// Define curve & zoom arrays
-	// --------------------------   APPAT   APAH	APALT	-	// Used within fnSetJoystickCurves() and applied to JS and Pedals (x, y & z axis)
-	short	Joystick_Curve[] 	= {	0,		1,		3,		4};	// Set via the Autopilot Switch	(Up is most aggresive joystick response, down is least aggressive)
+	// --------------------------   APPAT-O	APPAT-I	APAH	APALT-O	APALT-I	// Used within fnSetCurves() and applied to JS, Rudder and Slew  (x, y & z axis)
+	short	Joystick_Curve[] 	= {	1,		2,		0,		3,		4 };	// Autopilot (Up = MILD curves, down = SLOWER curves)
 	
-	short	Rudder_Curve[]		= { 0,		1,		3,		4};	// Set via the Autopilot Switch	(Up is most aggresive joystick response, down is least aggressive)
-	
-	short	Slew_Curve[]		= {	0,		2,		2,		2};	// Set Slew Curve
-								//	NONE	MILD	MEDIUM 	SLOW
+	short	Rudder_Curve[]		= { 1,		2,		0,		3,		4 };	// Autopilot (Up = MILD curves, down = SLOWER curves)
+	 
+	short	Slew_Curve[]		= {	2,		2,		0,		2,		2 };	// Set Slew Curve
+								//	MILD	MEDIUM	NONE	SLOW	SLOWEST
 
 // END
