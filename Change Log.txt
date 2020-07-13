@@ -9,9 +9,15 @@ v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
 		- Remove fnsGetStatusFileInfo() from ED_StateTracker.tmh. Script relies solely on 'StatusFile' alias to be set correctly in ED_UserSettings.tmh
 		- Rename fnSetJoystickCurves() as fnSetCurves()
 		- Tweak fnSetCurves() to include 5 profiles. Move OFF to APAH. APPAT-O = MILD, APPAT-I = MEDIUM, APALT-O = SLOW, APALT-I = SLOWEST
+		- Tweak tgAdvancedFAOff() to cater for new 5 tier curves 
+		- Tweak TFRPRudder detection/exclusion code
 		- Include UserSetting to disable Flashing LEDs
 		- On the fly LED brightness level adjustment via PSB+FlapsUp
 		- On the fly Weapon and Engine colour toggle
+		- Change method of save/restore MyStates
+		- Add LEDLevel to MyStates to be saved
+		- Move one off TOD code into it's own function ... fnGetTOD() ... add fnGetTOD() call to several functions to report TOD to console
+		- Add reminder sound to PSF and PSB 
 
 v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
