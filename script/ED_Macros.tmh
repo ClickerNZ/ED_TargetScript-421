@@ -21,22 +21,22 @@
 // ========================================================
 
 // Index:	Line			FUNCTION
-//			Line 51:		fnCustomCommands()
-//			Line 80: 		mRequestDock
-//			Line 93: 		mDeploySRV
-//			Line 105: 		mBoardShip
-//			Line 122: 		mShowGameStats
-//			Line 127: 		mFastModeSwitch0
-//			Line 138: 		mFastModeSwitch1
-//			Line 152: 		mFastModeSwitch2
-//			Line 165: 		mReportCrimesToggle
-//			Line 186: 		mNAVBeaconWing
-//			Line 211: 		mNAVBeaconOff
-//			Line 235: 		mClearAllChatBox
-//			Line 274: 		mClearChatBox
-//			Line 286: 		mEnterHanger
-//			Line 311: 		mLaunch
-//			Line 322:		mChangeColours
+//			Line 59:		fnCustomCommands()
+//			Line 87: 		mRequestDock
+//			Line 100: 		mDeploySRV
+//			Line 112: 		mBoardShip
+//			Line 129: 		mShowGameStats
+//			Line 134: 		mFastModeSwitch0
+//			Line 145: 		mFastModeSwitch1
+//			Line 159: 		mFastModeSwitch2
+//			Line 172: 		mReportCrimesToggle
+//			Line 193: 		mNAVBeaconWing
+//			Line 218: 		mNAVBeaconOff
+//			Line 242: 		mClearAllChatBox
+//			Line 281: 		mClearChatBox
+//			Line 293: 		mEnterHanger
+//			Line 319: 		mLaunch
+//			Line 330:		mChangeColours
 
 
 // START
@@ -48,6 +48,13 @@
 //---------------//
 // CUSTOM MACROS //			// MACROS Include a series of automated key presses to perform a specific task.
 //---------------//
+
+	// Not yet used...found in discord provided by Dar|{cyde
+	// Usage example: ModKey(L_ALT, 1);
+	// Note: Potentially better than defining a macro in ED-Defines.ttm as it relaeases 'mod' after 'key' and not before
+	int ModKey(int mod=0, int key=0) { 
+	    return CHAIN(DOWN+mod, D(), PULSE+key, D(), UP+mod);
+	}
 
 	int fnCustomCommands() {
 
@@ -64,7 +71,7 @@
 			if (AnnounceTraining) {
 				fnTextToSpeech("Training mode enabled, press a button or switch to hear what it does");
 			}
-			TrainingMain();
+			TrainingMap();
 		}
 		else {
 			printf("\x0a\Training Mode Disabled\x0a");			
@@ -74,7 +81,7 @@
 			MainKeyMap();
 		}
 		
-		// Initialise macros
+		// Initialise macro variables
 
 		// MACRO: Auto-Docking Request
 		mRequestDock = CHAIN(
@@ -126,7 +133,7 @@
 		// MACRO: Menulog to OPEN
 		mFastModeSwitch0 = CHAIN(
 			LOCK+PULSE+RolePanel, D(250),						// Select any panel to ensure GUIFocus is set (!=0)		
-			PULSE+MenuLog, D(750),								// p, up, spc, spc, <wait>, spc, spc
+			PULSE+MenuLog, D(1500),								// p, up, spc, spc, <wait>, spc, spc
 			PULSE+UIUp, D(500),
 			PULSE+UISelect, D(600),
 			PULSE+UISelect, D(6500),							// ** Depending on the load times of your PC, this value may need to be
@@ -137,7 +144,7 @@
 		// MACRO: Menulog to PRIVATE GROUP
 		mFastModeSwitch1 = CHAIN(
 			LOCK+PULSE+RolePanel, D(250),						// Select any panel to ensure GUIFocus is set (!=0)		
-			PULSE+MenuLog, D(750),								// p, up, spc, spc, <wait>, spc, right, spc, spc, right, spc
+			PULSE+MenuLog, D(1500),								// p, up, spc, spc, <wait>, spc, right, spc, spc, right, spc
 			PULSE+UIUp, D(500),
 			PULSE+UISelect, D(600),
 			PULSE+UISelect, D(6500),							// ** Depending on the load times of your PC, this value may need to be
@@ -151,7 +158,7 @@
 		// MACRO: Menulog to SOLO
 		mFastModeSwitch2 = CHAIN(
 			LOCK+PULSE+RolePanel, D(250),						// Select any panel to ensure GUIFocus is set (!=0)		
-			PULSE+MenuLog, D(750),								// p, up, spc, spc, <wait>, spc, right, right, spc
+			PULSE+MenuLog, D(1500),								// p, up, spc, spc, <wait>, spc, right, right, spc
 			PULSE+UIUp, D(500),
 			PULSE+UISelect, D(600),
 			PULSE+UISelect, D(6500),							// ** Depending on the load times of your PC, this value may need to be
@@ -321,8 +328,8 @@
 			
 		// MACRO: Change Engine and Weapon Colours	
 		mChangeColours = CHAIN(
-			PULSE+EngineColour, D(),
-			PULSE+WeaponColour, D()
+			PULSE+EngineColour, D(250),
+			PULSE+WeaponColour, D(250)
 			);
 			
 	}	// End of fnCustomCommands()
