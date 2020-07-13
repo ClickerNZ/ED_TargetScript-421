@@ -21,13 +21,12 @@
 // ========================================================
 
 // Index:	Line		FUNCTION
-//			Line 52: 	int fnsGetStatusFileInfo()
-//			Line 88: 	int fnsReadStatusJson()
-//			Line 153: 	int fnsGetKeyValue()
-//			Line 284: 	int fnsProcessFlags()
-//			Line 506: 	int fnsProcessGuiFocus()
-//			Line 545: 	int fnsStartCheck()
-//			line 597:	int fnsMyStates()
+//			Line 52: 	int fnsReadStatusJson()
+//			Line 115: 	int fnsGetKeyValue()
+//			Line 226: 	int fnsProcessFlags()
+//			Line 481: 	int fnsProcessGuiFocus()
+//			Line 519: 	int fnsStartCheck()
+//			line 574:	int fnsMyStates()
 	
 // START
 
@@ -39,6 +38,9 @@
 	int		newJson			= 0;								// set when myJson != lastJson...we then call fnsProcessFlags();
 
 	int 	fnReturn		= 0;								// Return -1 if error
+	
+	int		ReadErrorCount	= 0;
+	int		ReadErrorSent	= 0;	
 
 	// End of Global Variables
 	//============================================================================================================================
@@ -46,17 +48,10 @@
 
 	// FUNCTION:	Read in status.json into 'myJson'
 	// Requires:	'StatusFile' string variable to be correctly set in ED_UserSettings file
-
-	// GlobalVars
-	
-	int		ReadErrorCount = 0;
-	int		ReadErrorSent = 0;
-	
-	// ----------
 	
 	int fnsReadStatusJson() {
 
-		int VoiceTxt;
+		int 	VoiceTxt;
 		int 	fp;
 		int 	buf = 512;
 		int		myResult;	
@@ -79,7 +74,7 @@
 			else {
 				ReadErrorCount = 0;
 				ReadErrorSent = 0;
-				strdel(&myJson, myResult-1, buf);					// removes trailing NUL/garbage
+				myJson[myResult]=0;							// terminates char array with nul
 				
 				newJson = strcmp(&myJson, &lastJson);
 				if (newJson != 0) {
@@ -91,10 +86,8 @@
 					Flags = fnsGetKeyValue("Flags", 1);
 					if (OldFlags != Flags)	fnsProcessFlags(0);
 					OldFlags = Flags;
-				}
-				
+				}			
 				sprintf(&lastJson, "%s", &myJson);
-
 			}
 		}
 		else {
@@ -125,7 +118,6 @@
 			printf("\x0a\Function: fnsGetKeyValue(\"%s\", %d))\x0a", &pattern, vtype);
 		}
 		
-		int 	keystart;
 		int 	PatLen = strlen(&pattern);
 				
 		int 	valstart	= 0;									// string position of where the key value starts
@@ -141,34 +133,15 @@
 		float	fkeyvalue;											// cater for floating point key values
 		int		ikeyvalue;
 		int		PseudoText = "";
-
-		int 	buf;
 		int		myResult;
-		int		DimSize = 0;		
+		int		VoiceTxt;
 		
 		// Find the Key (pattern) ...
-		
-		int Start = 0;
-		int TheEnd = strlen(&myJson)-PatLen;
-		
-		strsub(&myStr, &myJson, Start, Start+PatLen);		
-		myResult = strcmp(&myStr, &pattern);
-		
-		while (myResult !=0) {
-			Start = Start + 1;
-			strsub(&myStr, &myJson, Start, Start+PatLen);
-			myResult = strcmp(&myStr, &pattern);
-			
-			if (Debug) {
-				if (myResult == 0) {
-					printf("Pattern %s found at char %d\x0a", &pattern, Start);
-					printf("PatLen = %d\x0a", PatLen);
-				}
-				if (Start > TheEnd) {
-					printf("Pattern %s NOT Found\x0a", &pattern);
-					return -1;
-				}
-			}
+
+		int Start = findstr(&myJson, &pattern);
+		if (Start == -1) {
+			printf("Key %s NOT Found\x0a", &pattern);
+			return -1;
 		}
 		
 		// Now grab the key-value...
@@ -191,7 +164,7 @@
 			strsub(&thischr, &myJson, valstart, valstart);
 			myResult = strcmp(&thischr, ",");
 			if (myResult == 0 & (vtype == 0 | vtype == 1)) EndValue = 1;
-			
+		
 			myResult = strcmp(&thischr, "}");
 			if (myResult == 0) EndValue = 1;
 			
@@ -219,10 +192,11 @@
 				myResult = strcmp(&thischr, "\"");
 				if (myResult == 0 & vtype == 2) EndValue = 1;			
 				
-				if (EndValue == 0) strcat(&keyvalue, &thischr);
-				
+				if (EndValue == 0) strcat(&keyvalue, &thischr);		// continue building char array
 			}			
 		}
+		
+		keyvalue[chrpnt] = 0;										// terminate char array with a nul 
 		
 		if (Debug) {
 			printf("key value: %s = %s\x0a", &pattern, &keyvalue);
@@ -237,17 +211,16 @@
 			return ieval(&keyvalue);
 		}
 
-		if (vtype == 2) {											// Just remove leading quote
-			strdel(&keyvalue, 0, 0);								// Use the global keyvalue on return
-			return 0;
+		if (vtype == 2) {			
+			strdel(&keyvalue, 0, 0);								// Just remove leading quote and...
+			return 0;												// ...use the global keyvalue on return
 		}
 	}
-
 	// End of fnsGetKeyValue()
 
 
 	// FUNCTION: Read and process "Flags" value from "status.json"
-	// Input: 'UpdateLEDs', 1 = update, 0 = no update					// <<<<<<<<<<<<< Remove the "update LEDs feature once we get this all working again.
+	// Input: 'UpdateLEDs', 1 = update, 0 = no update
 	// Output: Flags value
 
 	int fnsProcessFlags(int UpdateLEDs=0) {
@@ -283,8 +256,13 @@
 				GameLoaded = 0;
 
 				if(TrainingEnabled){
-					TrainingMain();									// Load KeyMap profile for training
-					VoiceTxt = "Game halted. Training mode enabled -";
+					TrainingMap();										// Load KeyMap profile for training
+					if (AnnounceTraining) {
+						VoiceTxt = "Game halted. Training mode enabled -";
+					}
+					else {
+						VoiceTxt = "Game halted -";									
+					}
 				}
 				else {
 					VoiceTxt = "Game halted -";				
@@ -292,14 +270,17 @@
 				
 				printf("\x0a- ");
 				fnVPOutput(VoiceTxt);
-				printf("\x0a");
+				
+				if (TrainingEnabled & !AnnounceTraining) {
+					printf("Training Mode enabled\x0a");
+				}
 				
 				if (ReverseThrust) {
 					ReverseThrust = !ReverseThrust;
 				}
 				
 				fnSetLEDs();											// Turn off Status LEDs
-				fnsMyStates(SAVE);				
+				fnsMyStates(SAVE);
 			}
 		}
 		else {		// Flags != 0
@@ -353,15 +334,12 @@
 					if (SelectDrop == 0) {								// Uninitiated drop
 						
 						if (OrbitalCruise & !fInterdicted) {
-							VoiceTxt = "Entering Glide Mode";
-//							printf("%s\x0a", VoiceTxt);
+							VoiceTxt = "Entering Glide Mode\x0a";
 						}
 						else { 
-							VoiceTxt = "Drop detected";
-//							printf("Uninitiated %s\x0a", VoiceTxt);
+							VoiceTxt = "Drop detected\x0a";
 						}
 						
-//						fnTextToSpeech(VoiceTxt);
 						fnVPOutput(VoiceTxt);
 						
 						if (fInterdicted | fDanger) {
@@ -380,9 +358,7 @@
 					else {												// Initiated drop
 						SelectDrop=0;
 					}
-					
-				UpdateLEDs = 1;
-				
+					UpdateLEDs = 1;
 				}
 			}
 
@@ -397,7 +373,7 @@
 			if (!fShieldsUp & su & !fSilentRunning) {		// Shields just dropped
 				if (fDanger) {
 					if (AutoStrobe) {
-						DeferCall(750, &fnVPOutput, "Activating Silent Strobe");
+						DeferCall(750, &fnVPOutput, "Activating Silent Strobe\x0a");
 						tgSilentRunning(STROBE);
 					}
 					else {
@@ -407,11 +383,12 @@
 			}
 
 			if (fLanded != ld) {		// Framework for future functionality
+							
 				if (fLanded) {
-					VoiceTxt = "Landed";
+					printf("Landed @ %s\x0a", fnGetTOD());
 				}
 				else {
-					VoiceTxt = "Lift off";
+					printf("Lift off @ %s\x0a", fnGetTOD());
 					if (AutoGearUP) {
 						ActKey(PULSE+KEYON+LandingGear);
 					}
@@ -420,22 +397,25 @@
 			}
 			
 			if (fDocked != dk) {		// Framework - currently testing - may not be viable in current form without additional information from journal
+							
 				if (fDocked) {							
 					if (AutoHanger) {
 						DeferCall(2500, &fnHangerServices, 1);			// Cannot use Auto feature until determine if in a Starport v Carrier
 					}
 					DeferCall(1000, &ActKey, PULSE+KEYON+BalancePower);
+					printf("Docked @ %s\x0a", fnGetTOD());
 				}
 				else	{	
 					InHanger = 0;
 					if (AutoGearUP) {
 						DeferCall(1500, &ActKey, PULSE+KEYON+LandingGear);
-					}					
+					}
+					printf("Launch @ %s\x0a", fnGetTOD());					
 				}
 			}
 			
 			if (fOverHeating & !oh) {
-				if (AutoHeatsink) {		// Fire a heatsink if we have one
+				if (AutoHeatsink) {			// Fire a heatsink if we have one
 					fnVPOutput("Auto Heat sink engaged!");
 					ActKey(PULSE+KEYON+DeployHeatSink);
 				}
@@ -529,7 +509,6 @@
 				printf("Function: fnsProcessGuiFocus();\x0a");
 				printf("GUIFocus		%d, %s\x0a", GUIFocus, prttxt);
 			}
-
 			return GUIFocus;
 		}
 	}
@@ -578,86 +557,97 @@
 	// PURPOSE:		Save current status of certain variables when mode switching or restarting the game
 	// REQUIRES:	'MyStatusFile' path to be set correctly within ED_UserSettings.tmh file
 	// PARAMETERS:	action = SAVE or LOAD
+
+	// Global declarions
 	
+	struct MyStruct {
+		int		sVolume;
+		int 	sDismissed;
+		int 	sCurves;
+		int 	sLEDLevel;
+	}
+	
+	MyStruct MyStates;
+	
+	// -----------------
+
 	int fnsMyStates(int action)	{
 
 		int fnName = "MyStates";
 		int reason;
-		int fp;														// General File Pointer Variable 
+		int fh;														// General File Pointer Variable 
 		int fpresult;
-		int FileError = 0;
-		int maxbuf = 64;
-		int buf;
-		int padding;
-
-		char MyVars;
-		char dummy; Dim(&dummy, maxbuf); dummy[0] = 0;
-		char GetVar; Dim(&GetVar, 8);  GetVar[0] = 0;				// Temp variable to extract out individual vars
-		
-		sprintf(&dummy, "{ \"VoiceVolume\":%03d, \"ShipDismissed\":%d }", VoiceVolume, ShipDismissed);	// add leading zeros to VoiceVolume so static length = 3 chars
-		
-		buf = strlen(&dummy);
-		strdel(&dummy, buf+1, maxbuf);
-		
-		Dim(&MyVars, buf+1);
-		MyVars[0] = 0;
 
 		if (action == SAVE)	{
-
-			strcat(&MyVars, &dummy);
 						
 			if (Debug) {
 				printf("Function: fnsMyStates();\x0a");
-				printf("MyStates: %s\x0a", &MyVars);
+				printf("Size of MyStates = %d\x0a", sizeof(&MyStates));
 			}
+
+			// Build our struct array
+			MyStates.sVolume	=	VoiceVolume;
+			MyStates.sDismissed =	ShipDismissed;
+			MyStates.sCurves	=	OldCurves;
+			MyStates.sLEDLevel	=	LEDLevel;
 			
-			fp = fopen(&MyStatusFile, "w");							// creates the file if it doesn't exist
+			fh = fopen(&MyStatusFile, "w");								// creates the file if it doesn't exist
 			
-			if (fp) {
-				fpresult = fwrite(&MyVars, 1, buf, fp);				// Write MyStates to file
-				fclose(fp);
+			if (fh) {
+			
+				fpresult = fwrite(&MyStates, sizeof(&MyStates), 1, fh);				
+				fclose(fh);
 				
-				if (fpresult == 0) {
+				if (fpresult == -1) {
 					fnVPOutput("Error writing MyStates to status file", 100);
 				}	
 				else {
 					if (Debug) {
-						printf("MyStates successfully saved: %s\x0a", &MyVars);
+						printf("MyStates successfully saved: \x0a");
+						printf("sVolume	= [%d]\x0a", MyStates.sVolume);
+						printf("sDismissed	= [%d]\x0a", MyStates.sDismissed);
+						printf("sCurves	= [%d]\x0a", MyStates.sCurves);
+						printf("sLEDLevel	= [%d]\x0a", MyStates.sLEDLevel);
+						printf("Timestamp	= [%s]\x0a", fnGetTOD());
 					}
 					else {
-						printf("MyStates successfully saved\x0a");
+						printf("MyStates successfully saved @ %s\x0a", fnGetTOD());
 					}
 				}
 			}
 			else {
 				fnTextToSpeech("Error writing to My Status File");
-				printf("Error opening file to write: %s\x0a", &MyStatusFile);
+				printf("Error opening file to write @ %s: %s\x0a", fnGetTOD(), &MyStatusFile);
 			}		
 		}
 		
 		else if (action == LOAD) {
 
-			fp = fopen(&MyStatusFile, "r");							// open file to read
+			fh = fopen(&MyStatusFile, "r");								// open file to read
 			
-			if (fp) {
-				fpresult = fread(&MyVars, 1, buf, fp);				// Load MyStates from file
-				fclose(fp);	
-				strdel(&MyVars, buf, maxbuf);						// Garbage removal
+			if (fh) {
+
+				fpresult = fread(&MyStates, sizeof(&MyStates), 1, fh);	// Load MyStates from file				
 				
-				if (fpresult > 0) {									// Read from file was successful
-					strsub(&GetVar, &MyVars, 16, 18);
-					VoiceVolume = ieval(&GetVar);					// Extract VoiceVolume
-					
-					strsub(&GetVar, &MyVars, 37, 38);
-					ShipDismissed = ieval(&GetVar);					// Extract ShipDismissed
+				if (fpresult > 0) {	// Read from file was successful
+					fclose(fh);							
+
+					// Extract our variables from our struct array
+					VoiceVolume		= MyStates.sVolume;
+					ShipDismissed	= MyStates.sDismissed;
+					OldCurves		= MyStates.sCurves;
+					LEDLevel		= MyStates.sLEDLevel;
 					
 					if (Debug) {
-						printf("\x0a\MyStates successfully loaded: %s\x0a", &MyVars);
+						printf("\x0a\MyStates successfully loaded:-\x0a");
 						printf("VoiceVolume	= [%d]\x0a", VoiceVolume);
-						printf("ShipDismissed	= [%d]\x0a", ShipDismissed); 
+						printf("ShipDismissed	= [%d]\x0a", ShipDismissed);
+						printf("OldCurves	= [%d]\x0a", OldCurves);
+						printf("LEDLevel	= [%d]\x0a", LEDLevel); 						
+						printf("Timestamp	= [%s]\x0a", fnGetTOD());
 					}
 					else {
-						printf("\x0a\MyStates successfully loaded\x0a");
+						printf("\x0a\MyStates successfully loaded @ %s\x0a\x0a", fnGetTOD());
 					}					
 				}
 				else {
@@ -667,8 +657,8 @@
 			else {
 				fnTextToSpeech("Non fatal error, my Status File not found or invalid, check con sole message"); 
 				printf("\x0a\!!! Non-Fatal Error opening file to read: %s\x0a", &MyStatusFile);
-				printf("This can happen if changes were made to the variables selected for save and reload\x0a");
-			}		
+				printf("This can happen if the file does not exist or is missing array elements\x0a");
+			}
 		}
 		
 		else {
@@ -677,6 +667,5 @@
 			printf("fnsMyStates Action = %d\x0a", action);
 		}
 	}
-	
 
 // END
