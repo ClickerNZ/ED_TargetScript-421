@@ -41,8 +41,8 @@
 	int PIPMode;						// Set/Reset via H4P and fnPIPMode() and used in fnPIPManager() to change PIP management profile  (see EDFunctions.tmh)
 	int PIPTxt;							// PIPMode descriptor
 	
-	int	SetLED;							// SetLED determines LED brightness. Refer fnLEDBrightness()		
-
+	int	SetLED;							// SetLED determines LED brightness. Refer fnLEDBrightness()
+	
 	int Debug				= 0;		// Debug mode for testing. 0 = OFF, 1 = ON. Prints additional info to console
 	int ShowFlags			= 0;		// Set/Reset in fnDebug() and used in fnsProcessFlags()
 	int StartupLock			= 1;		// Prevent triggering keystrokes during initialisation
