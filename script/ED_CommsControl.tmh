@@ -31,11 +31,11 @@
 // STATUS:		TESTING
 
 // Index:	Line		FUNCTION
-//			Line 118:	initCommsChannels()
-//			Line 151:	fnChannelSelect()
-//			Line 182:	fnMicControl()
-//			Line 290:	tgPTTMode()
-//			Line 301:	fnCommStatus()
+//			Line 178:	initCommsChannels()
+//			Line 111:	fnChannelSelect()
+//			Line 142:	fnMicControl()
+//			Line 250:	tgPTTMode()
+//			Line 264:	fnCommStatus()
 		
 // Global Vars
 // =================================================================================================== 
