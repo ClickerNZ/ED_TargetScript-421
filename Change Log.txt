@@ -18,6 +18,10 @@ v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
 		- Add LEDLevel to MyStates to be saved
 		- Move one off TOD code into it's own function ... fnGetTOD() ... add fnGetTOD() call to several functions to report TOD to console
 		- Add reminder sound to PSF and PSB 
+		- Terminate char arrays with nul
+		- Tweak timing for game started/restarted to detect Cargo Scoop etc 
+		- Tweak Deploy SRV code 
+		- Tweak ModeSwitch code
 
 v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
