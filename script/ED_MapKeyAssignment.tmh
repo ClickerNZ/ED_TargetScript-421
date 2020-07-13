@@ -24,7 +24,7 @@
 
 // Index:	Line		FUNCTION
 //			Line 38: 	int MainKeyMap()
-//			Line 605: 	int TrainingMain()
+//			Line 613: 	int TrainingMap()
 
 
 // START
@@ -274,9 +274,20 @@
 //		(Pinky Switch)		// Shift Modifier Switch
 //		--------------
 
-		MapKey(&Throttle, PSF, 0);								//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
-		MapKey(&Throttle, PSM, 0);								//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
-		MapKey(&Throttle, PSB, 0);								//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
+		if (MapKeyProfile == BASIC) {
+			MapKey(&Throttle, PSF, 0);								//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
+			MapKey(&Throttle, PSM, 0);								//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
+			MapKey(&Throttle, PSB, 0);								//  ** DO NOT TOUCH ** Used as ShiftButton for IOUMD
+		}
+		else {
+			MapKey(&Throttle, PSF, REXEC(9, 3000, "fnSoundFX(\"boop\", 50);", RNOSTOP));	//  ShiftButton: Sound Reminder every 3 seconds
+			MapKeyR(&Throttle, PSF, EXEC("StopAutoRepeat(9);"));		//RELEASE			//  Cancel reminder soundfx
+
+			MapKey(&Throttle, PSM, 0);														//  ShiftButton for IOUMD
+			
+			MapKey(&Throttle, PSB, REXEC(9, 3000, "fnSoundFX(\"boop\", 50);", RNOSTOP));	//  ShiftButton: Sound reminder every 3 seconds
+			MapKeyR(&Throttle, PSB, EXEC("StopAutoRepeat(9);"));		//RELEASE			//  Cancel reminder soundfx					
+		}
 
 //		(Coolie Switch)		// Frame Shift Drive functions
 //		---------------
@@ -599,7 +610,7 @@
 	// FUNCTION:	This MapKey set is called at startup if game is not running and user setting 'TrainingEnabled' is set to 1
 	//				Also called from fnsProcessFlags() when we detect Game has halted
 
-	int TrainingMain() {
+	int TrainingMap() {
 
 // ---------------------------------------- //
 // Map Joystick triggers, switches and hats //
@@ -819,9 +830,13 @@
 			MapKey(&Throttle, PSB, EXEC("fnVPOutput(\"Not mapped\");"));
 		}
 		else {
-			MapKey(&Throttle, PSF, EXEC("fnVPOutput(\"U M D Layer Forward\");"));
-			MapKey(&Throttle, PSM, EXEC("fnVPOutput(\"U M D Layer Middle\");"));
-			MapKey(&Throttle, PSB, EXEC("fnVPOutput(\"U M D Layer Back\");"));
+			MapKey(&Throttle, PSF, EXEC("fnVPOutput(\"UMD Layer Forward and sound reminder every 3 seconds\");"));
+			MapKeyR(&Throttle, PSF, EXEC("fnVPOutput(\"UMD Layer Middle and cancel reminder sound\");"));
+			
+//			MapKey(&Throttle, PSM, EXEC("fnVPOutput(\"U M D Layer Middle\");"));
+			
+			MapKey(&Throttle, PSB, EXEC("fnVPOutput(\"UMD Layer Back and sound reminder every 3 seconds\");"));
+			MapKeyR(&Throttle, PSB, EXEC("fnVPOutput(\"UMD Layer Middle and cancel reminder sound\");"));
 		}
 	
 //		(Coolie Switch)		// Frame Shift Drive functions
@@ -1022,8 +1037,8 @@
 			MapKey(&Throttle, APUOFF, EXEC("fnVPOutput(\"Not mapped\");"));
 		}
 		else {
-			MapKey(&Throttle, APUON, EXEC("fnVPOutput(\"Deploy S R V\");"));
-			MapKey(&Throttle, APUOFF, EXEC("fnVPOutput(\"Recover S R V\");"));
+			MapKey(&Throttle, APUON, EXEC("fnVPOutput(\"Deploy SRV\");"));
+			MapKey(&Throttle, APUOFF, EXEC("fnVPOutput(\"Recover SRV\");"));
 		}
 	
 //		(Engine Operate - Right)
@@ -1107,5 +1122,5 @@
 		MapKey(&Throttle, IDLERON, 0);				// <not used>
 		MapKey(&Throttle, IDLEROFF, 0);				// <not used>
 	
-	}	// end of TrainingMain
+	}	// end of TrainingMap
 
