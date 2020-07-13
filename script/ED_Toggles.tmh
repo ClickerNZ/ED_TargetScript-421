@@ -23,11 +23,11 @@
 // Index:	Line		FUNCTION
 //			Line 48: 	int tgTxt2Speech()
 //			Line 71: 	int tgEnhancedFAOFF()
-//			Line 103: 	int tgTriggerMode()
-//			Line 137: 	int tgLights()
-//			Line 199: 	int tgSilentRunning()
-//			Line 242: 	int tgCargoScoop()
-//			Line 273: 	int tgLandingGear()
+//			Line 100: 	int tgTriggerMode()
+//			Line 142: 	int tgLights()
+//			Line 201: 	int tgSilentRunning()
+//			Line 244: 	int tgCargoScoop()
+//			Line 274: 	int tgLandingGear()
 //			Line 310: 	int tgReverseThrust()
 //			Line 341: 	int tgHardpoints()
 //			Line 379: 	int tgHUDMode()
@@ -77,20 +77,15 @@
 				if (CurveInfo == PRINT) {
 					printf("FA-ON Curves:\x0a");
 				}
-//				if (Throttle[APPAT])	fnSetCurves(MILD, CurveInfo);
-//				if (Throttle[APAH])		fnSetCurves(NONE, CurveInfo);
-//				if (Throttle[APALT])	fnSetCurves(SLOW, CurveInfo);
-				fnSetCurves(OldCurves, CurveInfo);
+				fnSetCurves(OldCurves, CurveInfo, TRUE, FALSE);					// Announce curve profile, don't save curve info
 			}
 			else {
 				if (CurveInfo == PRINT) {
 					printf("FA-OFF Curves:\x0a");
 				}
-				OldCurves = JSCurveSetting;
-				fnSetCurves(FAOFFCurves, CurveInfo);
+				fnSetCurves(FAOFFCurves, CurveInfo, TRUE, FALSE);				// Announce curve profile, don't save curve info
 			}			
 			ActKey(PULSE+KEYON+FlightAssist);
-//			fnFlashLED(LED1);
 		}
 		else {
 			reason = "we are currently in Supercruise";
@@ -157,13 +152,11 @@
 				if (!fLights) {				// Transition: Off to LO
 					lstate = "LO";
 					arrows = ">>";
-//					fnFlashLED(LED2);
 				}
 				else {
 					if (fSRVHiBeam) {		// Transition: HI to OFF
 						lstate = "OFF";
 						arrows = "<<";
-//						fnFlashLED(LED2);	
 					}
 					else {					// Transition: LO to HI
 						lstate = "HI";
@@ -173,7 +166,6 @@
 			}
 			else {							// ...otherwise, we're in the ship...
 				ltext = "Ship";
-//				fnFlashLED(LED2);
 				if (!fLights) {				// If lights are off, turn them on
 					lstate = "ON";
 					arrows = ">>";
@@ -251,7 +243,7 @@
 
 	int tgCargoScoop(int x) {
 		int fnName = "Cargo Scoop";
-		int reason;
+		int reason;		
 		
 		if (!fSupercruise & !fDocked & !fLanded) {
 			if(!fCargoScoop) {										// Was RETRACTED, Deploy...
@@ -262,7 +254,6 @@
 			}
 			if (x != fCargoScoop) {
 				ActKey(PULSE+KEYON+CargoScoop);
-//				fnFlashLED(LED4);
 			}				
 		}
 		else if (x) {
@@ -298,7 +289,6 @@
 				}
 			}
 			ActKey(PULSE+KEYON+LandingGear);
-//			fnFlashLED(LED5);
 		}
 		else {
 			if (fSupercruise) {
@@ -464,7 +454,7 @@
 		if (JumpType) {
 			fnName = "Warp Drive";
 			EngineText = "Warp Drive:	";
-			WarpDrive = HyperJump;		// USB[0x0D] = "J"
+			WarpDrive = HyperJump;				// USB[0x0D] = "J"
 		}
 		else {
 			fnName = "Supercruise";
