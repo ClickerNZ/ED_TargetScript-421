@@ -9,7 +9,7 @@
 
 // Keyboard key mappings below which are commented out are not used within this script.
 // These are provided here as reference to what I've used in the game bindings
-// If you change anything here, you must ensure you also change within the control
+// If you change anything here, you should ensure you also change within the control
 // bindings of the game.
 
 // LEGEND: 
@@ -28,30 +28,30 @@
 
 						//  -- WARNING --  //
 
-// Do not assign  ALT+F4 to a variable	(L_ALT+USB[0x3D] or R_ALT+USB[0x3D])
-// PULSE will send an ALT+F4 to the current active window and close it!
+// Do not define a variable as ALT+F4 (L_ALT+USB[0x3D] or R_ALT+USB[0x3D])
+// PULSE an ALT+F4 to the current active window will close it!
 
 						//   -- NOTES --   //
 
 // Assigning ALT+F3 results in a 'brrringg' noise in TARGET Script Editor/GUI 
 
-// BINDINGS: If you change any of these you must also change binding in game
-// This includes the commented ones!
+// BINDINGS: If you change any of these you MUST also change binding in game
+// This should include the commented ones!
 
 // DX# versus keyboard keys:
 // 1 - By default, each individual controller (Joystick and Throttle) can generate up to 32 DX buttons, 8 DX Axes and 8 DX POV directions per device
 // 2 - Using TARGET script or configuring via the TARGET GUI combines the controllers into a single virtual device resulting in 32 DX buttons, 8 Axes and 8 DX POV total.
-// 3 - You can modify target.tmh to include more DX buttons beyond this 32 default
+// 3 - You can modify target.tmh to include more DX buttons beyond this 32 default, however...
 
 // 4 - Elite Dangerous game only allows 32 DX buttons
 // 5 - There are many more keyboard combinations available to mitigate this limit
 // 6 - You can therefore use a combination of DX and/or Keyboard key combinations - this is a matter of personal choice
 
-				// -- DEFINING MODIFIER+KEY -- //
+				// -- DEFINING MODIFIER+KEY ISSUE -- //
 // Example: 
-//		define PrimaryFire USB[0xE1]+USB[0x1E] 
+//		define PrimaryFire USB[0xE1]+USB[0x1E] ( = SHIFT+1)
 //		when used as a macro in the script will press LSHIFT then '1'
-//		however when releasing script releases LSHIFT first prior to '1'
+//		however when releasing, TARGET releases LSHIFT first prior to '1'
 // This will occassionaly result in the '1' key being sent as is and if you have something bound to '1' (such as left panel)...the panel will open.
 // By defining PrimaryFire etc as the shifted key ... eg '!' it will behave as expected...pressing results in SHIFT then '1', releasing releases '1' first before SHIFT.
 // This behaviour is evident in ALL defined combo keys, so use combos with care below.
@@ -75,11 +75,11 @@
 
 
 		// WEAPON CONTROL //
-//	define PrimaryFire 							DX1						// JOY 1 (Also mapped to LSHIFT+1 in ED Bindings)	
-	define PrimaryFire 							'!'						// LSHIFT+1 - FOR TESTING VIA EVENT TESTER
+	define PrimaryFire 							DX1						// JOY 1 (Also mapped to LSHIFT+1 in ED Bindings)	
+//	define PrimaryFire 							'!'						// LSHIFT+1 - FOR TESTING VIA EVENT TESTER
 	
-//	define SecondaryFire 						DX2						// JOY 2 (Also mapped to LSHIFT+2 in ED Bindings)
-	define SecondaryFire 						'@'						// LSHIFT+2 - FOR TESTING VIA EVENT TESTER
+	define SecondaryFire 						DX2						// JOY 2 (Also mapped to LSHIFT+2 in ED Bindings)
+//	define SecondaryFire 						'@'						// LSHIFT+2 - FOR TESTING VIA EVENT TESTER
 	
 	define DeployHardpoints 					USB[0x18] 				// U
 	define NextFireGroup 						USB[0x36]				// ,
@@ -194,7 +194,7 @@
 	define UIEscape 							USB[0x29] 				// Escape
 	define MenuLog								USB[0x13]				// P
 	define SystemMap 							USB[0x33] 				// ;
-	define GalMap 								':'				 		// LSHIFT+:
+	define GalMap 								':'				 		// LSHIFT+;
 //	define FriendsView									 				// <not mapped>
 
 		// MULTICREW //							(Note: These are not currently mapped in ED)
