@@ -34,13 +34,13 @@
 	//============================================================================================================================
 
 	char	myJson;	
-	char	lastJson; 	
-	int		newJson			= 0;								// set when myJson != lastJson...we then call fnsProcessFlags();
+//	char	lastJson; 	
+//	int		newJson			= 0;								// set when myJson != lastJson...we then call fnsProcessFlags();
 
-	int 	fnReturn		= 0;								// Return -1 if error
+//	int 	fnReturn		= 0;								// Return -1 if error
 	
-	int		ReadErrorCount	= 0;
-	int		ReadErrorSent	= 0;	
+//	int		ReadErrorCount	= 0;
+//	int		ReadErrorSent	= 0;	
 
 	// End of Global Variables
 	//============================================================================================================================
@@ -54,7 +54,14 @@
 		int 	VoiceTxt;
 		int 	fp;
 		int 	buf = 512;
-		int		myResult;	
+		int		myResult;
+		int		ReadErrorCount	= 0;
+		int		ReadErrorSent	= 0;
+		int		newJson			= 0;								// set when myJson != lastJson...we then call fnsProcessFlags();		
+		
+		char	lastJson;
+ 		Dim(&lastJson, buf); 
+ 		lastJson[0]=0;		
 		
 		fp = fopen(&StatusFile, "r");
 		if (fp) {
@@ -84,7 +91,9 @@
 						printf("strlen(myJson) = %d\x0a\x0a", strlen(&myJson));				
 					}
 					Flags = fnsGetKeyValue("Flags", 1);
-					if (OldFlags != Flags)	fnsProcessFlags(0);
+					if (OldFlags != Flags)	{
+						fnsProcessFlags(0);
+					}
 					OldFlags = Flags;
 				}			
 				sprintf(&lastJson, "%s", &myJson);
@@ -235,7 +244,8 @@
 		int ld = fLanded;												// Track when landed
 		int oh = fOverHeating;											// Track when we overheat
 		int su = fShieldsUp;											// Track when shields drop
-		int dg = fDanger;												// Track when we are in ganger
+		int dg = fDanger;												// Track when we are in danger
+		int tr = fSRVTurretRetracted;									// Track when SRV Turret is retracted
 		
 		int fa = fFAOff;												// LED 1 Tracking
 		int lt = fLights;												// LED 2 Tracking
@@ -382,7 +392,7 @@
 				}
 			}
 
-			if (fLanded != ld) {		// Framework for future functionality
+			if (fMainShip & (fLanded != ld)) {		// Framework for future functionality
 							
 				if (fLanded) {
 					printf("Landed @ %s\x0a", fnGetTOD());
@@ -421,6 +431,15 @@
 				}
 				else {
 					fnTextToSpeech("Consider firing a heat sink commander", 100);
+				}
+			}
+			
+			if (fSRV & fSRVTurretRetracted != tr) {
+				if (fSRVTurretRetracted) {
+					fnTextToSpeech("Turret Retracted");
+				}
+				else {
+					fnTextToSpeech("Turret Deployed");
 				}
 			}
 									
