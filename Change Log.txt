@@ -19,9 +19,11 @@ v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
 		- Move one off TOD code into it's own function ... fnGetTOD() ... add fnGetTOD() call to several functions to report TOD to console
 		- Add reminder sound to PSF and PSB 
 		- Terminate char arrays with nul
-		- Tweak timing for game started/restarted to detect Cargo Scoop etc 
-		- Tweak Deploy SRV code 
-		- Tweak ModeSwitch code
+		- Tweak timing for game started/restarted and ModeSwitch timings to detect Cargo Scoop etc - this is a bug in ED 
+		- Tweak Recover SRV macro - ED bug (?) menu occassionally starts in different place. Sometimes pressing 'down' when at 'Back' results in wrap...sometimes not 
+		- Move some no longer required global vars into local functions where appropriate.
+		- Add Turret Retracted and Deployed detection announcement code
+		- Tweak 'Landed' / 'Lift Off' detecion code to supresses messages when Deploy/Recover SRV
 
 v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
