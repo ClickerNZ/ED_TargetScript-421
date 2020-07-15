@@ -62,8 +62,8 @@
 		Dim(&myJson, 512);
 		myJson[0] = 0;
 
-		Dim(&lastJson, 512); 
-		lastJson[0]=0;
+//		Dim(&lastJson, 512); 
+//		lastJson[0]=0;
 
 		// Select MapKey Assignment profile
 		if (Flags == 0 & TrainingEnabled) {
@@ -108,8 +108,8 @@
 			PULSE+UISelect, D(500),
 			LOCK);
 
-		// MACRO: SRV - Board Ship
-		mBoardShip = CHAIN(
+		// MACRO: SRV - Board Ship								// Sometimes scrolling down past the "back" option wraps back to top and sometimes it doesn't
+		mBoardShip = CHAIN(										// This needs further testing as previously, the menu pointer occassionally started at a different place
 			LOCK+PULSE+RolePanel, D(250),						// 3, spc, down, down, down, down, down, up, up, spc
 			PULSE+UISelect, D(1500),
 			PULSE+UIDown, D(200),
@@ -117,12 +117,14 @@
 			PULSE+UIDown, D(200),
 			PULSE+UIDown, D(200),
 			PULSE+UIDown, D(200),
-			PULSE+UIDown, D(200),								// sticking in 3 extra 'down' to try to get this macro reliable!
+			PULSE+UIDown, D(200),								// adding 5 extra 'down' in case the selector wraps back to top 
+			PULSE+UIDown, D(200),
+			PULSE+UIDown, D(200),
 			PULSE+UIDown, D(200),
 			PULSE+UIDown, D(200),
 			PULSE+UIUp, D(200),
-			PULSE+UIUp, D(200),
-			PULSE+UISelect, D(500),			// Testing...until the macro is reliable
+			PULSE+UIUp, D(200),									// should now be positioned at 'Board Ship'
+//			PULSE+UISelect, D(500),								// remove comment if macro is reliable for you
 			LOCK);
 
 		// MACRO: Display the combined OSD FPS & Bandwidth meters
@@ -133,7 +135,7 @@
 		// MACRO: Menulog to OPEN
 		mFastModeSwitch0 = CHAIN(
 			LOCK+PULSE+RolePanel, D(250),						// Select any panel to ensure GUIFocus is set (!=0)		
-			PULSE+MenuLog, D(1500),								// p, up, spc, spc, <wait>, spc, spc
+			PULSE+MenuLog, D(500),								// p, up, spc, spc, <wait>, spc, spc
 			PULSE+UIUp, D(500),
 			PULSE+UISelect, D(600),
 			PULSE+UISelect, D(6500),							// ** Depending on the load times of your PC, this value may need to be
@@ -143,8 +145,8 @@
 
 		// MACRO: Menulog to PRIVATE GROUP
 		mFastModeSwitch1 = CHAIN(
-			LOCK+PULSE+RolePanel, D(250),						// Select any panel to ensure GUIFocus is set (!=0)		
-			PULSE+MenuLog, D(1500),								// p, up, spc, spc, <wait>, spc, right, spc, spc, right, spc
+			LOCK+PULSE+RolePanel, D(250),						// Select any panel to ensure GUIFocus is set (!=0) <-- Required???
+			PULSE+MenuLog, D(500),								// p, up, spc, spc, <wait>, spc, right, spc, spc, right, spc
 			PULSE+UIUp, D(500),
 			PULSE+UISelect, D(600),
 			PULSE+UISelect, D(6500),							// ** Depending on the load times of your PC, this value may need to be
@@ -158,7 +160,7 @@
 		// MACRO: Menulog to SOLO
 		mFastModeSwitch2 = CHAIN(
 			LOCK+PULSE+RolePanel, D(250),						// Select any panel to ensure GUIFocus is set (!=0)		
-			PULSE+MenuLog, D(1500),								// p, up, spc, spc, <wait>, spc, right, right, spc
+			PULSE+MenuLog, D(500),								// p, up, spc, spc, <wait>, spc, right, right, spc
 			PULSE+UIUp, D(500),
 			PULSE+UISelect, D(600),
 			PULSE+UISelect, D(6500),							// ** Depending on the load times of your PC, this value may need to be
