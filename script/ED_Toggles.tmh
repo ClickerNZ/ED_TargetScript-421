@@ -239,22 +239,27 @@
 
 	// TOGGLE: Cargo Scoop - LED4
 	// Parameter: 'x' Valid: 1 = Deploy, 0 = Retract
-	// NOTE: Aligns across menulog/restart
+	// NOTE: Aligns across menulog/restart <-- bug in ED causes CargoScoop reset when menu log
 
 	int tgCargoScoop(int x) {
 		int fnName = "Cargo Scoop";
 		int reason;		
 		
 		if (!fSupercruise & !fDocked & !fLanded) {
-			if(!fCargoScoop) {										// Was RETRACTED, Deploy...
+			if(x == 1 & !fCargoScoop) {										// Was RETRACTED, Deploy...
 				printf("Cargo Scoop:		DEPLOYED	>>\x0a");
-			}
-			else {													// Was DEPLOYED, Retract...
-				printf("Cargo Scoop:		RETRACTED	<<\x0a");
-			}
-			if (x != fCargoScoop) {
 				ActKey(PULSE+KEYON+CargoScoop);
-			}				
+			}
+			else if(x == 0 & fCargoScoop) {									// Was DEPLOYED, Retract...
+				printf("Cargo Scoop:		RETRACTED	<<\x0a");
+				ActKey(PULSE+KEYON+CargoScoop);
+			}
+			else {
+				DeferCall(500, &fnSetLEDs, 0);			
+			}
+//			if (x != fCargoScoop) {
+//				ActKey(PULSE+KEYON+CargoScoop);
+//			}				
 		}
 		else if (x) {
 			if (fSupercruise) {
