@@ -504,13 +504,16 @@
 		DefEventHandler(EV_HID_INPUT_DATA, &Throttle, THR_FC);			// Forces re-read of slider axis								
 		
 		fnFlashStart();
-		DeferCall(1200, &fnSetLEDs, 0);
 		
-		// Align toggle switches and internal status flags if required
-		if (Throttle[EACON])	DeferCall(2000, &tgSilentRunning,	1);		
-		if (Throttle[RDRNRM])	DeferCall(2000, &tgCargoScoop,		1);
-		if (Throttle[SPDF])		DeferCall(2000, &tgReverseThrust,	0);
+		if (Throttle[EACON] | Throttle[RDRNRM] | Throttle[SPDF]) {
+			// Align toggle switches and internal status flags if required
+			if (Throttle[EACON])	DeferCall(1000, &tgSilentRunning,	1);		
+			if (Throttle[RDRNRM])	DeferCall(1750, &tgCargoScoop,		1);		// <--- not reliable. Bug in ED
+			if (Throttle[SPDF])		DeferCall(2500, &tgReverseThrust,	0);
+		}
+		else DeferCall(1100, &fnSetLEDs, 0);
 
+	
 		// Align Joystick curves
 		if (Throttle[APPAT])	fnSetCurves(MILD, NOPRINT, FALSE);		// Don't print to console or announce curve setting
 		if (Throttle[APAH])		fnSetCurves(NONE, NOPRINT, FALSE);		// Don't print to console or announce curve setting
