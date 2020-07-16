@@ -58,12 +58,9 @@
 
 	int fnCustomCommands() {
 
-		// Initialise char arrays for status.json
-		Dim(&myJson, 512);
-		myJson[0] = 0;
-
-//		Dim(&lastJson, 512); 
-//		lastJson[0]=0;
+//		Initialise char arrays for status.json
+//		Dim(&myJson, 512);
+//		myJson[0] = 0;
 
 		// Select MapKey Assignment profile
 		if (Flags == 0 & TrainingEnabled) {
