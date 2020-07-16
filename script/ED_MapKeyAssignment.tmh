@@ -1080,8 +1080,8 @@
 		else {
 			MapKeyUMD(&Throttle, EFRNORM,
 				EXEC("fnVPOutput(\"Set Gameloaded flag to off\");"),
-				EXEC("fnVPOutput(\"Print status page to console\");"),
-				EXEC("fnVPOutput(\"Reset status LEDs\");")
+				EXEC("fnVPOutput(\"Reset status LEDs\");"),
+				EXEC("fnVPOutput(\"Print status page to console\");")
 				);
 		}
 				
