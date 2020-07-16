@@ -30,20 +30,11 @@
 	
 // START
 
-	// Global Variables defined here...
-	//============================================================================================================================
+	// GlobalVars
 
 	char	myJson;	
-//	char	lastJson; 	
-//	int		newJson			= 0;								// set when myJson != lastJson...we then call fnsProcessFlags();
 
-//	int 	fnReturn		= 0;								// Return -1 if error
-	
-//	int		ReadErrorCount	= 0;
-//	int		ReadErrorSent	= 0;	
-
-	// End of Global Variables
-	//============================================================================================================================
+	// ----------
 
 
 	// FUNCTION:	Read in status.json into 'myJson'
@@ -58,6 +49,9 @@
 		int		ReadErrorCount	= 0;
 		int		ReadErrorSent	= 0;
 		int		newJson			= 0;								// set when myJson != lastJson...we then call fnsProcessFlags();		
+
+		Dim(&myJson, 512);
+		myJson[0] = 0;
 		
 		char	lastJson;
  		Dim(&lastJson, buf); 
