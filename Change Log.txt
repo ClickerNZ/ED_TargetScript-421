@@ -24,6 +24,9 @@ v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
 		- Move some no longer required global vars into local functions where appropriate.
 		- Add Turret Retracted and Deployed detection announcement code
 		- Tweak 'Landed' / 'Lift Off' detecion code to supresses messages when Deploy/Recover SRV
+		- Minor text change to state dump output 
+		- Move 'myJson' char array initialisation from fnCustomCommands() and into fnsReadStatusJson()
+		- Correct Training output for EFRNORM-M and -D
 
 v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
