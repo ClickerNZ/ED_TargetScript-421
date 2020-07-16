@@ -1137,7 +1137,7 @@
 			printf("HUD Mode:	%s	Ship Lights:	%s		Night Vision:	%s\x0a", HM, SL, NV);
 			printf("Cargo Scoop:	%s	Landing Gear:	%s	Hardpoints:	%s\x0a", CR, LG, HP);
 			printf("FSS Mode:	%s		Supercruise:	%s	Silent Running:	%s\x0a", FM, WD, SR);
-			printf("Flight Assist:	%s		Reverse Thrust:	%s	Speed Brake:	%s\x0a", FA, RT, SB);
+			printf("Flight Assist:	%s		Thrust Vector:	%s	Speed Brake:	%s\x0a", FA, RT, SB);
 		}
 		if (fSRV) {		
 			if (!fLights) {
