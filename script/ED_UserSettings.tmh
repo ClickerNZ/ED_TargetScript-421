@@ -8,7 +8,7 @@
 // Refer Change Log.txt in same folder
 
 // LEGEND: 
-// ========================================================
+// ===========================================================
 // fnName()					refer to ED_Functions file
 // initName()				refer to ED_Functions file
 // fnsName()				refer to ED_StateTracker file
@@ -18,7 +18,7 @@
 // Global Defines			refer to ED_Defines file
 // Global Variables			refer to ED_GlobalVars file
 // User Config Settings		refer to ED_UserSettings file
-// ========================================================
+// ===========================================================
 
 // START
 
@@ -26,23 +26,22 @@
 // MapKey Profile //
 //----------------//
 
-	define	MapKeyProfile		FULL					// Valid Settings are FULL, BASIC or CUSTOM 
+	define	MapKeyProfile		FULL					// Valid Settings are FULL or BASIC 
 														// FULL uses all the advanced functions available for Axis, Switches, Triggers and Buttons
 														// BASIC sends simple, plain keystrokes...no macro or function calls, no smarts...great for beginners
-														// CUSTOM is yet to be implemented
 
 //--------------//
 // LED settings //
 //--------------//
 
-	define	FlashLEDs			1							// Enable to Flash the Status LEDs when status changes. 0 = Disabled
-	int		LEDLevel			= 1;						// Default starting LED Level. Valid Levels = 0 - 5. Refer fnLEDBrightness()
-															// LEDLevel 0: 0	- 42 (off)
-															// LEDLevel 1: 43	- 85 (dimmest)
-															// LEDLevel 2: 86	- 128
-															// LEDLevel 3: 129 - 171
-															// LEDLevel 4: 172	- 214
-															// LEDLevel 5: 215 - 255 (brightest)
+	define	FlashLEDs			ENABLED					// Flash the Status LEDs when status changes. ENABLED or DISABLED
+	int		LEDLevel			= 1;					// Default starting LED Level. Valid Levels = 0 - 5. Refer fnLEDBrightness()
+														// LEDLevel 0: 0	- 42 (off)
+														// LEDLevel 1: 43	- 85 (dimmest)
+														// LEDLevel 2: 86	- 128
+														// LEDLevel 3: 129 - 171
+														// LEDLevel 4: 172	- 214
+														// LEDLevel 5: 215 - 255 (brightest)
 
 //----------------//
 // Status.json    //
@@ -52,7 +51,7 @@
 	//				If the script cannot find status.json, it will abort.
 
 	// NOTE:		Set the 'alias' below to point to the Elite Dangerous journal folder / status.json file
-	//				The below path is usually where the Elite Dangerous journal file can be found.
+	//				The below path is usually where the Elite Dangerous journal files can be found.
 	//				Just replace '<username>' with your windows username.
 	
 //	alias	JournalFolder		= "C:\\Users\\<username>\\Saved Games\\Frontier Developments\\Elite Dangerous\\";
@@ -60,6 +59,7 @@
 
 //	here's mine as an example...
 
+	alias	JournalFolder		= "C:\\Users\\clicker\\Saved Games\\Frontier Developments\\Elite Dangerous\\";
 	alias	StatusFile			= "C:\\Users\\clicker\\Saved Games\\Frontier Developments\\Elite Dangerous\\status.json";
 	
 	define	StatusReadRate		500		// Set Read Loop rate in milliseconds. (ie 500 = read status.json twice a second)
@@ -82,8 +82,10 @@
 	// Refer fnTextToSpeech(text) function for usage etc
 	// Set voicepath to where you copied voice.exe. Add any command line arguments you want within 'VoiceCMD'!
 	// Run voice.exe in a command prompt (from where you copied it) with no arguments etc to see a list of options
+	// Run voice.exe -l to get a list of installed voices. Additional voices available via download from microsoft.com
 	// VoiceVolume should be set to the relative volume level (%) for voice.exe 
-	// VoiceCMD is example on how to use command line arguments. -r <rate> (>0 = faster, <0 = slower), voice = "Catherine" (must be installed)
+	// VoiceCMD is example on how to set command line arguments. -r <rate> (>0 = faster, <0 = slower)
+	// Refer fnTextToSpeech() function in ED_Functions.tmh for usage examples
 
 	int		EnableVoice			= 1; 					// 0 = Disable, 1 = Enable. Enable this if you wish to use "voice.exe". 
 														// Toggled via tgTxt2Speech();
@@ -93,8 +95,18 @@
 	int		VoiceVolume			= 75;					// Default Volume set at 75% Settable via fnVoiceVolume()
 														// Note: VoiceVolume gets saved to MyStatus file when game halts and is reloaded at script start
 
-	alias	VoiceCMD			= "-r 0 -n \"Microsoft Catherine\"";
-//	alias	VoiceCMD			= "";
+	// Add or remove voices available on your PC. Run 'voice.exe -l" in a command line where you copied voice.exe to, to see which voices are installed
+	
+	alias	Hazel				= "-n \"Microsoft Hazel Desktop\"";		// Adult, Female,	en-GB
+	alias 	Susan				= "-n \"Microsoft Susan\"";				// Adult, Female,	en-GB 
+	alias	Catherine			= "-n \"Microsoft Catherine\"";			// Adult, Female,	en-AU
+	alias	David				= "-n \"Microsoft David Desktop\"";		// Adult, Male,		en-US
+	alias	Zira				= "-n \"Microsoft Zira Desktop\"";		// Adult, Female,	en-US 
+	alias	Haruka				= "-n \"Microsoft Haruka Desktop\"";	// Adult, Female,	ja-JP
+	
+	int		DefaultVoice		= &Catherine;			// Set your preferred (installed) voice here
+
+	alias	VoiceCMD			= "-r 0";
 	
 	define	TrainingEnabled		1						// 0 = Disable, 1 = Enable. When game stopped pressing a button/switch announces basic function
 	define	AnnounceTraining	0						// 0 = Do not annnounce training mode, 1 = Announce training mode
