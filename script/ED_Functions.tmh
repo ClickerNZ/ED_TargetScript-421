@@ -21,42 +21,43 @@
 // ========================================================
 
 // Index:	Line		FUNCTION
-//			Line 68: 	int initJoystickAxis()
-//			Line 78: 	int initThrottleAxis()
-//			Line 96: 	int initTFRPRudder()
-//			Line 109: 	int initTextToSpeech()
-//			Line 125: 	int initSoundFX()
-//			Line 144: 	int fnNotValid()
-//			Line 167: 	int fnSetCurves()
-//			Line 236: 	int fnSetSliderCurve()
-//			Line 267: 	int fnGetFlightMode()
-//			Line 285:	int fnLEDBrightness()
-//			Line 305: 	int fnFlashLED()
-//			Line 321: 	int fnSetLEDs()
-//			Line 352: 	int fnFlashStart()
-//			Line 380: 	int fnTextToSpeech()
-//			Line 413: 	int fnVoiceVolume()
-//			Line 467: 	int fnSoundFX()
-//			Line 488: 	int fnGameStarted()
-//			Line 566: 	int fnPIPMode()
-//			Line 617: 	int fnPIPManager()
-//			Line 654: 	int fnPIPMapper()
-//			Line 694: 	int fnAdvFireControl()
-//			Line 767: 	int fnAdvancedSCB()
-//			Line 799: 	int fnHeatsink()
-//			Line 813: 	int fnChaff()
-//			Line 831: 	int fnDeploySRV()
-//			line 875:	int fnDRShip()
-//			Line 904: 	int fnRequestDock()
-//			Line 926: 	int fnHangerServices()
-//			Line 970:	int fnIdleLock()
-//			Line 1004: 	int fnModeSwitch()
-//			Line 1059:	int fnVPOutput()
-//			Line 1071: 	int fnPrintState()
-//			Line 1082: 	int fnStateDump()
-//			Line 1171: 	int fnDebug()
-//			Line 1196:	int fnGetTOD()
-//			Line 1215:	int findstr()
+//			Line 69: 	int initJoystickAxis()
+//			Line 79: 	int initThrottleAxis()
+//			Line 97: 	int initTFRPRudder()
+//			Line 110: 	int initTextToSpeech()
+//			Line 126: 	int initSoundFX()
+//			Line 145: 	int fnNotValid()
+//			Line 168: 	int fnSetCurves()
+//			Line 237: 	int fnSetSliderCurve()
+//			Line 268: 	int fnGetFlightMode()
+//			Line 286:	int fnLEDBrightness()
+//			Line 306: 	int fnFlashLED()
+//			Line 322: 	int fnSetLEDs()
+//			Line 353: 	int fnFlashStart()
+//			Line 387: 	int fnTextToSpeech()
+//			Line 419: 	int fnVoiceVolume()
+//			Line 472: 	int fnSoundFX()
+//			Line 493: 	int fnGameStarted()
+//			Line 595: 	int fnPIPMode()
+//			Line 646: 	int fnPIPManager()
+//			Line 683: 	int fnPIPMapper()
+//			Line 723: 	int fnAdvFireControl()
+//			Line 796: 	int fnAdvancedSCB()
+//			Line 828: 	int fnHeatsink()
+//			Line 842: 	int fnChaff()
+//			Line 860: 	int fnDeploySRV()
+//			line 904:	int fnDRShip()
+//			Line 933: 	int fnRequestDock()
+//			Line 955: 	int fnHangerServices()
+//			Line 999:	int fnIdleLock()
+//			Line 1033: 	int fnModeSwitch()
+//			Line 1088:	int fnVPOutput()
+//			Line 1100: 	int fnPrintState()
+//			Line 1111: 	int fnStateDump()
+//			Line 1200: 	int fnDebug()
+//			Line 1225:	int fnGetTOD()
+//			Line 1242:	int fnGetDate()
+//			Line 1265:	int findstr()
 
 // START
 
@@ -365,7 +366,11 @@
 	// FUNCTION: 	Text to Speech using voice.exe
 	// Requires: 	Voice.exe available in path set in ED_UserSettings (VoicePath)
 	//				VoiceCMD must also be set correctly in ED_UserSettings.tmh 
-	// Parameter:	Text string to convert to speech, Optional 'VolumeOverride' to override current volume setting 
+	// Parameter:	Text string to convert to speech, 
+	//				Optional 'VolumeOverride' to override current volume setting
+	//				Optional 'Voice' to use. DeafaultVoice set in ED_UserSettings. 'Voice' parameter must match a currently installed MS Voice
+	//				See ED_UserSettings file for more information
+	
 	// Usage1:		fnTextToSpeech("This is test number 1");	// says the text at current value of 'VoiceVolume' in %
 	
 	// Usage2:		int VoiceTxt = "This is test number 2";
@@ -377,7 +382,9 @@
 	//				sprintf(&VoiceTxt, "%s number %d", tString, test);
 	//				fnTextToSpeech(&VoiceTxt, 50);				//says the text at 50% volume 
 	
-	int fnTextToSpeech(int text, int VolumeOverride=0) {
+	// Usage4:		fnTextToSpeech("Test number 4", 0, &David);	//says the text at default volume using "David" voice
+	
+	int fnTextToSpeech(int text, int VolumeOverride=0, int Voice=DefaultVoice) {
 		char volume; Dim (&volume, 4); volume[0] = 0;
 		char SysCmd; Dim(&SysCmd, 255); SysCmd[0] = 0;			// Increase buffersize if required
 
@@ -387,21 +394,20 @@
 		else {
 			sprintf(&volume, "%d", VoiceVolume);
 		}
-				
+		volume[3] = 0;						// terminate char array 
 		if (EnableVoice) {
-			if (!GameLoaded) {
-				sprintf(&SysCmd, "%s -v %s %s %s", &VoicePath, &volume, &VoiceCMD, text);			
+			if (!GameLoaded) {				// Serial - wait until voice.exe finishes before processing next line in script 
+				sprintf(&SysCmd, "%s -v %s %s %s %s", &VoicePath, &volume, &VoiceCMD, Voice, text);			
 			}
-			else {
-				sprintf(&SysCmd, "start %s -v %s %s %s", &VoicePath, &volume, &VoiceCMD, text);
+			else {							// Parallel - send text to voice the process next line in script. No waiting
+				sprintf(&SysCmd, "start %s -v %s %s %s %s", &VoicePath, &volume, &VoiceCMD, Voice, text);
 			}
-
+			SysCmd[strlen(&SysCmd)] = 0;							// terminate char array with nul
 			if (Debug) {
 				printf("\x0a\Function: fnTextToSpeech();\x0a");
 				printf("SysCmd:		= %s\x0a", &SysCmd);
 				printf("strlen(&SysCmd)	= %d\x0a\x0a", strlen(&SysCmd));
 			}
-			
 			system(&SysCmd);										// send command to Windows
 		}
 	}
@@ -444,9 +450,8 @@
 				VolTxt = "Decreased to";
 			}
 		}
-
 		sprintf(&c, "Voice volume %s %d percent", VolTxt, VoiceVolume);
-		
+		c[strlen(&c)] = 0;											// Terminate char array
 		fnVPOutput(&c);
 	}
 
@@ -466,18 +471,18 @@
 	
 	int fnSoundFX(int wavfile, int vol=100, int loops=1) {
 
-		char SysCmd; Dim(&SysCmd, 255);	SysCmd[0] = 0;			// Increase buffersize if required
+		char SysCmd; Dim(&SysCmd, 255);	SysCmd[0] = 0;				// Increase buffer size if required
 		
 		if (EnableSoundFX) {
 			
 			sprintf(&SysCmd, "start %s %s /vol %d /loop %d %s%s", &SoundPath, &SoundCMD, vol, loops, &WAVPath, wavfile);
+			SysCmd[strlen(&SysCmd)] = 0;							// terminate char array 
 
 			if (Debug) {
 				printf("\x0a\Function: fnSoundFX();\x0a");
 				printf("SysCmd:		= %s\x0a", &SysCmd);
 				printf("strlen(&SysCmd)	= %d\x0a\x0a", strlen(&SysCmd));
 			}
-			
 			system(&SysCmd);										// send command to Windows			
 		}
 	}
@@ -554,7 +559,7 @@
 		printf("\x0a\SoundFXStatus = %s\x0a", SoundFXStatus);
 
 		fnTextToSpeech("Welcome back Commander");
-
+		
 		fnPrintState();
 		printf("\x0a\Script running....waiting for input...\x0a\x0a");
 
@@ -1207,6 +1212,27 @@
 			fread(TOD, 1, 5, fp);						// Read local timestamp
 			fclose(fp);
 			return TOD;
+		}	
+	}
+	
+	
+	// FUNCTION:	Get Today's Date
+	
+	int fnGetDate() {
+		char date;
+		Dim(&date, 14);
+		date[0]=0;
+		
+		int today = "00/00";							// Set type and format
+		
+		system("date /T > C:\\today.txt");				// Create local date stamp
+		
+		int fp = fopen("c:\\today.txt", "r");
+		if (fp) {
+			fread(&date, 1, 13, fp);					// Read local date stamp
+			fclose(fp);
+			strsub(today, &date, 4, 8);
+			return today;
 		}	
 	}
 
