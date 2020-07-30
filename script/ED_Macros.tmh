@@ -21,25 +21,28 @@
 // ========================================================
 
 // Index:	Line			FUNCTION
-//			Line 59:		fnCustomCommands()
-//			Line 87: 		mRequestDock
-//			Line 100: 		mDeploySRV
-//			Line 112: 		mBoardShip
-//			Line 129: 		mShowGameStats
-//			Line 134: 		mFastModeSwitch0
-//			Line 145: 		mFastModeSwitch1
-//			Line 159: 		mFastModeSwitch2
-//			Line 172: 		mReportCrimesToggle
-//			Line 193: 		mNAVBeaconWing
-//			Line 218: 		mNAVBeaconOff
-//			Line 242: 		mClearAllChatBox
-//			Line 281: 		mClearChatBox
-//			Line 293: 		mEnterHanger
-//			Line 319: 		mLaunch
-//			Line 330:		mChangeColours
+//			Line 55:		int ModKey()
+//			Line 60:		fnCustomCommands()
+//			Line 81: 		mRequestDock
+//			Line 94: 		mDeploySRV
+//			Line 106: 		mBoardShip
+//			Line 125: 		mShowGameStats
+//			Line 130: 		mFastModeSwitch0
+//			Line 141: 		mFastModeSwitch1
+//			Line 155: 		mFastModeSwitch2
+//			Line 168: 		mReportCrimesToggle
+//			Line 189: 		mNAVBeaconWing
+//			Line 214: 		mNAVBeaconOff
+//			Line 238: 		mClearAllChatBox
+//			Line 277: 		mClearChatBox
+//			Line 289: 		mEnterHanger
+//			Line 315: 		mLaunch
+//			Line 326:		mChangeColours
 
 
 // START
+
+	// Declare macros (must be declared as global)
 
 	int	mRequestDock, mDeploySRV, mShowGameStats, mReportCrimesToggle, mNAVBeaconWing, mNAVBeaconOff;
 	int	mFastModeSwitch0, mFastModeSwitch1, mFastModeSwitch2, mClearAllChatBox, mClearChatBox, mBoardShip;
@@ -58,10 +61,6 @@
 
 	int fnCustomCommands() {
 
-//		Initialise char arrays for status.json
-//		Dim(&myJson, 512);
-//		myJson[0] = 0;
-
 		// Select MapKey Assignment profile
 		if (Flags == 0 & TrainingEnabled) {
 			printf("\x0a\Training Mode Enabled\x0a");		
@@ -78,7 +77,7 @@
 			MainKeyMap();
 		}
 		
-		// Initialise macro variables
+		// Define macros...
 
 		// MACRO: Auto-Docking Request
 		mRequestDock = CHAIN(
