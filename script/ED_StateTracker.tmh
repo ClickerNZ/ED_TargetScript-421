@@ -21,24 +21,24 @@
 // ========================================================
 
 // Index:	Line		FUNCTION
-//			Line 52: 	int fnsReadStatusJson()
-//			Line 115: 	int fnsGetKeyValue()
-//			Line 226: 	int fnsProcessFlags()
-//			Line 481: 	int fnsProcessGuiFocus()
-//			Line 519: 	int fnsStartCheck()
-//			line 574:	int fnsMyStates()
+//			Line 43: 	int fnsReadStatusJson()
+//			Line 119: 	int fnsGetKeyValue()
+//			Line 236: 	int fnsProcessFlags()
+//			Line 496: 	int fnsProcessGuiFocus()
+//			Line 534: 	int fnsStartCheck()
+//			line 589:	int fnsMyStates()
 	
 // START
+
+
+	// FUNCTION:	Read in status.json into 'myJson'
+	// Requires:	'StatusFile' string variable to be correctly set in ED_UserSettings file
 
 	// GlobalVars
 
 	char	myJson;	
 
-	// ----------
-
-
-	// FUNCTION:	Read in status.json into 'myJson'
-	// Requires:	'StatusFile' string variable to be correctly set in ED_UserSettings file
+	// ------------
 	
 	int fnsReadStatusJson() {
 
@@ -50,7 +50,7 @@
 		int		ReadErrorSent	= 0;
 		int		newJson			= 0;								// set when myJson != lastJson...we then call fnsProcessFlags();		
 
-		Dim(&myJson, 512);
+		Dim(&myJson, buf);
 		myJson[0] = 0;
 		
 		char	lastJson;
@@ -91,6 +91,7 @@
 					OldFlags = Flags;
 				}			
 				sprintf(&lastJson, "%s", &myJson);
+				lastJson[strlen(&lastJson)] = 0;			//terminate char array 
 			}
 		}
 		else {
@@ -128,16 +129,22 @@
 		int 	chrpnt		= 0;									// character pointer used to determine where key value ends
 		int		EndValue	= 0;									// flag to set when we hit the end of value
 		
-		char 	thischr;	Dim(&thischr, 2);		thischr[0]	= 0;	// char variable to detect end of value via a ',' or '}' or ' '
-		char	myStr;		Dim(&myStr, PatLen);	myStr[0] 	= 0;
+		char 	thischr;											// char variable to detect end of value via a ',' or '}' or ' '	
+		Dim(&thischr, 2);
+		thischr[0]	= 0;
+		
+		char	myStr;
+		Dim(&myStr, PatLen);
+		myStr[0] 	= 0;
 
-		Dim(&keyvalue, 64);		keyvalue[0] = 0;					// keyvalue char is a global (used in status dump)
+		Dim(&keyvalue, 64);											// keyvalue char is global (used in status dump)
+		keyvalue[0] = 0;
 
-		float	fkeyvalue;											// cater for floating point key values
-		int		ikeyvalue;
+		float	fkeyvalue;											// floating point key values
+		int		ikeyvalue;											// integer key value
 		int		PseudoText = "";
 		int		myResult;
-		int		VoiceTxt;
+//		int		VoiceTxt;
 		
 		// Find the Key (pattern) ...
 
@@ -149,14 +156,14 @@
 		
 		// Now grab the key-value...
 		
-		valstart = Start + PatLen + 2;							// start of value we're after
+		valstart = Start + PatLen + 2;								// start of value we're after
 
 		chrpnt = 0;
 						
 		myResult = strcmp(&pattern, "Pips");
 		
-		if (myResult == 0) {
-			vallen = 5;											// if (pattern == "Pips")
+		if (myResult == 0) {										// pattern = "Pips"
+			vallen = 5;
 			while(chrpnt < vallen) {
 				strsub(&thischr, &myJson, valstart+chrpnt, valstart+chrpnt);
 				strcat(&keyvalue, &thischr);
@@ -180,7 +187,7 @@
 				chrpnt = chrpnt + 1;
 				strsub(&thischr, &myJson, valstart+chrpnt, valstart+chrpnt);
 				
-				myResult = strcmp(&thischr, ",");				// end of value signalled by ',' or '}' or ' ' or '"' 
+				myResult = strcmp(&thischr, ",");					// end of value signalled by ',' or '}' or ' ' or '"' 
 				if (myResult == 0 & (vtype == 0 | vtype == 1)) EndValue = 1;
 				
 				myResult = strcmp(&thischr, "}");
@@ -202,7 +209,7 @@
 		keyvalue[chrpnt] = 0;										// terminate char array with a nul 
 		
 		if (Debug) {
-			printf("key value: %s = %s\x0a", &pattern, &keyvalue);
+			printf("key:	%s	value:	%s\x0a", &pattern, &keyvalue);
 		}
 		
 		// Return converted key-value...
@@ -259,17 +266,12 @@
 			if(GameLoaded == 1) {										// Detects when Game halts
 				GameLoaded = 0;
 
+				VoiceTxt = "Game halted -";
 				if(TrainingEnabled){
 					TrainingMap();										// Load KeyMap profile for training
 					if (AnnounceTraining) {
 						VoiceTxt = "Game halted. Training mode enabled -";
 					}
-					else {
-						VoiceTxt = "Game halted -";									
-					}
-				}
-				else {
-					VoiceTxt = "Game halted -";				
 				}
 				
 				printf("\x0a- ");
