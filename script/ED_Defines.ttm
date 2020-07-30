@@ -76,10 +76,10 @@
 
 		// WEAPON CONTROL //
 	define PrimaryFire 							DX1						// JOY 1 (Also mapped to LSHIFT+1 in ED Bindings)	
-//	define PrimaryFire 							'!'						// LSHIFT+1 - FOR TESTING VIA EVENT TESTER
+//	define PrimaryFire 							'!'						// LSHIFT+1 - FOR TESTING VIA EVENT TESTER - Not recommended for gameplay
 	
 	define SecondaryFire 						DX2						// JOY 2 (Also mapped to LSHIFT+2 in ED Bindings)
-//	define SecondaryFire 						'@'						// LSHIFT+2 - FOR TESTING VIA EVENT TESTER
+//	define SecondaryFire 						'@'						// LSHIFT+2 - FOR TESTING VIA EVENT TESTER - Not recommended for gameplay 
 	
 	define DeployHardpoints 					USB[0x18] 				// U
 	define NextFireGroup 						USB[0x36]				// ,
