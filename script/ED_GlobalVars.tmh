@@ -30,8 +30,8 @@
 // DEFAULT STATES //   					// GLOBAL VARIABLE INITIALISATION, DESCRIPTION & USAGE
 //----------------//
 
-	int VoiceExists;					// Initialised here and set in initTextToSpeech()
-	int SounderExists;					// Initialised here and set in initSoundFX()
+	int VoiceExists;					// Declared here and set in initTextToSpeech()
+	int SounderExists;					// Declared here and set in initSoundFX()
 
 	int JSProfile;						// Used in fnSetCurves() and fnEnhancedFAOFF() (see EDFunctions.tmh) Values = 0, 1 or 2
 	int JSCurveSetting;
@@ -72,6 +72,9 @@
 	
 	define TRUE				1
 	define FALSE			0
+	
+	define ENABLED			1
+	define DISABLED			0
 
 	define BASIC			0
 	define FULL				1
