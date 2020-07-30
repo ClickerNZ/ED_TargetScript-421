@@ -4,7 +4,7 @@ v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
 		- Expand tgSilentRunning() to include a 'strobe' option (ON/OFF every 2 seconds)
 		- Create 'AutoStrobe' define in ED_UserSettings.tmh and code in ED_StateTracker.tmh to strobe silent running if in danger and shields drop
 		- Create 'AutoHUD' define in ED_UserSettings to enable HUD=Analysis Mode on FSD 
-		- Create 'AutoHeatsink' define in ED_UserSettings.tmh and code in ED_StateTracker.tmh to fire heatsink if Heat > 100% automatically
+		- Create 'AutoHeatsink' define in ED_UserSettings.tmh and code in ED_StateTracker.tmh to fire heat sink if Heat > 100% automatically
 		- Use AutoRepeat() instead of REXEC() for PWS trigger modes and recode TG1 and S2 triggers
 		- Remove fnsGetStatusFileInfo() from ED_StateTracker.tmh. Script relies solely on 'StatusFile' alias to be set correctly in ED_UserSettings.tmh
 		- Rename fnSetJoystickCurves() as fnSetCurves()
@@ -20,19 +20,22 @@ v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
 		- Add reminder sound to PSF and PSB 
 		- Terminate char arrays with nul
 		- Tweak timing for game started/restarted and ModeSwitch timings to detect Cargo Scoop etc - this is a bug in ED 
-		- Tweak Recover SRV macro - ED bug (?) menu occassionally starts in different place. Sometimes pressing 'down' when at 'Back' results in wrap...sometimes not 
+		- Tweak Recover SRV macro - ED bug (?) menu occasionally starts in different place. Sometimes pressing 'down' when at 'Back' results in wrap...sometimes not 
 		- Move some no longer required global vars into local functions where appropriate.
 		- Add Turret Retracted and Deployed detection announcement code
-		- Tweak 'Landed' / 'Lift Off' detecion code to supresses messages when Deploy/Recover SRV
+		- Tweak 'Landed' / 'Lift Off' detection code to suppresses messages when Deploy/Recover SRV
 		- Minor text change to state dump output 
-		- Move 'myJson' char array initialisation from fnCustomCommands() and into fnsReadStatusJson()
+		- Move 'myJson' char array initialization from fnCustomCommands() and into fnsReadStatusJson()
 		- Correct Training output for EFRNORM-M and -D
+		- Add defines for additional voices in ED_UserSettings.tmh and...
+		- Add ability to parse different voices to fnTextToSpeech()
+		- Create fnGetDate() function 
 
 v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
 		- Update Enter Hanger Macro to cater for new menus
 		- Added index section to function .tmh files
-		- Refactor some toggles to remove unneccessary flag assignments
+		- Refactor some toggles to remove unnecessary flag assignments
 		- Add second parameter, 'reason' to fnNotValid ()
 		- Add second parameter, 'VolumeOverride' to fnTextToSpeech()
 		- Remove unused parameter from fnSetLEDs()
@@ -41,8 +44,8 @@ v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 				- Move DX33-64 defines to top of script.
 				- Add ThrottleMap mappings for DX34-DX55
 				- NOTE: Elite Dangerous only detects up to DX32
-		- Extend Joystick Curves to include global variables for all 3 deadzones
-		- Decouple Rudder from Joystick Curves and create independant curve variables etc.
+		- Extend Joystick Curves to include global variables for all 3 dead zones
+		- Decouple Rudder from Joystick Curves and create independent curve variables etc.
 		- Add User Setting for FA-OFF Curves and printinfo
 		- Tweak tgEnhancedFAOFF() code
 		- Tweak fnModeSwitch{} and fnGameStarted()
@@ -53,7 +56,7 @@ v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Create fnsMyStates() function to save and load non 'status.json' variables we want to be persistent
 		- Replace Sleep() with DeferCall when triggering use of FreeCamera
 		- Create bind file for No EDTracker
-		- Create User setting to disable TFRP Rudder controller if not connected. Add test when Configuring and initialising devices
+		- Create User setting to disable TFRP Rudder controller if not connected. Add test when Configuring and initializing devices
 		- Include 'DefaultPIPMode' in UserSettings. Reset PIPMode now resets to this default instead of Mode 0
 		- Create mClearAllChatBox macro to clear all three chat session windows instead of the currently selected window 
 		- Create a 'Training Mode'. Seperate Keymap profile which announces what each button or switch does 
@@ -74,6 +77,11 @@ v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Create EnableTFRPRudder define so user can indicate if they have rudder pedals 
 		- Add mapping to enable alternate Roll/Yaw via Mike switch if EnableTFRPRudder=0
 		- Tidy up.
+		- Fix typo in fnStateDump()
+		- Revert PrimaryFire and SecondaryFire to DX1 and DX2 respectively
+		- Tweak Cargo Scoop timing on game restart - bug in ED 
+		- Fix status.json char arrays
+		- Tweak Recover SRV macro - ED bug (?) menu occassionally starts in different place. Sometimes pressing 'down' when at 'Back' results in wrap...sometimes not 
 
 v4.1.0b	- created forked branch - this version uses REXEC to read status.json in the background every 500ms.
 		- (it no longer uses TCPCallback)
