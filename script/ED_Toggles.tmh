@@ -27,14 +27,14 @@
 //			Line 142: 	int tgLights()
 //			Line 201: 	int tgSilentRunning()
 //			Line 244: 	int tgCargoScoop()
-//			Line 274: 	int tgLandingGear()
-//			Line 310: 	int tgReverseThrust()
-//			Line 341: 	int tgHardpoints()
-//			Line 379: 	int tgHUDMode()
-//			Line 395: 	int tgFSSMode()
-//			Line 423: 	int tgPlanetView()
-//			Line 447: 	int tgWarpDrive()
-//			Line 504: 	int tgExtCamera()
+//			Line 286: 	int tgLandingGear()
+//			Line 322: 	int tgReverseThrust()
+//			Line 353: 	int tgHardpoints()
+//			Line 391: 	int tgHUDMode()
+//			Line 407: 	int tgFSSMode()
+//			Line 435: 	int tgPlanetView()
+//			Line 459: 	int tgWarpDrive()
+//			Line 516: 	int tgExtCamera()
 	
 	
 // START
@@ -226,7 +226,7 @@
 				ActKey(PULSE+KEYON+SilentRunning);
 			}						
 			if (SilentStrobe) {								
-				StopAutoRepeat(5);											// Stop Strobe 
+				StopAutoRepeat(5);												// Stop Strobe 
 				SilentStrobe = 0;
 				fnVPOutput("Silent Strobe:		DEACTIVATED	!!");
 			}
@@ -243,23 +243,30 @@
 
 	int tgCargoScoop(int x) {
 		int fnName = "Cargo Scoop";
-		int reason;		
+		int reason;
+		int action;
 		
 		if (!fSupercruise & !fDocked & !fLanded) {
-			if(x == 1 & !fCargoScoop) {										// Was RETRACTED, Deploy...
-				printf("Cargo Scoop:		DEPLOYED	>>\x0a");
+			if (x != fCargoScoop) {
+				if(x == 1) {													// Was RETRACTED, Deploy...
+					action = "Deploy";
+					printf("Cargo Scoop:		DEPLOYED	>>\x0a");
+				}
+				else if(x == 0) {												// Was DEPLOYED, Retract...
+					action = "Retract";
+					printf("Cargo Scoop:		RETRACTED	<<\x0a");
+				}
 				ActKey(PULSE+KEYON+CargoScoop);
 			}
-			else if(x == 0 & fCargoScoop) {									// Was DEPLOYED, Retract...
-				printf("Cargo Scoop:		RETRACTED	<<\x0a");
-				ActKey(PULSE+KEYON+CargoScoop);
-			}
-			else {
+			else {																// we usually only get here during a menulog
+//				if (Debug) {
+					fnTextToSpeech("Function Cargo Scoop called but logic not aligned");
+					printf("fCargoScoop	= [%d]\x0a", fCargoScoop);
+					printf("Action Req	= [%s]\x0a", action);
+//				}
 				DeferCall(500, &fnSetLEDs, 0);			
 			}
-//			if (x != fCargoScoop) {
-//				ActKey(PULSE+KEYON+CargoScoop);
-//			}				
+				
 		}
 		else if (x) {
 			if (fSupercruise) {
