@@ -23,10 +23,10 @@
 // Index:	Line		FUNCTION
 //			Line 43: 	int fnsReadStatusJson()
 //			Line 119: 	int fnsGetKeyValue()
-//			Line 236: 	int fnsProcessFlags()
-//			Line 496: 	int fnsProcessGuiFocus()
-//			Line 534: 	int fnsStartCheck()
-//			line 589:	int fnsMyStates()
+//			Line 235: 	int fnsProcessFlags()
+//			Line 495: 	int fnsProcessGuiFocus()
+//			Line 535: 	int fnsStartCheck()
+//			line 588:	int fnsMyStates()
 	
 // START
 
@@ -144,7 +144,6 @@
 		int		ikeyvalue;											// integer key value
 		int		PseudoText = "";
 		int		myResult;
-//		int		VoiceTxt;
 		
 		// Find the Key (pattern) ...
 
