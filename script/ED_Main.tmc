@@ -56,6 +56,8 @@ include "ED_Toggles.tmh"
 // --------------- //
 
 	int main() {
+	
+		printf("\x0a\++	Exclude unwanted controllers	...	");
 			
 		Exclude(&HCougar);
 		Exclude(&T16000);
@@ -75,11 +77,16 @@ include "ED_Toggles.tmh"
 			Exclude(&TFRPRudder);
 		}
 		
+		printf("done	++\x0a\x0a");
+		printf("++	Connect our controllers ... \x0a\x0a");
+		
 		if(Init(&EventHandle)) return 1;
 				
 	// ---------------------------------------- //
 	// Initialise LEDs, variables and functions //
 	// ---------------------------------------- //
+	
+		printf("\x0a\++	Initialise hardware	...	Start	++\x0a"); 
 
 		SetShiftButton(&Joystick, S3, &Throttle, PSF, PSB);						// ** DO NOT TOUCH **  Joystick S3 for IO, Throttle pinky SWITCH for UMD
 
@@ -94,7 +101,7 @@ include "ED_Toggles.tmh"
 		fnLEDBrightness();														// Set initial LED Brightness levels
 		initTextToSpeech();														// Initialise Text-To-Speech engine
 		initSoundFX();															// Initialise Sound Effects engine
-
+		
 
 	// -------------------------- //
 	// Initialise Flight controls //
@@ -104,6 +111,8 @@ include "ED_Toggles.tmh"
 		initThrottleAxis();														// Includes Throttle "Friction Control" Slider
 		initTFRPRudder();
 
+		printf("\x0a\++	Initialise Hardware	...	Complete	++\x0a");
+		
 		fnsStartCheck();														// Check for vital files and game start
 				
 		if(Flags == 0) {
