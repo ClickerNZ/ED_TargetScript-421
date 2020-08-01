@@ -38,26 +38,26 @@
 //			Line 419: 	int fnVoiceVolume()
 //			Line 472: 	int fnSoundFX()
 //			Line 493: 	int fnGameStarted()
-//			Line 595: 	int fnPIPMode()
-//			Line 646: 	int fnPIPManager()
-//			Line 683: 	int fnPIPMapper()
-//			Line 723: 	int fnAdvFireControl()
-//			Line 796: 	int fnAdvancedSCB()
-//			Line 828: 	int fnHeatsink()
-//			Line 842: 	int fnChaff()
-//			Line 860: 	int fnDeploySRV()
-//			line 904:	int fnDRShip()
-//			Line 933: 	int fnRequestDock()
-//			Line 955: 	int fnHangerServices()
-//			Line 999:	int fnIdleLock()
-//			Line 1033: 	int fnModeSwitch()
-//			Line 1088:	int fnVPOutput()
-//			Line 1100: 	int fnPrintState()
-//			Line 1111: 	int fnStateDump()
-//			Line 1200: 	int fnDebug()
-//			Line 1225:	int fnGetTOD()
-//			Line 1242:	int fnGetDate()
-//			Line 1265:	int findstr()
+//			Line 574: 	int fnPIPMode()
+//			Line 625: 	int fnPIPManager()
+//			Line 662: 	int fnPIPMapper()
+//			Line 702: 	int fnAdvFireControl()
+//			Line 775: 	int fnAdvancedSCB()
+//			Line 807: 	int fnHeatsink()
+//			Line 821: 	int fnChaff()
+//			Line 839: 	int fnDeploySRV()
+//			line 883:	int fnDRShip()
+//			Line 912: 	int fnRequestDock()
+//			Line 934: 	int fnHangerServices()
+//			Line 978:	int fnIdleLock()
+//			Line 1012: 	int fnModeSwitch()
+//			Line 1067:	int fnVPOutput()
+//			Line 1079: 	int fnPrintState()
+//			Line 1090: 	int fnStateDump()
+//			Line 1179: 	int fnDebug()
+//			Line 1204:	int fnGetTOD()
+//			Line 1221:	int fnGetDate()
+//			Line 1244:	int findstr()
 
 // START
 
@@ -151,7 +151,7 @@
 		Dim(&fntxt, buf);
 		fntxt[0] = 0;
 		sprintf(&fntxt, "%s %s %s", fnName, msg, reason);
-		fntxt[buf-1] = 0;														//terminate char array with a nul
+		fntxt[buf-1] = 0;													//terminate char array with a nul
 		
 		fnTextToSpeech(&fntxt);
 		printf("!!! Function: %s !!!\x0a", &fntxt);		
