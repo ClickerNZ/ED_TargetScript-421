@@ -259,11 +259,11 @@
 				ActKey(PULSE+KEYON+CargoScoop);
 			}
 			else {																// we usually only get here during a menulog
-//				if (Debug) {
+				if (Debug) {
 					fnTextToSpeech("Function Cargo Scoop called but logic not aligned");
 					printf("fCargoScoop	= [%d]\x0a", fCargoScoop);
 					printf("Action Req	= [%s]\x0a", action);
-//				}
+				}
 				DeferCall(500, &fnSetLEDs, 0);			
 			}
 				
