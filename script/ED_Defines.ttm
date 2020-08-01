@@ -67,7 +67,7 @@
 
 	define VMajor		 						4						// Script Version Major Value			ie. 2.x.x
 	define VMinor		 						2						// Script Version Minor Value			ie. x.3.x
-	define VPoint								"1_DEV"					// Script Version Point Update			ie. x.x.4
+	define VPoint								"1"						// Script Version Point Update			ie. x.x.4
 
 //----------------------------------------------------------------------//
 // BINDINGS																//
