@@ -27,8 +27,9 @@ v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
 		- Minor text change to state dump output 
 		- Move 'myJson' char array initialization from fnCustomCommands() and into fnsReadStatusJson()
 		- Correct Training output for EFRNORM-M and -D
-		- Add defines for additional voices in ED_UserSettings.tmh and...
+		- Add aliases for additional Microsoft TTS voices in ED_UserSettings.tmh and...
 		- Add ability to parse different voices to fnTextToSpeech()
+		- Add "Text To Speech" section in user guide to describe how to set TextToSpeech up and how to add additional voices to a user's PC
 		- Create fnGetDate() function 
 
 v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
