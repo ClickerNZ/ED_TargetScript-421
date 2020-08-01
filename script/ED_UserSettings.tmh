@@ -95,14 +95,22 @@
 	int		VoiceVolume			= 75;					// Default Volume set at 75% Settable via fnVoiceVolume()
 														// Note: VoiceVolume gets saved to MyStatus file when game halts and is reloaded at script start
 
-	// Add or remove voices available on your PC. Run 'voice.exe -l" in a command line where you copied voice.exe to, to see which voices are installed
+	// Add or remove voices available on your PC. Run 'voice.exe -l" (lower case L) in a command line where you copied voice.exe to, to see which voices are installed.
+	// The below are the voices I've installed and tested on my PC...
 	
 	alias	Hazel				= "-n \"Microsoft Hazel Desktop\"";		// Adult, Female,	en-GB
-	alias 	Susan				= "-n \"Microsoft Susan\"";				// Adult, Female,	en-GB 
+	alias 	Susan				= "-n \"Microsoft Susan\"";				// Adult, Female,	en-GB
+	alias	George				= "-n \"Microsoft George\"";			// Adult, Male,		en-GB	
+	alias	James				= "-n \"Microsoft James\"";				// Adult, Male,		en-AU
 	alias	Catherine			= "-n \"Microsoft Catherine\"";			// Adult, Female,	en-AU
+	alias	Sean				= "-n \"Microsoft Sean\"";				// Adult, Male,		en-IE
+	alias	Richard				= "-n \"Microsoft Richard\"";			// Adult, Male,		en-CA
+	alias	Linda				= "-n \"Microsoft Linda\"";				// Adult, Female,	en-CA
 	alias	David				= "-n \"Microsoft David Desktop\"";		// Adult, Male,		en-US
+	alias	Mark				= "-n \"Microsoft Mark Desktop\"";		// Adult, Male,		en-US
 	alias	Zira				= "-n \"Microsoft Zira Desktop\"";		// Adult, Female,	en-US 
-	alias	Haruka				= "-n \"Microsoft Haruka Desktop\"";	// Adult, Female,	ja-JP
+	alias	Heera				= "-n \"Microsoft Heera\"";				// Adult, Male,		en-IN
+	alias	Ravi				= "-n \"Microsoft Ravi\"";				// Adult, Female,	en-IN 
 	
 	int		DefaultVoice		= &Catherine;			// Set your preferred (installed) voice here
 
