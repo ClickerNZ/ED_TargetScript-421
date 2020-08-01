@@ -87,7 +87,7 @@
 	// VoiceCMD is example on how to set command line arguments. -r <rate> (>0 = faster, <0 = slower)
 	// Refer fnTextToSpeech() function in ED_Functions.tmh for usage examples
 
-	int		EnableVoice			= 1; 					// 0 = Disable, 1 = Enable. Enable this if you wish to use "voice.exe". 
+	int		EnableVoice			= ENABLED;				// ENABLED or DISABLED. Enable this if you wish to use "voice.exe". 
 														// Toggled via tgTxt2Speech();
 														
 	alias	VoicePath			= "d:\\Thrustmaster\\ED_TargetScript\\voice.exe";
@@ -116,8 +116,8 @@
 
 	alias	VoiceCMD			= "-r 0";
 	
-	define	TrainingEnabled		1						// 0 = Disable, 1 = Enable. When game stopped pressing a button/switch announces basic function
-	define	AnnounceTraining	0						// 0 = Do not annnounce training mode, 1 = Announce training mode
+	define	TrainingEnabled		ENABLED					// ENABLED or DISABLED. When game stopped pressing a button/switch announces basic function
+	define	AnnounceTraining	ENABLED					// DISABLED = Do not annnounce training mode, ENABLED = Announce training mode
 
 //------------------//
 // WAV Sound Player //
@@ -129,7 +129,7 @@
 	// Set 'SoundCMD' for any command line arguments you wish to use 
 	// Run sounder.exe in a command prompt (from where you copied it) with no arguments etc to see a list of options
 
-	int		EnableSoundFX		= 1; 					// 0 = Disable, 1 = Enable. Enable this if you wish to use "sounder.exe"
+	int		EnableSoundFX		= ENABLED; 				// ENABLED or DISABLED. Enable this if you wish to use "sounder.exe"
 	
 	alias	SoundPath			= "d:\\Thrustmaster\\ED_TargetScript\\sounder.exe";
 	alias	WAVPath				= "d:\\Thrustmaster\\ED_TargetScript\\sounds\\";
@@ -174,16 +174,16 @@
 // General Status Variables //
 //--------------------------//
 
-	define	AutoHanger			0					 		// !! TESTING !!	// 1 = Initiate Hanger+Station Services automatically when docked, 0 = don't
+	define	AutoHanger			DISABLED			 		// !! TESTING !!	// 1 = Initiate Hanger+Station Services automatically when docked, 0 = don't
 															// !! TESTING !!	// Hanger services on Carrier is completely different to stations
 															
-	define	AutoHUD				0							//	Enable to toggle HUD to Analysis Mode when FSD engaged
-	define	AutoGearUP			0	 						//	Enable to retract landing gear when lifting off
-	define	AutoGearDOWN		0	 						//	Enable to deploy landing gear when request docking
-	define	AutoHeatsink		1							//	Enable to fire a heatsink when temp > 100% (requires launcher and ammo)
-	define	AutoStrobe			1							//	Enable to strobe silent running if in danger and shields drop
+	define	AutoHUD				DISABLED					//	Enable to toggle HUD to Analysis Mode when FSD engaged
+	define	AutoGearUP			DISABLED					//	Enable to retract landing gear when lifting off
+	define	AutoGearDOWN		DISABLED					//	Enable to deploy landing gear when request docking
+	define	AutoHeatsink		ENABLED						//	Enable to fire a heatsink when temp > 100% (requires launcher and ammo)
+	define	AutoStrobe			ENABLED						//	Enable to strobe silent running if in danger and shields drop
 	
-	define	CommsModule			0	 						//	ED_CommsControl still in testing
+	define	CommsModule			DISABLED					//	ED_CommsControl still in testing
 
 //-------------//
 // Axis Curves //
@@ -211,8 +211,8 @@
 
 	define	FAOFFCurves			SLOW						// Set Curve profile desired for FA-OFF. Valid settings = OFF, MILD, MEDIUM or SLOW (see below) 
 	define	CurveInfo			NOPRINT						// Set if you want curve info printed to console each time we change. Valid settings = PRINT or NOPRINT
-	define	EnableTFRPRudder	1							// Set to 0 if you do not have a Thrustmaster TFRP Rudder.
-	define	SwapRoll4Yaw		0							// Set to 1 if you wish to swap Roll and Yaw Axes
+	define	EnableTFRPRudder	ENABLED						// Set to 0 if you do not have a Thrustmaster TFRP Rudder.
+	define	SwapRoll4Yaw		DISABLED					// Set to 1 if you wish to swap Roll and Yaw Axes
 
 	// The below curve arrays are set for "off", "mild", "medium" or "slow" and controlled via the Autopilot switch
 	// Eg 	AP Switch set at APPAT-O	= (Curve = 1)
