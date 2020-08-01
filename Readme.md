@@ -3,7 +3,7 @@ Version 4.2.1
 
 STATUS: 
 
-BETA
+Released
 
 HISTORY:
 
