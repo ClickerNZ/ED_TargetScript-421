@@ -43,7 +43,7 @@
 
 		// Include MapKey for everything.
 		// Include MapKeyR only where used.
-
+				
 //		(Gun Trigger - Primary Fire)
 //		----------------------------
 
@@ -240,7 +240,7 @@
 				EXEC("fnPIPMode(2);")																		// D - Decrement PIPMode 
 				);
 		}
-	
+			
 // ------------------------------------ //
 // Map Throttle LEVER switches and hats //
 // ------------------------------------ //
@@ -373,7 +373,7 @@
 
 		MapKey(&Throttle, CHF, PULSE+TargetNextSubsystem);
 		MapKey(&Throttle, CHB, PULSE+TargetPrevSubsystem);
-
+		
 // ---------------------------------------//
 // Map Throttle BASE buttons and switches //
 // ---------------------------------------//
@@ -615,7 +615,6 @@
 // ---------------------------------------- //
 // Map Joystick triggers, switches and hats //
 // ---------------------------------------- //
-
 
 //		(Gun Trigger - Primary Fire)
 //		----------------------------
@@ -1121,6 +1120,6 @@
 		
 		MapKey(&Throttle, IDLERON, 0);				// <not used>
 		MapKey(&Throttle, IDLEROFF, 0);				// <not used>
-	
+
 	}	// end of TrainingMap
 
