@@ -3,9 +3,11 @@
 //	CMDR Clicker's Elite Dangerous Thrustmaster Warthog + TFRP Script	//
 //----------------------------------------------------------------------//
 
-// This file: ED_Main.tmc (v4.2.1) ... supports Elite Dangerous v3.7 (Fleet Carriers)
-
-// Uses REXEC to read status.json every second and process Flags key value echa time it changes
+// This file:	ED_Main.tmc 		v4.2.1
+// Supports:	Elite Dangerous 	v3.7 (Fleet Carriers)
+// Requires:	TARGET 				v3.0.20.427
+//				Joystick firmware	v12
+//				Throttle firmware 	v23
 
 // Refer Change Log.txt in same folder
 
@@ -23,9 +25,9 @@
 // ========================================================
 
 // Index:	Line		FUNCTION
-//			Line 45:	include statements
-//			Line 58: 	int main()
-//			Line 117:	int EventHandle()
+//			Line 39:	include statements
+//			Line 60: 	int main()
+//			Line 128:	int EventHandle()
 
 
 // START
