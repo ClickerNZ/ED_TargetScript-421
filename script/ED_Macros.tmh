@@ -21,23 +21,22 @@
 // ========================================================
 
 // Index:	Line			FUNCTION
-//			Line 58:		int ModKey()
-//			Line 62:		fnCustomCommands()
-//			Line 83: 		mRequestDock
-//			Line 96: 		mDeploySRV
-//			Line 108: 		mBoardShip
-//			Line 127: 		mShowGameStats
-//			Line 132: 		mFastModeSwitch0
-//			Line 143: 		mFastModeSwitch1
-//			Line 157: 		mFastModeSwitch2
-//			Line 170: 		mReportCrimesToggle
-//			Line 191: 		mNAVBeaconWing
-//			Line 216: 		mNAVBeaconOff
-//			Line 240: 		mClearAllChatBox
-//			Line 279: 		mClearChatBox
-//			Line 291: 		mEnterHanger
-//			Line 317: 		mLaunch
-//			Line 328:		mChangeColours
+//			Line 54:		fnCustomCommands()
+//			Line 75: 		mRequestDock
+//			Line 88: 		mDeploySRV
+//			Line 100: 		mBoardShip
+//			Line 119: 		mShowGameStats
+//			Line 124: 		mFastModeSwitch0
+//			Line 135: 		mFastModeSwitch1
+//			Line 149: 		mFastModeSwitch2
+//			Line 162: 		mReportCrimesToggle
+//			Line 183: 		mNAVBeaconWing
+//			Line 208: 		mNAVBeaconOff
+//			Line 232: 		mClearAllChatBox
+//			Line 271: 		mClearChatBox
+//			Line 283: 		mEnterHanger
+//			Line 309: 		mLaunch
+//			Line 320:		mChangeColours
 
 
 // START
@@ -51,13 +50,6 @@
 //---------------//
 // CUSTOM MACROS //			// MACROS Include a series of automated key presses to perform a specific task.
 //---------------//
-
-	// Not yet used...found in discord provided by Dar|{cyde
-	// Usage example: ModKey(L_ALT, 1);
-	// Note: Potentially better than defining a macro in ED-Defines.ttm as it relaeases 'mod' after 'key' and not before
-	int ModKey(int mod=0, int key=0) { 
-	    return CHAIN(DOWN+mod, D(), PULSE+key, D(), UP+mod);
-	}
 
 	int fnCustomCommands() {
 
@@ -236,10 +228,10 @@
 			PULSE+UIBack,
 			LOCK);
 
-		// MACRO: Send '/clear' command to clear any text in all 3 chat box windows
+		// MACRO: Send '/clear' command to clear any text in all chat box windows
 		mClearAllChatBox = CHAIN(
 			LOCK+PULSE+QuickCommsPanel, D(500),					// enter, enter, 2, left, enter, /, c, l, e, a, r, enter, left, down
-			PULSE+QuickCommsPanel, D(500),							// repeat 3x
+			PULSE+QuickCommsPanel, D(500),						// repeat twice, 3x if in squadron
 			PULSE+CommsPanel, D(500),
 			PULSE+UILeft, D(),
 			PULSE+QuickCommsPanel, D(),
@@ -260,16 +252,16 @@
 			PULSE+'a', D(),
 			PULSE+'r', D(),
 			PULSE+QuickCommsPanel, D(500),
-			PULSE+UILeft, D(),
-			PULSE+UIDown, D(),
-			PULSE+QuickCommsPanel, D(),
-			PULSE+'\/', D(),
-			PULSE+'c', D(),
-			PULSE+'l', D(),
-			PULSE+'e', D(),
-			PULSE+'a', D(),
-			PULSE+'r', D(),
-			PULSE+QuickCommsPanel, D(500),
+//			PULSE+UILeft, D(),									// Uncomment this and the following lines if you are a member of a squadron
+//			PULSE+UIDown, D(),									// .
+//			PULSE+QuickCommsPanel, D(),							// .
+//			PULSE+'\/', D(),									// .
+//			PULSE+'c', D(),										// .
+//			PULSE+'l', D(),										// .
+//			PULSE+'e', D(),										// .
+//			PULSE+'a', D(),										// .
+//			PULSE+'r', D(),										// .
+//			PULSE+QuickCommsPanel, D(500),						// .
 			PULSE+UILeft, D(),
 			PULSE+UIDown, D(),
 			PULSE+CommsPanel, D(),			
@@ -287,7 +279,7 @@
 			PULSE+QuickCommsPanel, D(500),
 			LOCK);
 
-		// MACRO: Enter hanger then facilities + refuel/repair/restock
+		// MACRO: Enter hanger then facilities + refuel/repair/restock >>> NOTE: Due to differences between Carrier and Starport we need to comment a bunch of key presses
 		mEnterHanger = CHAIN(
 			LOCK,
 			// Fleet Carriers New Menu items when docked
