@@ -4,6 +4,7 @@ echo.
 echo VERSION 4.2.1
 echo.
 
+rem REMOVE THE "REM" FROM BEGINNING OF THE LINES FOR THOSE APPS YOU USE
 
 rem pause
 
@@ -39,9 +40,9 @@ REM start VoiceAttack.exe -shortcutson
 
 rem timeout /t 5
 
-rem echo Start TeamSpeak or discord...
-rem cd "\Users\%username%\AppData\Local\TeamSpeak 3 Client"
-rem start ts3client_win64.exe
+REM echo Start TeamSpeak or discord...
+REM cd "\Users\%username%\AppData\Local\TeamSpeak 3 Client"
+REM start ts3client_win64.exe
 
 rem timeout /t 5
 
