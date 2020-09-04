@@ -8,7 +8,7 @@
 // Refer Change Log.txt in same folder
 
 // NOTE:	All user related settings can be found in the ED_UserSettings.tmh file
-//			Changing any of the below global variables will have s ignificant effect on the script
+//			Changing any of the below global variables will have significant effect on the script
 //			and may cause errors. Change these at your own risk
 
 // LEGEND: 
