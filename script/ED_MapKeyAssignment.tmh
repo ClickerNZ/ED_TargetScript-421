@@ -47,10 +47,10 @@
 //		(Gun Trigger - Primary Fire)
 //		----------------------------
 
-		if (MapKeyProfile == BASIC) {
+		if (MapKeyProfile == BASIC) {			// ...use BASIC profile settings								// MapKeyProfile is set within ED_UserSettings.tmh
 			MapKey(&Joystick, TG1, PrimaryFire);
 		}
-		else {
+		else {									// ...use FULL profile settings 
 			MapKeyUMD(&Joystick, TG1,			// (Gun Trigger - Stage 1)
 				EXEC("tgTriggerMode(1);"),																		// U - Increment trigger mode for shifted Primary Fire
 				EXEC("fnAdvFireControl(0);"),																	// M - Default Primary Fire action
