@@ -572,7 +572,7 @@
 	// REQUIRES:	'MyStatusFile' path to be set correctly within ED_UserSettings.tmh file
 	// PARAMETERS:	action = SAVE or LOAD
 
-	// Global declarions
+	// Global declarations
 	
 	struct MyStruct {
 		int		sVolume;
