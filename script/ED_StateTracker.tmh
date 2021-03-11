@@ -236,6 +236,9 @@
 	int fnsProcessFlags(int UpdateLEDs=0) {
 
 		int VoiceTxt;
+
+		// These 2-letter shorthand duplicate variables enable me to track when certain status bits change.
+		// Set these first before re-decoding latest flags key value
 		
 		int ll = fLatLong;												// Track in/out of orbit
 		int sc = fSupercruise;											// Track Supercruise changes
