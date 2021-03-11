@@ -31,6 +31,7 @@ v4.2.1	- Fix name of TrainingMap in fnCustomCommands()
 		- Add ability to parse different voices to fnTextToSpeech()
 		- Add "Text To Speech" section in user guide to describe how to set TextToSpeech up and how to add additional voices to a user's PC
 		- Create fnGetDate() function 
+		- redefine 'ReadErrorCount' as global within fnsReadStatusJson() 
 
 v4.2.0	- New Minor Release (Elite Dangerous 3.7 - Fleet Carriers)
 		- Ported code from 4.1.0b
