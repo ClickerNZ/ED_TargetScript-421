@@ -47,7 +47,7 @@
 		int 	fp;
 		int 	buf = 512;
 		int		myResult;
-//		int		ReadErrorCount	= 0;
+//		int		ReadErrorCount	= 0;	// moved to global 
 		int		ReadErrorSent	= 0;
 		int		newJson			= 0;								// set when myJson != lastJson...we then call fnsProcessFlags();		
 
