@@ -111,7 +111,7 @@
 	alias	Zira				= "-n \"Microsoft Zira Desktop\"";		// Adult, Female,	en-US 
 	alias	Heera				= "-n \"Microsoft Heera\"";				// Adult, Male,		en-IN
 	alias	Ravi				= "-n \"Microsoft Ravi\"";				// Adult, Female,	en-IN 
-	alias	Haruka				= "-n \"Microsoft Haruka Desktop\""		// Adult, Female,	en-JP
+	alias	Haruka				= "-n \"Microsoft Haruka Desktop\"";	// Adult, Female,	en-JP
 	
 	int		DefaultVoice		= &Catherine;			// Set your preferred (installed) voice here
 
