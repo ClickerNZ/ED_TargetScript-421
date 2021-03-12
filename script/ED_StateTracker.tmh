@@ -37,7 +37,7 @@
 	// GlobalVars
 
 	char	myJson;	
-	int		ReadErrorCount	= 0;
+	int	ReadErrorCount	= 0;
 
 	// ------------
 	
