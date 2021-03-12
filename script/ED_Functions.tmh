@@ -399,7 +399,7 @@
 			if (!GameLoaded) {				// Serial - wait until voice.exe finishes before processing next line in script 
 				sprintf(&SysCmd, "%s -v %s %s %s %s", &VoicePath, &volume, &VoiceCMD, Voice, text);			
 			}
-			else {							// Parallel - send text to voice the process next line in script. No waiting
+			else {							// Parallel - send text to voice then process next line in script. No waiting
 				sprintf(&SysCmd, "start %s -v %s %s %s %s", &VoicePath, &volume, &VoiceCMD, Voice, text);
 			}
 			SysCmd[strlen(&SysCmd)] = 0;							// terminate char array with nul
