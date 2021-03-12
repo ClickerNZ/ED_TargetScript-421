@@ -5,7 +5,7 @@
 
 // This file:	ED_Main.tmc 		v4.2.1
 // Supports:	Elite Dangerous 	v3.7 (Fleet Carriers)
-// Requires:	TARGET 				v3.0.20.427
+// Requires:	TARGET 				v3.0.20.826
 //				Joystick firmware	v12
 //				Throttle firmware 	v23
 
@@ -71,6 +71,8 @@ include "ED_Toggles.tmh"
 		Exclude(&RMFD);
 		Exclude(&A320Pilot);
 		Exclude(&A320Copilot);
+		Exclude(&TCAQuadrant12);
+		Exclude(&TCAQuadrant34);					  
 		
 		if (EnableTFRPRudder) {
 			Configure(&TFRPRudder, MODE_FILTERED);
