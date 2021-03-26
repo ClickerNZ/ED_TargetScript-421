@@ -680,8 +680,8 @@
 
 		if (MapKeyProfile == BASIC) {
 			MapKey(&Joystick, H1U, EXEC("fnVPOutput(\"Select next fire group\");"));
-			MapKey(&Joystick, H1D, EXEC("fnVPOutput(\"Select Previous fire group\");"));
-			MapKey(&Joystick, H1L, EXEC("fnVPOutput(\"Toggle Landing gear\");"));
+			MapKey(&Joystick, H1D, EXEC("fnVPOutput(\"Select previous fire group\");"));
+			MapKey(&Joystick, H1L, EXEC("fnVPOutput(\"Toggle landing gear\");"));
 			MapKey(&Joystick, H1R, EXEC("fnVPOutput(\"Toggle ship lights\");"));
 		}
 		else {		
@@ -910,8 +910,8 @@
 //		(China Hat)			// Subsystem Targetting
 //		-----------
 
-		MapKey(&Throttle, CHF, EXEC("fnVPOutput(\"Target Next Subsystem\");"));
-		MapKey(&Throttle, CHB, EXEC("fnVPOutput(\"Target Previous Subsystem\");"));
+		MapKey(&Throttle, CHF, EXEC("fnVPOutput(\"Target next subsystem\");"));
+		MapKey(&Throttle, CHB, EXEC("fnVPOutput(\"Target previous subsystem\");"));
 		
 
 // ---------------------------------------//
@@ -943,8 +943,8 @@
 //		(Enhanced Attitude Control (EAC) Arm/Off)
 //		-----------------------------------------
 		
-		MapKey(&Throttle, EACON, EXEC("fnVPOutput(\"Engage Silent running\");"));
-		MapKey(&Throttle, EACOFF, EXEC("fnVPOutput(\"Disengage Silent Running\");"));
+		MapKey(&Throttle, EACON, EXEC("fnVPOutput(\"Engage silent running\");"));
+		MapKey(&Throttle, EACOFF, EXEC("fnVPOutput(\"Disengage silent running\");"));
 
 //		(Radar Altimeter)
 //		-----------------
@@ -1050,7 +1050,7 @@
 			MapKey(&Throttle, EORIGN, EXEC("fnVPOutput(\"Dismiss or recall ship\");"));
 		}
 		
-		MapKey(&Throttle, EORMOTOR, EXEC("fnVPOutput(\"Toggle Ship GUI off\");"));			
+		MapKey(&Throttle, EORMOTOR, EXEC("fnVPOutput(\"Toggle ship GUI off\");"));			
 		MapKeyR(&Throttle, EORMOTOR, EXEC("fnVPOutput(\"Toggle ship GUI on\");"));		// RELEASE
 
 		
@@ -1064,7 +1064,7 @@
 			MapKeyUMD(&Throttle, EOLIGN,
 				 EXEC("fnVPOutput(\"Switch Game mode to Open\");"),
 				 EXEC("fnVPOutput(\"Switch Game mode to Private Group\");"),
-				 EXEC("fnVPOutput(\"Switch Game mode to solo\");")
+				 EXEC("fnVPOutput(\"Switch Game mode to Solo\");")
 				 );
 		}
 				 
