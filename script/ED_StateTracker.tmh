@@ -97,7 +97,7 @@
 		}
 		else {
 			printf("\x0a");
-			VPOutput("FATAL ERROR: Status.jason file not found", 100);
+			fnVPOutput("FATAL ERROR: Status.jason file not found", 100);
 			Abort();
 		}		
 	}
